@@ -74,5 +74,6 @@ export type Copy = {
     submit: string;
   };
   thanksPage: { title: string; text: string; back: string };
+  schedulePage: { title: string; description: string; soon: string };
   todoLabel: string;
 };

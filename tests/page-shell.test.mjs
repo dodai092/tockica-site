@@ -102,7 +102,28 @@ test('instructors pages are twins of each other', async () => {
   assert.ok(header(en).includes('href="/instruktori"'));
 });
 
-test('schedule pages hide the mobile book bar', { todo: 'pages arrive in Task 10' }, async () => {
-  assert.ok(!(await read('raspored/index.html')).includes('data-book-bar'));
-  assert.ok(!(await read('en/schedule/index.html')).includes('data-book-bar'));
-});
+for (const { lang, file } of [
+  { lang: 'hr', file: 'raspored/index.html' },
+  { lang: 'en', file: 'en/schedule/index.html' },
+]) {
+  test(`${lang}: schedule stub shows next classes, a booking-soon notice and an open booking placeholder`, async () => {
+    const html = await read(file);
+    assert.match(html, new RegExp(`<html[^>]*\\slang="${lang}"`));
+    assert.equal([...html.matchAll(/<h1\b/g)].length, 1);
+    const list = html.match(/<section[^>]*data-section="next-classes"[\s\S]*?<\/section>/)?.[0];
+    assert.ok(list, 'next classes list missing');
+    assert.equal([...list.matchAll(/data-next-class/g)].length, 4);
+    assert.ok(/data-schedule-notice/.test(html), 'booking-soon notice missing');
+    assert.ok(/data-todo="[^"]*book[^"]*"/.test(html), 'where-to-book placeholder missing');
+  });
+
+  test(`${lang}: schedule page hides the mobile book bar`, async () => {
+    assert.ok(!(await read(file)).includes('data-book-bar'));
+  });
+
+  test(`${lang}: schedule page language switch lands on the twin`, async () => {
+    const html = header(await read(file));
+    const link = html.match(/<a[^>]*data-lang-switch[^>]*>/)[0];
+    assert.equal(attr(link, 'href'), pathFor('schedule', otherLang(lang)));
+  });
+}

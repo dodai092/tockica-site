@@ -38,5 +38,13 @@
   {
     "path": "/en/thanks/",
     "kind": "noindex"
+  },
+  {
+    "path": "/raspored/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/schedule/",
+    "kind": "public"
   }
 ]

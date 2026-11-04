@@ -96,5 +96,10 @@ export const hr: Copy = {
     submit: 'Pošalji upit',
   },
   thanksPage: { title: 'Hvala', text: 'Poruka je poslana. Javit ćemo ti se.', back: 'Natrag na naslovnicu' },
+  schedulePage: {
+    title: 'Raspored',
+    description: 'Raspored treninga u Točkici na i.',
+    soon: 'Online rezervacija uskoro stiže.',
+  },
   todoLabel: 'Nedostaje',
 };

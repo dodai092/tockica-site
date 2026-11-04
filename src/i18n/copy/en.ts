@@ -97,5 +97,10 @@ export const en: Copy = {
     submit: 'Send inquiry',
   },
   thanksPage: { title: 'Thanks', text: 'Your message is sent. We will get back to you.', back: 'Back to the homepage' },
+  schedulePage: {
+    title: 'Schedule',
+    description: 'The class schedule at Točkica na i.',
+    soon: 'Online booking opens soon.',
+  },
   todoLabel: 'Missing',
 };
