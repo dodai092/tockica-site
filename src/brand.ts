@@ -4,8 +4,8 @@
 // it at config load and exposes it as a CSS variable, e.g. `--font-noto-sans`).
 // Point the `fonts` values below at that variable.
 
-// Client: drop your logo in src/assets/images/ and uncomment:
-// import logoImage from '~/assets/images/logo.svg';
+// Logo: recolour of the old green SVG, temporary until Dunia sends the official red file.
+import logoImage from '~/assets/images/logo.svg';
 
 export type BrandTokens = {
   radius?: 'sharp' | 'soft' | 'round' | 'pill';
@@ -17,16 +17,16 @@ export type BrandTokens = {
 
 export const brand = {
   logo: {
-    image: null, // set to logoImage once the import above is uncommented
-    alt: '',
+    image: logoImage,
+    alt: 'Točkica na i',
     ogPath: '', // project-root-relative raster logo path for generated OG cards
     showName: true, // show SITE.name text beside/instead of the image
   },
 
   fonts: {
-    sans: 'var(--font-noto-sans)',
-    serif: 'var(--font-noto-sans)',
-    heading: 'var(--font-noto-sans)',
+    sans: 'var(--font-roboto)',
+    serif: 'var(--font-roboto)',
+    heading: 'var(--font-montserrat)',
   },
 
   /**
@@ -48,23 +48,25 @@ export const brand = {
     container: 'normal',
   } satisfies BrandTokens,
 
+  // Red is an estimate from AI images, pending Dunia's official value (doc item 21).
+  // Red text on the slate page is 2.78:1 and fails, so in dark mode red is for buttons only.
   light: {
     primary: 'rgb(215 25 32)',
-    secondary: 'rgb(1 84 207)',
-    accent: 'rgb(109 40 217)',
-    textHeading: 'rgb(0 0 0)',
-    textDefault: 'rgb(16 16 16)',
-    textMuted: 'rgb(16 16 16 / 66%)',
-    bgPage: 'rgb(255 255 255)',
+    secondary: 'rgb(179 18 26)',
+    accent: 'rgb(35 42 53)',
+    textHeading: 'rgb(35 42 53)',
+    textDefault: 'rgb(42 42 42)',
+    textMuted: 'rgb(99 107 118)',
+    bgPage: 'rgb(247 247 247)',
   },
 
   dark: {
     primary: 'rgb(215 25 32)',
-    secondary: 'rgb(1 84 207)',
-    accent: 'rgb(109 40 217)',
-    textHeading: 'rgb(247 248 248)',
-    textDefault: 'rgb(229 236 246)',
-    textMuted: 'rgb(229 236 246 / 66%)',
-    bgPage: 'rgb(3 6 32)',
+    secondary: 'rgb(179 18 26)',
+    accent: 'rgb(58 68 84)',
+    textHeading: 'rgb(247 247 247)',
+    textDefault: 'rgb(229 231 235)',
+    textMuted: 'rgb(229 231 235 / 66%)',
+    bgPage: 'rgb(35 42 53)',
   },
 } as const;

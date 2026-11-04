@@ -69,6 +69,18 @@
   gap: var(--aw-layout-grid-gap);
 }
 
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .btn {
+    font-family: var(--font-heading);
+  }
+}
+
 @utility layout-gutter {
   @apply px-4 sm:px-6;
 }

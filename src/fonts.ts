@@ -5,4 +5,4 @@
 // A system-font client leaves this empty and sets `fonts: []` in astro.config.ts:
 // no web font is fetched, subset, or preloaded, and src/brand.ts points
 // brand.fonts.* straight at a system stack.
-export const preloadFonts: string[] = ['--font-noto-sans'];
+export const preloadFonts: string[] = ['--font-montserrat', '--font-roboto'];
