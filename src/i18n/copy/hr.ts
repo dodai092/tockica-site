@@ -63,5 +63,9 @@ export const hr: Copy = {
       instructor: 'Fotka: portret instruktora',
     },
   },
+  instructorsPage: {
+    title: 'Instruktori',
+    description: 'Upoznaj instruktore Točkice na i.',
+  },
   todoLabel: 'Nedostaje',
 };

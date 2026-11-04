@@ -44,5 +44,6 @@ export type Copy = {
     contact: { heading: string; write: string };
     photo: { hero: string; space: string; riders: string; sculpt: string; instructor: string };
   };
+  instructorsPage: { title: string; description: string };
   todoLabel: string;
 };

@@ -93,7 +93,7 @@ for (const { lang, file, self } of pages) {
   });
 }
 
-test('instructors pages are twins of each other', { todo: 'pages arrive in Task 7' }, async () => {
+test('instructors pages are twins of each other', async () => {
   const hr = await read('instruktori/index.html');
   const en = await read('en/instructors/index.html');
   assert.match(hr, /<html[^>]*\slang="hr"/);

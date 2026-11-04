@@ -1,4 +1,6 @@
 [
   { "path": "/", "kind": "public" },
-  { "path": "/en/", "kind": "public" }
+  { "path": "/en/", "kind": "public" },
+  { "path": "/instruktori/", "kind": "public" },
+  { "path": "/en/instructors/", "kind": "public" }
 ]

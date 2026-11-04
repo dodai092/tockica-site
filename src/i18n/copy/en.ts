@@ -64,5 +64,9 @@ export const en: Copy = {
       instructor: 'Photo: instructor portrait',
     },
   },
+  instructorsPage: {
+    title: 'Instructors',
+    description: 'Meet the Točkica na i instructors.',
+  },
   todoLabel: 'Missing',
 };
