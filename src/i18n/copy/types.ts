@@ -15,7 +15,6 @@ export type Copy = {
     seeSchedule: string;
   };
   langSwitch: {
-    label: string;
     aria: string;
   };
   footer: {

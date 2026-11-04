@@ -15,7 +15,6 @@ export const en: Copy = {
     seeSchedule: 'See the schedule',
   },
   langSwitch: {
-    label: 'HR',
     aria: 'Hrvatski',
   },
   footer: {

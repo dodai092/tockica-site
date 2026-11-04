@@ -1,0 +1,58 @@
+---
+// Light/dark toggle, same behaviour as the template's ToggleTheme but with the sun drawn
+// inline. The template version relies on astro-icon's shared <symbol>, which is emitted
+// once per build rather than per page, so the icon came out empty on most pages.
+import { UI } from 'astrowind:config';
+
+interface Props {
+  label?: string;
+}
+
+const { label = 'Toggle between Dark and Light mode' } = Astro.props;
+---
+
+{
+  !(UI.theme && UI.theme.endsWith(':only')) && (
+    <tk-theme-toggle>
+      <button
+        type="button"
+        class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+        aria-label={label}
+        data-aw-toggle-color-scheme
+      >
+        <svg class="w-6 h-6 md:w-5 md:h-5" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0-8 0m-5 0h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7l-.7.7m0 11.4l.7.7m-12.1-.7l-.7.7"
+          />
+        </svg>
+      </button>
+    </tk-theme-toggle>
+  )
+}
+
+<style>
+  tk-theme-toggle {
+    display: contents;
+  }
+</style>
+
+<script>
+  class TkThemeToggle extends HTMLElement {
+    connectedCallback() {
+      this.querySelector('[data-aw-toggle-color-scheme]')?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.theme = isDark ? 'dark' : 'light';
+        document.dispatchEvent(new CustomEvent('aw:theme-change'));
+      });
+    }
+  }
+
+  if (!customElements.get('tk-theme-toggle')) {
+    customElements.define('tk-theme-toggle', TkThemeToggle);
+  }
+</script>

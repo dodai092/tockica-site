@@ -2,7 +2,7 @@
 // Client header. Structure copied from widgets/Header.astro (parts bin, never edited):
 // the <aw-header> script below drives the mobile menu and sticky state.
 import Logo from '~/components/Logo.astro';
-import ToggleTheme from '~/components/common/ToggleTheme.astro';
+import ToggleTheme from '~/components/client/ThemeToggle.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
 import { sculpt } from '~/data/sculpt';
@@ -24,7 +24,7 @@ const links = headerRoutes(sculpt.visible).map((key) => ({ text: copy.nav[key], 
 const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap';
 ---
 
-<aw-header transition:persist="header">
+<aw-header>
   <header
     class="top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out sticky"
     data-aw-sticky-header
@@ -79,9 +79,15 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
               aria-label={copy.langSwitch.aria}
               data-lang-switch
             >
-              {copy.langSwitch.label}
+              <img
+                src={other === 'en' ? '/flags/flag-gb.svg' : '/flags/flag-hr.webp'}
+                alt=""
+                width="28"
+                height="28"
+                class="h-7 w-7 rounded-full object-cover"
+              />
             </a>
-            <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />
+            <ToggleTheme />
           </div>
           <span class="ml-4">
             <Button

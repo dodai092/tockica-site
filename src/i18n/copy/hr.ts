@@ -14,7 +14,6 @@ export const hr: Copy = {
     seeSchedule: 'Pogledaj raspored',
   },
   langSwitch: {
-    label: 'EN',
     aria: 'English',
   },
   footer: {
