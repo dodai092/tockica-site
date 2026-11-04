@@ -1,0 +1,41 @@
+---
+// Shell for every Točkica page: PageLayout with the client header and footer, language
+// and hreflang from the route table, and the fixed mobile book bar.
+import PageLayout from '~/layouts/PageLayout.astro';
+import SiteHeader from '~/components/client/SiteHeader.astro';
+import SiteFooter from '~/components/client/SiteFooter.astro';
+import BookBar from '~/components/client/BookBar.astro';
+import { alternatesFor } from '~/i18n';
+import type { Lang, RouteKey } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { lang, route, title, description, noindex = false } = Astro.props;
+
+const metadata = {
+  title,
+  description,
+  lang,
+  alternates: alternatesFor(route),
+  ...(noindex ? { robots: { index: false, follow: false } } : {}),
+};
+// The schedule page is the booking entry, so it has no extra book bar. The footer gets
+// bottom space so the fixed bar never covers its last line.
+const showBookBar = route !== 'schedule';
+---
+
+<PageLayout metadata={metadata}>
+  <Fragment slot="announcement"></Fragment>
+  <SiteHeader slot="header" lang={lang} route={route} />
+  <slot />
+  <Fragment slot="footer">
+    <SiteFooter lang={lang} bookBarSpace={showBookBar} />
+    {showBookBar && <BookBar lang={lang} />}
+  </Fragment>
+</PageLayout>

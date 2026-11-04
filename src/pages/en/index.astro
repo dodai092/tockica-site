@@ -1,11 +1,9 @@
 ---
-import Layout from '~/layouts/PageLayout.astro';
-import { alternatesFor } from '~/i18n';
+import Page from '~/components/client/Page.astro';
 
 // Stub until Task 5 builds the homepage.
-const metadata = { title: 'Točkica na i', lang: 'en', alternates: alternatesFor('home') };
 ---
 
-<Layout metadata={metadata}>
+<Page lang="en" route="home" title="Točkica na i" description="Točkica na i">
   <section class="mx-auto max-w-3xl px-4 py-16"><h1>Točkica na i</h1></section>
-</Layout>
+</Page>

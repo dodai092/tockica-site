@@ -1,0 +1,69 @@
+---
+import Logo from '~/components/Logo.astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+  bookBarSpace?: boolean;
+}
+
+const { lang, bookBarSpace = false } = Astro.props;
+const copy = getCopy(lang);
+
+const nav = [
+  { text: copy.nav.schedule, href: pathFor('schedule', lang) },
+  { text: copy.nav.instructors, href: pathFor('instructors', lang) },
+  { text: copy.nav.packs, href: pathFor('packs', lang) },
+  { text: copy.nav.sculpt, href: pathFor('sculpt', lang) },
+  { text: copy.nav.contact, href: pathFor('contact', lang) },
+];
+const legal = [
+  { text: copy.footer.rules, href: pathFor('rules', lang) },
+  { text: copy.footer.terms, href: pathFor('terms', lang) },
+  { text: copy.footer.privacy, href: pathFor('privacy', lang) },
+];
+const linkClass = 'text-muted hover:text-default hover:underline transition duration-150 ease-in-out';
+---
+
+<footer class="relative border-t border-gray-200 dark:border-slate-700 not-prose">
+  <div class:list={['max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12', { 'pb-28 md:pb-12': bookBarSpace }]}>
+    <div class="grid grid-cols-12 gap-8">
+      <div class="col-span-12 lg:col-span-4">
+        <a class="inline-block" href={pathFor('home', lang)}><Logo /></a>
+        <p class="mt-4 text-sm text-muted">Točkica na i j.d.o.o. · OIB HR37892279693</p>
+      </div>
+      <nav class="col-span-6 lg:col-span-3" aria-label={lang === 'hr' ? 'Podnožje' : 'Footer'}>
+        <ul class="text-sm space-y-2">
+          {
+            nav.map(({ text, href }) => (
+              <li>
+                <a class={linkClass} href={href}>
+                  {text}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="col-span-6 lg:col-span-3">
+        <ul class="text-sm space-y-2">
+          {
+            legal.map(({ text, href }) => (
+              <li>
+                <a class={linkClass} href={href}>
+                  {text}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <ul class="col-span-12 lg:col-span-2 text-sm space-y-2">
+        <li><Placeholder lang={lang} label="Instagram URL" /></li>
+        <li><Placeholder lang={lang} label="Facebook URL" /></li>
+      </ul>
+    </div>
+  </div>
+</footer>
