@@ -95,6 +95,10 @@ export const hr: Copy = {
     formHeading: 'Javi se',
     submit: 'Pošalji upit',
   },
+  legalPage: {
+    description: 'Pravni tekst Točkice na i.',
+    official: 'Hrvatski tekst je službeni tekst. Engleska verzija je prijevod.',
+  },
   thanksPage: { title: 'Hvala', text: 'Poruka je poslana. Javit ćemo ti se.', back: 'Natrag na naslovnicu' },
   schedulePage: {
     title: 'Raspored',

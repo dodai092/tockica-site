@@ -96,6 +96,10 @@ export const en: Copy = {
     formHeading: 'Get in touch',
     submit: 'Send inquiry',
   },
+  legalPage: {
+    description: 'Legal text of Točkica na i.',
+    official: 'The Croatian text is the official version. This English version is a translation.',
+  },
   thanksPage: { title: 'Thanks', text: 'Your message is sent. We will get back to you.', back: 'Back to the homepage' },
   schedulePage: {
     title: 'Schedule',

@@ -73,6 +73,7 @@ export type Copy = {
     formHeading: string;
     submit: string;
   };
+  legalPage: { description: string; official: string };
   thanksPage: { title: string; text: string; back: string };
   schedulePage: { title: string; description: string; soon: string };
   todoLabel: string;

@@ -46,5 +46,29 @@
   {
     "path": "/en/schedule/",
     "kind": "public"
+  },
+  {
+    "path": "/pravilnik/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/uvjeti/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/privatnost/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/en/rules/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/en/terms/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/en/privacy/",
+    "kind": "noindex"
   }
 ]

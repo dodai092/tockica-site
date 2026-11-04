@@ -1,0 +1,25 @@
+---
+// Legal page stub (rules, terms, privacy). Body is a placeholder until Dunia sends the
+// texts (doc item 14). Croatian is the official version, English a translation.
+import Page from '~/components/client/Page.astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+  route: 'rules' | 'terms' | 'privacy';
+}
+
+const { lang, route } = Astro.props;
+const copy = getCopy(lang);
+const title = copy.footer[route];
+---
+
+<Page lang={lang} route={route} title={title} description={copy.legalPage.description} noindex>
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 py-16 md:py-24">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{title}</h1>
+    <p class="mt-4 text-lg text-default">{copy.legalPage.official}</p>
+    <p class="mt-8"><Placeholder lang={lang} label={`${route} text (doc item 14)`} /></p>
+  </section>
+</Page>
