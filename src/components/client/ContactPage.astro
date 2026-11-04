@@ -1,0 +1,37 @@
+---
+import Page from '~/components/client/Page.astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+import MessageForm from '~/components/client/MessageForm.astro';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang);
+// Address, phone, e-mail and hours stay open until Dunia answers doc item 8.
+const open = ['address', 'phone', 'e-mail', 'opening hours'];
+---
+
+<Page lang={lang} route="contact" title={copy.nav.contact} description={copy.contactPage.description}>
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 py-12 md:py-16">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{copy.nav.contact}</h1>
+    <div class="mt-10 grid items-start gap-10 md:grid-cols-2">
+      <ul class="space-y-3">
+        {
+          open.map((label) => (
+            <li>
+              <Placeholder lang={lang} label={`${label} (doc item 8)`} />
+            </li>
+          ))
+        }
+      </ul>
+      <div>
+        <h2 class="mb-4 text-2xl font-bold text-heading">{copy.home.contact.write}</h2>
+        <MessageForm lang={lang} />
+      </div>
+    </div>
+  </section>
+</Page>

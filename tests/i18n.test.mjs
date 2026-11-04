@@ -61,8 +61,7 @@ test('route table lists the ten agreed pages', () => {
   ]);
 });
 
-// Pages arrive in Tasks 5 to 12. The assertion is switched on in Task 12.
-test('every route has a page file in both languages', { todo: 'pages arrive in Tasks 5 to 12' }, async () => {
+test('every route has a page file in both languages', async () => {
   for (const key of routeKeys) {
     for (const lang of langs) {
       await access(new URL(`../${pageFile(pathFor(key, lang))}`, import.meta.url));

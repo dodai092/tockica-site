@@ -70,5 +70,13 @@
   {
     "path": "/en/privacy/",
     "kind": "noindex"
+  },
+  {
+    "path": "/kontakt/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/contact/",
+    "kind": "public"
   }
 ]
