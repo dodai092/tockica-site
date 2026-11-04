@@ -1,24 +1,23 @@
 ---
-import Layout from '~/layouts/Layout.astro';
-import { getHomePermalink } from '~/utils/permalinks';
+// Croatian first (default language), one English line below. Netlify serves a single
+// 404.html for every unknown path, including old WordPress URLs until redirects exist.
+import Page from '~/components/client/Page.astro';
+import { getCopy, pathFor } from '~/i18n';
 
-const title = `Error 404`;
+const hr = getCopy('hr').notFound;
+const en = getCopy('en').notFound;
 ---
 
-<Layout metadata={{ title }}>
-  <section class="flex items-center h-full p-16">
-    <div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
-      <div class="max-w-md text-center">
-        <h2 class="mb-8 font-bold text-9xl">
-          <span class="sr-only">Error</span>
-          <span class="text-primary">404</span>
-        </h2>
-        <p class="text-3xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
-        <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          But don't worry, you can find plenty of other things on our homepage.
-        </p>
-        <a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">Back to homepage</a>
-      </div>
-    </div>
+<Page lang="hr" route="home" title={hr.title} description={hr.text} noindex>
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 py-16 md:py-24 text-center">
+    <h1 class="text-heading font-extrabold tracking-tight">
+      <span class="block text-8xl md:text-9xl" aria-hidden="true">404</span>
+      <span class="mt-4 block text-3xl md:text-4xl">{hr.title}</span>
+    </h1>
+    <p class="mt-4 text-xl text-default">{hr.text}</p>
+    <p class="mt-8"><a class="btn-primary" href={pathFor('home', 'hr')}>{hr.back}</a></p>
+    <p lang="en" class="mt-10 text-muted">
+      {en.title}. <a class="font-semibold underline" href={pathFor('home', 'en')}>{en.back}</a>
+    </p>
   </section>
-</Layout>
+</Page>

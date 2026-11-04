@@ -109,6 +109,11 @@ export const hr: Copy = {
     description: 'Pravni tekst Točkice na i.',
     official: 'Hrvatski tekst je službeni tekst. Engleska verzija je prijevod.',
   },
+  notFound: {
+    title: 'Stranica nije pronađena',
+    text: 'Možda je link star ili je stranica premještena. Na naslovnici ćeš naći sve ostalo.',
+    back: 'Natrag na naslovnicu',
+  },
   thanksPage: { title: 'Hvala', text: 'Poruka je poslana. Javit ćemo ti se.', back: 'Natrag na naslovnicu' },
   schedulePage: {
     title: 'Raspored',

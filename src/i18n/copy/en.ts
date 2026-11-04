@@ -110,6 +110,11 @@ export const en: Copy = {
     description: 'Legal text of Točkica na i.',
     official: 'The Croatian text is the official version. This English version is a translation.',
   },
+  notFound: {
+    title: 'Page not found',
+    text: 'The link may be old or the page has moved. Everything else is on the homepage.',
+    back: 'Back to the homepage',
+  },
   thanksPage: { title: 'Thanks', text: 'Your message is sent. We will get back to you.', back: 'Back to the homepage' },
   schedulePage: {
     title: 'Schedule',

@@ -28,6 +28,8 @@ production DNS.
       the actual domain in your browser's address bar as a final human sanity check.
 - [ ] Favicons, OG image (`src/assets/images/default.png`), and logos are the client's.
 - [ ] `robots.txt` allows indexing; `metadata.robots.index: true` in `config.yaml`.
+- [ ] Placeholders gone: `LAUNCH=1 npm run check:todos` exits 0 on a fresh `npm run build` (it lists every
+      `data-todo` left in `dist/` and fails while any remain).
 - [ ] Legal pages reviewed and approved by the client.
 - [ ] Contact form: test a real submission, confirm it arrives.
 - [ ] `src/schema.ts` filled if the client is a local business.

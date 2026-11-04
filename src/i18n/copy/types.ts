@@ -75,6 +75,7 @@ export type Copy = {
   consent: { label: string; text: string; more: string; decline: string; accept: string };
   contactPage: { description: string; submit: string };
   legalPage: { description: string; official: string };
+  notFound: { title: string; text: string; back: string };
   thanksPage: { title: string; text: string; back: string };
   schedulePage: { title: string; description: string; soon: string };
   todoLabel: string;
