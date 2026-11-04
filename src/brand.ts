@@ -49,7 +49,7 @@ export const brand = {
   } satisfies BrandTokens,
 
   light: {
-    primary: 'rgb(1 97 239)',
+    primary: 'rgb(215 25 32)',
     secondary: 'rgb(1 84 207)',
     accent: 'rgb(109 40 217)',
     textHeading: 'rgb(0 0 0)',
@@ -59,7 +59,7 @@ export const brand = {
   },
 
   dark: {
-    primary: 'rgb(1 97 239)',
+    primary: 'rgb(215 25 32)',
     secondary: 'rgb(1 84 207)',
     accent: 'rgb(109 40 217)',
     textHeading: 'rgb(247 248 248)',

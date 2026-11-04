@@ -1,7 +1,7 @@
-# Building a client site from this template
+# Client site build reference
 
-This repo is a GitHub **template repo**. Each client site is a fresh repo created from it
-with independent history, then built through one workflow of three arcs (Discovery, Build,
+This repo was created from the dodai-astrowind GitHub **template repo**, with its own
+independent history, then built through one workflow of three arcs (Discovery, Build,
 Launch), with numbered steps under each. Some steps collapse when the client brings
 finished copy or discovery already happened elsewhere; the arcs are a **dependency order,
 not a schedule** (arc A and step B1 routinely interleave, since a brand colour feeds

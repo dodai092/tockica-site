@@ -2,16 +2,15 @@
 
 ## Project Overview
 
-This repo is the **Dodai website template**, a fork of AstroWind: a static website
-template built with **Astro v7** and **Tailwind CSS v4**, optimized for performance, SEO,
-and accessibility.
+This repo was built from the dodai-astrowind template for Točkica na i, a fork of AstroWind:
+a static website built with **Astro v7** and **Tailwind CSS v4**, optimized for
+performance, SEO, and accessibility.
 
 **Stack:** Astro v7 | Tailwind CSS v4 | TypeScript 5.9 | MDX | Sharp
 
 ## Dodai template rules
 
 Read [CONTEXT.md](./CONTEXT.md) for the exact meaning of the terms below,
-[SETUP.md](./SETUP.md) for the per-client build workflow (one workflow: Discovery, Build, Launch),
 [docs/client-build-rules.md](./docs/client-build-rules.md) before writing a client plan
 or reviewing a client branch, and [docs/quality-gates.md](./docs/quality-gates.md) for the
 canonical client quality-gate policy (gate order, thresholds, route coverage, review rubric).

@@ -6,7 +6,7 @@ layout: '~/layouts/MarkdownLayout.astro'
 > **Template placeholder.** This is generic boilerplate. Replace it with terms reviewed
 > for the client's jurisdiction. Not legal advice.
 
-_Last updated_: {{LAST_UPDATED}}
+_Last updated_: November 4, 2026
 
 Please read these terms and conditions carefully before using Our Service.
 
@@ -22,9 +22,9 @@ For the purposes of these Terms and Conditions:
 
 - **Affiliate** means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.
 
-- **Country** refers to: {{JURISDICTION}}
+- **Country** refers to: Croatia
 
-- **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to {{CLIENT_ENTITY}}
+- **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Točkica na i j.d.o.o.
 
 - **Device** means any device that can access the Service such as a computer, a cellphone or a digital tablet.
 
@@ -34,7 +34,7 @@ For the purposes of these Terms and Conditions:
 
 - **Third-party Social Media Service** means any services or content (including data, information, products or services) provided by a third-party that may be displayed, included or made available by the Service.
 
-- **Website** refers to {{CLIENT_NAME}}, accessible from {{SITE_DOMAIN}}
+- **Website** refers to Točkica na i, accessible from https://tockicanai.hr
 
 - **You** means the individual accessing or using the Service, or the company, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.
 
@@ -120,4 +120,4 @@ By continuing to access or use Our Service after those revisions become effectiv
 
 If you have any questions about these Terms and Conditions, You can contact us:
 
-- By email: {{CONTACT_EMAIL}}
+- By email: info@tockicanai.hr

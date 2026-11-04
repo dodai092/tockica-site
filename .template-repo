@@ -1,3 +1,0 @@
-This file marks the dodai-astrowind template repo itself. Its presence disables the
-client-repo core-edit guard in .githooks/pre-commit. scripts/init-client.mjs removes it
-when forking a client site. Do not delete it here.

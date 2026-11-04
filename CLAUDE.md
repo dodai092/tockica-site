@@ -1,13 +1,13 @@
 # Claude Code Configuration
 
-This repo is the **Dodai website template** (AstroWind fork). Read in this order:
+This repo was built from the [dodai-astrowind](https://github.com/dodai/dodai-astrowind)
+template for Točkica na i (AstroWind fork). Read in this order:
 
 1. [CONTEXT.md](./CONTEXT.md), vocabulary. Terms below are used precisely.
-2. [SETUP.md](./SETUP.md), the per-client build workflow (one workflow: Discovery, Build, Launch).
-3. [AGENTS.md](./AGENTS.md), AstroWind architecture and conventions.
-4. [docs/client-build-rules.md](./docs/client-build-rules.md), before writing a client
+2. [AGENTS.md](./AGENTS.md), AstroWind architecture and conventions.
+3. [docs/client-build-rules.md](./docs/client-build-rules.md), before writing a client
    plan or reviewing a client branch.
-5. [docs/quality-gates.md](./docs/quality-gates.md), the canonical client quality-gate
+4. [docs/quality-gates.md](./docs/quality-gates.md), the canonical client quality-gate
    policy (gate order, thresholds, route coverage, review rubric).
 
 ## Hard rules

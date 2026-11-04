@@ -1,7 +1,7 @@
 {
-  "name": "dodai-astrowind",
+  "name": "to-kica-na-i",
   "version": "0.1.0",
-  "description": "Dodai client website template. Fork of AstroWind (Astro 7 + Tailwind CSS v4). See SETUP.md.",
+  "description": "Točkica na i website.",
   "type": "module",
   "private": true,
   "engines": {

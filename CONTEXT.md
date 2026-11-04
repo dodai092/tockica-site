@@ -1,7 +1,7 @@
 # Context
 
-Glossary for this repo. This is an AstroWind fork used as the base template for Dodai
-client websites. Terms below have precise meanings; use them consistently in code,
+Glossary for this repo. Točkica na i was built from the dodai-astrowind template (an
+AstroWind fork). Terms below have precise meanings; use them consistently in code,
 commits, and docs.
 
 ## Glossary
@@ -44,5 +44,5 @@ per-client design work lands, so **template core** never drifts.
 
 ## Related docs
 
-- [SETUP.md](./SETUP.md), the per-client build workflow (Discovery, Build, Launch)
+- [SETUP.md](./SETUP.md), the build reference kept from the template
 - [AGENTS.md](./AGENTS.md), AstroWind architecture and conventions
