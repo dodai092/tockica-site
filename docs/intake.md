@@ -29,8 +29,8 @@ Filled 2026-11-04 from the project folder (`Tockica/CONTEXT.md`, `REQUIREMENTS.m
 ## Brand
 
 - Logo files received? An older green SVG (`Tockica/TNI_logo.svg`) and my red recolor (`prototype/assets/tockica-logo.svg`). Not Dunia's official red file. Ask her for it. White/dark versions unknown.
-- Brand colors (hex): Estimated from AI images, not official. Red `#D71920` base, fill `#C8141C`, ink `#B3121A`, navy `#243F5C` (Dodai's navy, check whether it belongs to Točkica too). Dunia confirms.
-- Fonts / typeface: Montserrat ("fonts stay the same", Dunia).
+- Brand colors (hex): Red estimated from AI images, not official: `#D71920` base, `#C8141C` fill, `#B3121A` ink. Dark slate `#232A35` and greys come from the original Točkica site CSS (used in the prototype). Dunia confirms the red and whether slate is part of her palette (doc item 21). The Dodai navy `#243F5C` is not a Točkica colour.
+- Fonts / typeface: Montserrat for headings and buttons, Roboto for body, as on the original site and the prototype ("fonts stay the same", Dunia). Check Roboto is wanted on the new site.
 - Photography / image assets received? None. Real photos only, no AI images. Placeholders until she sends about 15 (item 9).
 - Tone of voice notes: Playful, music-led, direct. Croatian addresses the visitor with "ti". English is casual, same register. Spartan copy.
 
