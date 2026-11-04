@@ -67,5 +67,14 @@ export const hr: Copy = {
     title: 'Instruktori',
     description: 'Upoznaj instruktore Točkice na i.',
   },
+  packsPage: {
+    title: 'Paketi',
+    description: 'Intro paketi i cijena po treningu.',
+    introLabel: 'Intro paket',
+    oncePerAccount: 'Jednom po računu.',
+    perClass: 'po treningu',
+    classOne: 'trening',
+    classMany: 'treninga',
+  },
   todoLabel: 'Nedostaje',
 };

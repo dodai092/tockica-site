@@ -1,0 +1,59 @@
+---
+import Page from '~/components/client/Page.astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+import { packs } from '~/data/packs';
+import { formatEur, pricePerClass } from '~/lib/packs';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang);
+const t = copy.packsPage;
+---
+
+<Page lang={lang} route="packs" title={t.title} description={t.description}>
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 py-12 md:py-16">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
+    <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        packs.map((p) => {
+          const perClass = p.priceEur === null ? null : pricePerClass(p.priceEur, p.classes);
+          return (
+            <li
+              data-pack={p.id}
+              class="flex flex-col gap-3 rounded-(--aw-radius-card) border border-gray-200 dark:border-slate-600 p-6"
+            >
+              {p.intro && <p class="text-sm font-semibold text-muted">{t.introLabel}</p>}
+              <h2 class="text-2xl font-bold text-heading">
+                {p.classes} {p.classes === 1 ? t.classOne : t.classMany}
+              </h2>
+              {p.priceEur === null ? (
+                <Placeholder lang={lang} label={`${p.id} price (doc item 5)`} />
+              ) : (
+                <p class="text-3xl font-extrabold tabular-nums whitespace-nowrap text-heading">
+                  {formatEur(p.priceEur, lang)}
+                </p>
+              )}
+              {perClass !== null && (
+                <p class="text-default">
+                  <span data-per-class={perClass} class="font-semibold tabular-nums whitespace-nowrap">
+                    {formatEur(perClass, lang)}
+                  </span>{' '}
+                  {t.perClass}
+                </p>
+              )}
+              {p.intro && <p class="mt-auto text-sm text-muted">{t.oncePerAccount}</p>}
+            </li>
+          );
+        })
+      }
+    </ul>
+    <p class="mt-8">
+      <Placeholder lang={lang} label="regular packs and prices (doc item 5, price image not copied yet)" />
+    </p>
+  </section>
+</Page>

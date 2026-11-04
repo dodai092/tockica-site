@@ -1,6 +1,26 @@
 [
-  { "path": "/", "kind": "public" },
-  { "path": "/en/", "kind": "public" },
-  { "path": "/instruktori/", "kind": "public" },
-  { "path": "/en/instructors/", "kind": "public" }
+  {
+    "path": "/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/",
+    "kind": "public"
+  },
+  {
+    "path": "/paketi/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/packs/",
+    "kind": "public"
+  }
 ]

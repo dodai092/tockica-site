@@ -45,5 +45,14 @@ export type Copy = {
     photo: { hero: string; space: string; riders: string; sculpt: string; instructor: string };
   };
   instructorsPage: { title: string; description: string };
+  packsPage: {
+    title: string;
+    description: string;
+    introLabel: string;
+    oncePerAccount: string;
+    perClass: string;
+    classOne: string;
+    classMany: string;
+  };
   todoLabel: string;
 };

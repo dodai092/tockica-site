@@ -68,5 +68,14 @@ export const en: Copy = {
     title: 'Instructors',
     description: 'Meet the Točkica na i instructors.',
   },
+  packsPage: {
+    title: 'Packs',
+    description: 'Intro packs and the price per class.',
+    introLabel: 'Intro pack',
+    oncePerAccount: 'Once per account.',
+    perClass: 'per class',
+    classOne: 'class',
+    classMany: 'classes',
+  },
   todoLabel: 'Missing',
 };
