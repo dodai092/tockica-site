@@ -5,6 +5,8 @@ import Logo from '~/components/Logo.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
+import { sculpt } from '~/data/sculpt';
+import { headerRoutes } from '~/lib/nav';
 import { getCopy, otherLang, pathFor } from '~/i18n';
 import type { Lang, RouteKey } from '~/i18n';
 
@@ -18,12 +20,7 @@ const copy = getCopy(lang);
 const other = otherLang(lang);
 const currentPath = Astro.url.pathname.replace(/(.)\/$/, '$1');
 
-const links: { text: string; href: string }[] = [
-  { text: copy.nav.schedule, href: pathFor('schedule', lang) },
-  { text: copy.nav.instructors, href: pathFor('instructors', lang) },
-  { text: copy.nav.packs, href: pathFor('packs', lang) },
-  { text: copy.nav.sculpt, href: pathFor('sculpt', lang) },
-];
+const links = headerRoutes(sculpt.visible).map((key) => ({ text: copy.nav[key], href: pathFor(key, lang) }));
 const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap';
 ---
 

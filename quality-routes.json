@@ -22,5 +22,21 @@
   {
     "path": "/en/packs/",
     "kind": "public"
+  },
+  {
+    "path": "/sculpt-room/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/sculpt-room/",
+    "kind": "public"
+  },
+  {
+    "path": "/hvala/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/en/thanks/",
+    "kind": "noindex"
   }
 ]

@@ -54,5 +54,25 @@ export type Copy = {
     classOne: string;
     classMany: string;
   };
+  form: {
+    name: string;
+    email: string;
+    message: string;
+    consentBefore: string;
+    consentLink: string;
+    consentAfter: string;
+  };
+  sculptPage: {
+    title: string;
+    description: string;
+    priceLabel: string;
+    minLabel: string;
+    monthsMany: string;
+    visitsLabel: string;
+    slots: string;
+    formHeading: string;
+    submit: string;
+  };
+  thanksPage: { title: string; text: string; back: string };
   todoLabel: string;
 };

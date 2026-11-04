@@ -1,0 +1,20 @@
+---
+import Page from '~/components/client/Page.astro';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getCopy(lang).thanksPage;
+---
+
+<Page lang={lang} route="thanks" title={t.title} description={t.text} noindex>
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 py-16 md:py-24">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
+    <p class="mt-4 text-xl text-default">{t.text}</p>
+    <p class="mt-8"><a class="font-semibold underline" href={pathFor('home', lang)}>{t.back}</a></p>
+  </section>
+</Page>

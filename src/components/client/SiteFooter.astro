@@ -1,6 +1,8 @@
 ---
 import Logo from '~/components/Logo.astro';
 import Placeholder from '~/components/client/Placeholder.astro';
+import { sculpt } from '~/data/sculpt';
+import { footerRoutes } from '~/lib/nav';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -12,13 +14,7 @@ interface Props {
 const { lang, bookBarSpace = false } = Astro.props;
 const copy = getCopy(lang);
 
-const nav = [
-  { text: copy.nav.schedule, href: pathFor('schedule', lang) },
-  { text: copy.nav.instructors, href: pathFor('instructors', lang) },
-  { text: copy.nav.packs, href: pathFor('packs', lang) },
-  { text: copy.nav.sculpt, href: pathFor('sculpt', lang) },
-  { text: copy.nav.contact, href: pathFor('contact', lang) },
-];
+const nav = footerRoutes(sculpt.visible).map((key) => ({ text: copy.nav[key], href: pathFor(key, lang) }));
 const legal = [
   { text: copy.footer.rules, href: pathFor('rules', lang) },
   { text: copy.footer.terms, href: pathFor('terms', lang) },

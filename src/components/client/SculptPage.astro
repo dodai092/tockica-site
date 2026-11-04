@@ -1,0 +1,67 @@
+---
+import Page from '~/components/client/Page.astro';
+import Photo from '~/components/client/Photo.astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+import InquiryForm from '~/components/client/InquiryForm.astro';
+import { sculpt } from '~/data/sculpt';
+import { formatEur } from '~/lib/packs';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang);
+const t = copy.sculptPage;
+---
+
+<Page lang={lang} route="sculpt" title={t.title} description={t.description} noindex={!sculpt.visible}>
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 py-12 md:py-16">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
+    <p class="mt-4 text-xl text-default"><Placeholder lang={lang} label="Sculpt Room pitch sentence (doc item 6)" /></p>
+    <div class="mt-10 grid items-start gap-10 md:grid-cols-2">
+      <div>
+        <dl class="space-y-6">
+          <div>
+            <dt class="text-sm font-semibold text-muted">{t.priceLabel}</dt>
+            <dd class="mt-1 text-2xl font-bold tabular-nums text-heading">
+              {
+                sculpt.monthlyPriceEur === null ? (
+                  <Placeholder lang={lang} label="Sculpt Room monthly price (100 or 150, not final)" />
+                ) : (
+                  formatEur(sculpt.monthlyPriceEur, lang)
+                )
+              }
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-semibold text-muted">{t.minLabel}</dt>
+            <dd class="mt-1 text-2xl font-bold tabular-nums text-heading">
+              <span data-min-months={sculpt.minMonths}>{sculpt.minMonths} {t.monthsMany}</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-semibold text-muted">{t.visitsLabel}</dt>
+            <dd class="mt-1 text-2xl font-bold tabular-nums text-heading">
+              {
+                sculpt.visitsPerMonth === null ? (
+                  <Placeholder lang={lang} label="Sculpt Room visits per month (doc item 3)" />
+                ) : (
+                  sculpt.visitsPerMonth
+                )
+              }
+            </dd>
+          </div>
+        </dl>
+        <p class="mt-6 text-default">{t.slots}</p>
+      </div>
+      <Photo role={copy.home.photo.sculpt} ratio="4 / 3" />
+    </div>
+  </section>
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 pb-12 md:pb-16">
+    <h2 class="mb-6 text-3xl font-extrabold text-heading">{t.formHeading}</h2>
+    <InquiryForm lang={lang} />
+  </section>
+</Page>
