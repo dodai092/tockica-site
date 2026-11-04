@@ -1,0 +1,28 @@
+---
+import Placeholder from '~/components/client/Placeholder.astro';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang).home.contact;
+// Address, phone, e-mail and hours stay open until Dunia answers doc item 8.
+const open = ['address', 'phone', 'e-mail', 'opening hours'];
+---
+
+<section data-section="contact" class="mx-auto max-w-7xl px-4 sm:px-6 py-12 md:py-16">
+  <h2 class="text-3xl font-extrabold text-heading">{copy.heading}</h2>
+  <ul class="mt-8 space-y-3">
+    {
+      open.map((label) => (
+        <li>
+          <Placeholder lang={lang} label={`${label} (doc item 8)`} />
+        </li>
+      ))
+    }
+  </ul>
+  <p class="mt-6"><a class="font-semibold underline" href={pathFor('contact', lang)}>{copy.write}</a></p>
+</section>

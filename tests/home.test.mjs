@@ -11,6 +11,7 @@ const pages = [
 
 // Layout A, booking first: hero and next classes come before the story.
 const part1 = ['hero', 'next-classes', 'about', 'rooms', 'instructors'];
+const part2 = ['how-it-works', 'sculpt-band', 'faq', 'contact'];
 
 function section(html, name) {
   const re = new RegExp(`<section[^>]*data-section="${name}"[^>]*>[\\s\\S]*?</section>`);
@@ -99,4 +100,77 @@ for (const { lang, file } of pages) {
     const html = await read(file);
     assert.equal([...html.matchAll(/<h1\b/g)].length, 1);
   });
+
+  test(`${lang}: lower sections follow the instructors in order`, async () => {
+    const html = await read(file);
+    const at = ['instructors', ...part2].map((name) => {
+      const i = html.indexOf(`data-section="${name}"`);
+      assert.ok(i >= 0, `section ${name} missing`);
+      return i;
+    });
+    assert.deepEqual(
+      at,
+      [...at].sort((a, b) => a - b)
+    );
+  });
+
+  test(`${lang}: how it works has three steps and names the intro packs`, async () => {
+    const block = section(await read(file), 'how-it-works');
+    assert.equal([...block.matchAll(/<li\b[^>]*data-step/g)].length, 3);
+    assert.ok(block.includes('10 EUR'));
+    assert.ok(block.includes('30 EUR'));
+  });
+
+  test(`${lang}: Sculpt band has one link to the Sculpt route and an open price`, async () => {
+    const block = section(await read(file), 'sculpt-band');
+    const links = [...block.matchAll(/<a\b[^>]*>/g)].map((m) => m[0]);
+    assert.equal(links.length, 1);
+    assert.ok(links[0].includes(`href="${pathFor('sculpt', lang)}"`));
+    assert.ok(/data-todo="[^"]*Sculpt[^"]*"/.test(block), 'price must be an open placeholder (100 or 150 not final)');
+    assert.ok(!/\b(100|150) ?(EUR|€)/.test(block));
+  });
+
+  test(`${lang}: FAQ is a four-item details accordion`, async () => {
+    const block = section(await read(file), 'faq');
+    assert.equal([...block.matchAll(/<details\b/g)].length, 4);
+    assert.equal([...block.matchAll(/<summary\b/g)].length, 4);
+  });
+
+  test(`${lang}: contact block shows only open placeholders, no unconfirmed facts`, async () => {
+    const html = await read(file);
+    const block = section(html, 'contact');
+    assert.ok([...block.matchAll(/data-todo="/g)].length >= 4);
+    for (const label of ['address', 'phone', 'e-mail', 'hours']) {
+      assert.ok(new RegExp(`data-todo="[^"]*${label}[^"]*"`).test(block), `${label} placeholder missing`);
+    }
+    for (const fact of ['Rusanova', '095 865', 'Bauera', 'info@tockicanai.hr']) {
+      assert.ok(!html.includes(fact), `${fact} must not ship until Dunia confirms (item 8)`);
+    }
+    assert.ok(block.includes(`href="${pathFor('contact', lang)}"`));
+  });
 }
+
+test('en: FAQ ships the client English verbatim, apostrophes and typos included', async () => {
+  const block = section(await read('en/index.html'), 'faq');
+  const text = block.replace(/<[^>]+>/g, '\n').replace(/&#x27;|&#39;/g, "'");
+  for (const line of [
+    'Which classes are beginner friendly?',
+    'All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 45 minutes.',
+    'If you’d prefer to start with a slightly slower tempo, we recommend trying Mario, Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.',
+    'What do i need to bring?',
+    'Clean shoes, water and towel. You can always buy water at the studio.',
+    'How early should I arrive?',
+    'If you are new, come 15 minutes before to allow your instructor to help you set up.',
+    'What if I need to cancel?',
+  ]) {
+    assert.ok(text.includes(line), `missing verbatim: ${line.slice(0, 40)}`);
+  }
+  assert.ok(/data-todo="[^"]*cancel[^"]*"/.test(block), 'cancel answer is an open placeholder');
+});
+
+test('hr: FAQ never shows English text, every question and answer is an open placeholder', async () => {
+  const block = section(await read('index.html'), 'faq');
+  assert.ok(!block.includes('beginner friendly'));
+  assert.ok(!block.includes('Clean shoes'));
+  assert.equal([...block.matchAll(/data-todo="/g)].length, 8);
+});

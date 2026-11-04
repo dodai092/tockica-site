@@ -1,0 +1,26 @@
+---
+import Button from '~/components/ui/Button.astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang).home.sculptBand;
+---
+
+<section data-section="sculpt-band" class="bg-accent text-white">
+  <div
+    class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-12 sm:px-6 md:flex-row md:items-center md:justify-between md:py-16"
+  >
+    <div>
+      <h2 class="text-3xl font-extrabold text-white">{copy.heading}</h2>
+      <p class="mt-2 text-lg">{copy.text}</p>
+      <p class="mt-2"><Placeholder lang={lang} label="Sculpt Room monthly price (doc items 3 and 6)" /></p>
+    </div>
+    <Button variant="primary" text={copy.cta} href={pathFor('sculpt', lang)} />
+  </div>
+</section>

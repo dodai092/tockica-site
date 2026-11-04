@@ -5,6 +5,10 @@ import NextClasses from '~/components/client/home/NextClasses.astro';
 import AboutStudio from '~/components/client/home/AboutStudio.astro';
 import Rooms from '~/components/client/home/Rooms.astro';
 import InstructorTeaser from '~/components/client/home/InstructorTeaser.astro';
+import HowItWorks from '~/components/client/home/HowItWorks.astro';
+import SculptBand from '~/components/client/home/SculptBand.astro';
+import Faq from '~/components/client/home/Faq.astro';
+import ContactBlock from '~/components/client/home/ContactBlock.astro';
 import { getCopy } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -22,4 +26,8 @@ const copy = getCopy(lang).home;
   <AboutStudio lang={lang} />
   <Rooms lang={lang} />
   <InstructorTeaser lang={lang} />
+  <HowItWorks lang={lang} />
+  <SculptBand lang={lang} />
+  <Faq lang={lang} />
+  <ContactBlock lang={lang} />
 </Page>

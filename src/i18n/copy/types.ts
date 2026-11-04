@@ -35,6 +35,13 @@ export type Copy = {
       more: string;
     };
     instructors: { heading: string; all: string };
+    how: {
+      heading: string;
+      steps: [{ title: string; text: string }, { title: string; text: string }, { title: string; text: string }];
+    };
+    sculptBand: { heading: string; text: string; cta: string };
+    faq: { heading: string };
+    contact: { heading: string; write: string };
     photo: { hero: string; space: string; riders: string; sculpt: string; instructor: string };
   };
   todoLabel: string;

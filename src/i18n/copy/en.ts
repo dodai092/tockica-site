@@ -41,6 +41,21 @@ export const en: Copy = {
       more: 'Learn more',
     },
     instructors: { heading: 'Instructors', all: 'All instructors' },
+    how: {
+      heading: 'How it works',
+      steps: [
+        { title: 'Sign up', text: 'Log in with your e-mail, no password.' },
+        { title: 'Buy a pack', text: 'Intro packs: 1 class 10 EUR, 3 classes 30 EUR.' },
+        { title: 'Pick your bike', text: 'Choose a class and your bike on the map.' },
+      ],
+    },
+    sculptBand: {
+      heading: 'Sculpt Room Rent',
+      text: 'For independent trainers.',
+      cta: 'Get in touch',
+    },
+    faq: { heading: 'FAQ' },
+    contact: { heading: 'Contact', write: 'Send us a message' },
     photo: {
       hero: 'Photo: the whole Riders Room with bikes',
       space: 'Photo: the space, reception and slogan wall',

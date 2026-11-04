@@ -40,6 +40,21 @@ export const hr: Copy = {
       more: 'Saznaj više',
     },
     instructors: { heading: 'Instruktori', all: 'Svi instruktori' },
+    how: {
+      heading: 'Kako to ide',
+      steps: [
+        { title: 'Registriraj se', text: 'Prijava e-mailom, bez lozinke.' },
+        { title: 'Kupi paket', text: 'Intro paketi: 1 trening 10 EUR, 3 treninga 30 EUR.' },
+        { title: 'Odaberi bicikl', text: 'Odaberi trening i svoj bicikl na karti.' },
+      ],
+    },
+    sculptBand: {
+      heading: 'Sculpt Room Rent',
+      text: 'Za samostalne trenere.',
+      cta: 'Javi se',
+    },
+    faq: { heading: 'Česta pitanja' },
+    contact: { heading: 'Kontakt', write: 'Napiši nam poruku' },
     photo: {
       hero: 'Fotka: cijela Riders Room s biciklima',
       space: 'Fotka: prostor, recepcija i zid sa sloganom',
