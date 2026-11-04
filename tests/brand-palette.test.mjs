@@ -56,7 +56,7 @@ test('fonts point at Montserrat and Roboto', () => {
 
 test('logo is wired with alt text', () => {
   assert.ok(brand.logo.image);
-  assert.equal(brand.logo.alt, 'Točkica na i');
+  assert.equal(brand.logo.alt, 'Točkica na i logo');
 });
 
 for (const [name, fg, bg] of [

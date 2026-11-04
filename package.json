@@ -30,6 +30,7 @@
     "test:contrast": "node --test tests/contrast.test.mjs",
     "test:lhci": "lhci autorun",
     "test:links": "linkinator ./dist --config linkinator.config.json",
+    "check:todos": "node scripts/check-todos.mjs",
     "screenshot": "node scripts/screenshot.mjs",
     "screenshot:check": "node scripts/screenshot.mjs --check",
     "verify": "npm run build && npm run check && npm run test:quality && npm run test:routes && npm run test:analytics && npm run test:meta && npm run test:baselines && npm run test:contrast && npm run test:links && npm run test:lhci && npm run screenshot:check",

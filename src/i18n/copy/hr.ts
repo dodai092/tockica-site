@@ -37,7 +37,7 @@ export const hr: Copy = {
       heading: 'Prostori',
       riders: { name: 'Riders Room', text: 'Naš signature 45-minutni rhythm spin. 20 bicikala.' },
       sculpt: { name: 'Sculpt Room', text: 'Prostor koji samostalni treneri iznajmljuju za svoje klijente.' },
-      more: 'Saznaj više',
+      more: 'O Sculpt Roomu',
     },
     instructors: { heading: 'Instruktori', all: 'Svi instruktori' },
     how: {
@@ -98,7 +98,7 @@ export const hr: Copy = {
   consent: {
     label: 'Kolačići',
     text: 'Koristimo kolačiće za mjerenje posjeta. Je li to u redu?',
-    more: 'Više informacija',
+    more: 'Politika privatnosti',
     decline: 'Odbij',
     accept: 'Prihvati',
   },

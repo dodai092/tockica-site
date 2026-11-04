@@ -38,7 +38,7 @@ export const en: Copy = {
       heading: 'Rooms',
       riders: { name: 'Riders Room', text: 'Our signature 45-minute rhythm spin class. 20 bikes.' },
       sculpt: { name: 'Sculpt Room', text: 'A room independent trainers rent for their own clients.' },
-      more: 'Learn more',
+      more: 'About the Sculpt Room',
     },
     instructors: { heading: 'Instructors', all: 'All instructors' },
     how: {
@@ -99,7 +99,7 @@ export const en: Copy = {
   consent: {
     label: 'Cookie consent',
     text: 'We use cookies to measure site traffic. Is that OK?',
-    more: 'More information',
+    more: 'Privacy policy',
     decline: 'Decline',
     accept: 'Accept',
   },

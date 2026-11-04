@@ -18,7 +18,7 @@ export type BrandTokens = {
 export const brand = {
   logo: {
     image: logoImage,
-    alt: 'Točkica na i',
+    alt: 'Točkica na i logo', // differs from the visible name beside it (Lighthouse image-redundant-alt)
     ogPath: '', // project-root-relative raster logo path for generated OG cards
     showName: true, // show SITE.name text beside/instead of the image
   },
