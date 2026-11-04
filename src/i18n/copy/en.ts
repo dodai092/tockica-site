@@ -23,5 +23,31 @@ export const en: Copy = {
     terms: 'Terms of use',
     privacy: 'Privacy',
   },
+  home: {
+    title: 'Rhythm spin studio in Zagreb',
+    description: 'The first and only rhythm spin studio in the heart of Zagreb.',
+    nextClasses: {
+      heading: 'Next classes',
+      freeBikes: 'Free bikes',
+      waitlist: 'Waitlist',
+      book: 'Book',
+      all: 'All classes',
+    },
+    about: { heading: 'About the studio', line: 'The first and only rhythm spin studio in the heart of Zagreb.' },
+    rooms: {
+      heading: 'Rooms',
+      riders: { name: 'Riders Room', text: 'Our signature 45-minute rhythm spin class. 20 bikes.' },
+      sculpt: { name: 'Sculpt Room', text: 'A room independent trainers rent for their own clients.' },
+      more: 'Learn more',
+    },
+    instructors: { heading: 'Instructors', all: 'All instructors' },
+    photo: {
+      hero: 'Photo: the whole Riders Room with bikes',
+      space: 'Photo: the space, reception and slogan wall',
+      riders: 'Photo: Riders Room',
+      sculpt: 'Photo: Sculpt Room',
+      instructor: 'Photo: instructor portrait',
+    },
+  },
   todoLabel: 'Missing',
 };

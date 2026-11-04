@@ -1,0 +1,25 @@
+---
+import Page from '~/components/client/Page.astro';
+import HomeHero from '~/components/client/home/HomeHero.astro';
+import NextClasses from '~/components/client/home/NextClasses.astro';
+import AboutStudio from '~/components/client/home/AboutStudio.astro';
+import Rooms from '~/components/client/home/Rooms.astro';
+import InstructorTeaser from '~/components/client/home/InstructorTeaser.astro';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang).home;
+---
+
+<Page lang={lang} route="home" title={copy.title} description={copy.description}>
+  <HomeHero lang={lang} />
+  <NextClasses lang={lang} />
+  <AboutStudio lang={lang} />
+  <Rooms lang={lang} />
+  <InstructorTeaser lang={lang} />
+</Page>

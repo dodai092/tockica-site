@@ -23,5 +23,19 @@ export type Copy = {
     terms: string;
     privacy: string;
   };
+  home: {
+    title: string;
+    description: string;
+    nextClasses: { heading: string; freeBikes: string; waitlist: string; book: string; all: string };
+    about: { heading: string; line: string };
+    rooms: {
+      heading: string;
+      riders: { name: string; text: string };
+      sculpt: { name: string; text: string };
+      more: string;
+    };
+    instructors: { heading: string; all: string };
+    photo: { hero: string; space: string; riders: string; sculpt: string; instructor: string };
+  };
   todoLabel: string;
 };

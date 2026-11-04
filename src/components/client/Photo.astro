@@ -1,0 +1,22 @@
+---
+// Flat slate placeholder naming the photo's role. Swap for <Image> when Dunia sends
+// real photos. No stock or AI images.
+interface Props {
+  role: string;
+  ratio?: string;
+  class?: string;
+}
+
+const { role, ratio = '16 / 9', class: className = '' } = Astro.props;
+---
+
+<div
+  data-photo={role}
+  class:list={[
+    'flex items-center justify-center rounded-(--aw-radius-card) bg-accent p-4 text-center text-sm font-medium text-white',
+    className,
+  ]}
+  style={`aspect-ratio: ${ratio}`}
+>
+  {role}
+</div>
