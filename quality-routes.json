@@ -1,1 +1,10 @@
-[]
+[
+  { "path": "/", "kind": "public" },
+  { "path": "/about/", "kind": "public" },
+  { "path": "/services/", "kind": "public" },
+  { "path": "/pricing/", "kind": "public" },
+  { "path": "/contact/", "kind": "public" },
+  { "path": "/privacy/", "kind": "public" },
+  { "path": "/terms/", "kind": "public" },
+  { "path": "/thank-you/", "kind": "noindex" }
+]
