@@ -1,11 +1,2 @@
-# REPLACE all entries with the client's real team (source: docs/intake.md).
-- id: person-1
-  name: First Last
-  role: Founder
-  bio: One or two sentences on background and focus.
-  order: 1
-- id: person-2
-  name: First Last
-  role: Operations
-  bio: One or two sentences on background and focus.
-  order: 2
+# Emptied for the Tockica build. Real entries arrive with the page tasks (docs/copy/source.md).
+[]

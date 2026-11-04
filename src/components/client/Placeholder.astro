@@ -1,0 +1,21 @@
+---
+// Marks a fact that is not confirmed yet (TODO(client)). Visible on purpose so nothing
+// looks finished that is not. `npm run check:todos` lists every data-todo in dist/ and
+// fails a LAUNCH=1 build while any remain (Task 14).
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  label: string;
+  lang?: Lang;
+}
+
+const { label, lang = 'hr' } = Astro.props;
+---
+
+<span
+  data-todo={label}
+  class="inline-block rounded-(--aw-radius-card) border border-dashed border-current px-2 py-1 text-sm text-default"
+>
+  {getCopy(lang).todoLabel}: {label}
+</span>

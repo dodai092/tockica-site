@@ -1,11 +1,2 @@
-# REPLACE all entries with real, permissioned client quotes (source: docs/intake.md).
-- id: quote-1
-  quote: They understood what we needed and delivered it without fuss.
-  name: First Last
-  role: Role
-  company: Company
-- id: quote-2
-  quote: Clear communication and a result that did what it was supposed to.
-  name: First Last
-  role: Role
-  company: Company
+# Emptied for the Tockica build. Real entries arrive with the page tasks (docs/copy/source.md).
+[]
