@@ -1,6 +1,5 @@
 ---
 import Logo from '~/components/Logo.astro';
-import Placeholder from '~/components/client/Placeholder.astro';
 import { sculpt } from '~/data/sculpt';
 import { footerRoutes } from '~/lib/nav';
 import { getCopy, pathFor } from '~/i18n';
@@ -19,6 +18,11 @@ const legal = [
   { text: copy.footer.rules, href: pathFor('rules', lang) },
   { text: copy.footer.terms, href: pathFor('terms', lang) },
   { text: copy.footer.privacy, href: pathFor('privacy', lang) },
+];
+const social = [
+  { text: 'Instagram', href: 'https://www.instagram.com/tockicanai' },
+  { text: 'Facebook', href: 'https://www.facebook.com/tockicanai' },
+  { text: 'TikTok', href: 'https://www.tiktok.com/@tockicanai' },
 ];
 const linkClass = 'text-muted hover:text-default hover:underline transition duration-150 ease-in-out';
 ---
@@ -57,8 +61,15 @@ const linkClass = 'text-muted hover:text-default hover:underline transition dura
         </ul>
       </div>
       <ul class="col-span-12 lg:col-span-2 text-sm space-y-2">
-        <li><Placeholder lang={lang} label="Instagram URL" /></li>
-        <li><Placeholder lang={lang} label="Facebook URL" /></li>
+        {
+          social.map(({ text, href }) => (
+            <li>
+              <a class={linkClass} href={href} target="_blank" rel="noopener noreferrer">
+                {text}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </div>
