@@ -1,0 +1,16 @@
+# REPLACE all entries with the client's real services (source: docs/intake.md).
+- id: discovery
+  title: Discovery
+  summary: A short engagement to map the problem, the constraints, and what a good outcome looks like.
+  icon: tabler:search
+  order: 1
+- id: build
+  title: Build
+  summary: Design and implementation delivered in reviewable increments.
+  icon: tabler:tool
+  order: 2
+- id: support
+  title: Ongoing support
+  summary: Maintenance, monitoring, and iteration after launch.
+  icon: tabler:lifebuoy
+  order: 3

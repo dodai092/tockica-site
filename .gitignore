@@ -1,0 +1,43 @@
+# build output
+dist/
+.output/
+
+# CI quality gates
+.lighthouseci/
+quality-ci-evidence/
+
+# Screenshot diffing (golden-baselines/ itself IS committed)
+golden-baselines-diff/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# Claude Code local settings (session summaries under .claude/ are tracked)
+.claude/settings.local.json
+
+# pnpm-specific files: pnpm is supported for local use (see .pnpmrc), but
+# package-lock.json is the tracked lockfile and npm is what CI, Docker and
+# the deploy targets run. Committing these would let the two trees diverge.
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+.astro
+
+# local git worktrees for isolated feature/plan execution
+.worktrees/
+# Playwright MCP browser session artifacts (screenshots, page dumps)
+.playwright-mcp/

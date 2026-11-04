@@ -1,0 +1,73 @@
+{
+  "generated": "2026-09-07T14:38:40.358Z",
+  "runsPerRoute": 3,
+  "assertionFailures": 0,
+  "routes": {
+    "/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "/about/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "/services/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "/pricing/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "/contact/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "/privacy/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "/terms/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "/thank-you/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 0.66
+    },
+    "/dev/components/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 0.69
+    },
+    "/dev/og/": {
+      "performance": 0.98,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 0.69
+    },
+    "/dev/tokens/": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 0.66
+    }
+  }
+}

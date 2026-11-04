@@ -1,0 +1,19 @@
+
+> dodai-astrowind@0.1.0 test:analytics
+> node --test tests/analytics-events.browser.mjs
+
+✔ grant, unset, denial, revocation, missing API, missing GA and non-consent mode (435.104ms)
+✔ valid submit attempt and confirmed success are separate, with no field data (131.818334ms)
+✔ closed values reject personal/free text, long values and wrong event semantics (438.297125ms)
+✔ reinstall and page-load events retain exactly one listener per interaction (112.414833ms)
+✔ built component stays active through two actual ClientRouter navigations (2067.994584ms)
+✔ all recognized parameter validation is enforced before emission (214.552417ms)
+✔ submit without success and direct success-page load never confirm a lead (93.729084ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4178.36475

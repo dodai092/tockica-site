@@ -1,0 +1,24 @@
+{
+  "capturedAt": "2026-09-07",
+  "node": "v26.7.0",
+  "playwright": "1.62.1",
+  "chromium": {
+    "executablePath": "/Users/antunzebec/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+    "version": "Google Chrome for Testing 151.0.7922.34"
+  },
+  "lhci": "0.15.1",
+  "sha256": {
+    "package-lock.json": "eb27c092f84aae9794e6f1b80d477ba1fdbde3fa253a9c3fa7d8dd7d66a1811d",
+    "quality-routes.json": "d2de466ffc21ce2950c8571087d3f037ba325317c3d024d7da6318ca9db88bb4"
+  },
+  "reviewedSourceCommit": "b84209efb03eef50b9a8df59a2aa968163675f79",
+  "gitStatusPorcelain": [
+    " M .claude/session-summaries/INDEX.md",
+    "?? .claude/session-summaries/2026-09-07-140800-4f7a.md",
+    "?? docs/reviews/"
+  ],
+  "gitStatusNote": "INDEX.md modification and the untracked 2026-09-07-140800 session summary are pre-existing and unrelated to Phase 4. docs/reviews/ is this review's own evidence tree. (Task brief anticipated two untracked session-summary files; the worktree currently shows one untracked plus one modified INDEX.md.)",
+  "platform": "darwin",
+  "arch": "arm64",
+  "goldenBaselinesBaselineCommit": "bf6f45018432822e0180052fa2a92dd91a18eebc"
+}

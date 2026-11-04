@@ -1,0 +1,211 @@
+
+> dodai-astrowind@0.1.0 verify
+> npm run build && npm run check && npm run test:quality && npm run test:routes && npm run test:analytics && npm run test:links && npm run test:lhci && npm run screenshot:check
+
+
+> dodai-astrowind@0.1.0 build
+> astro build
+
+14:33:13 [astrowind] Astrowind `./src/config.yaml` has been loaded.
+14:33:13 [content] Syncing content
+14:33:13 [content] Synced content
+14:33:13 [types] Generated 185ms
+14:33:13 [build] output: "static"
+14:33:13 [build] mode: "static"
+14:33:13 [build] directory: /Users/antunzebec/Work/dodai-astrowind/.worktrees/phase4-quality-gates/dist/
+14:33:13 [build] Collecting build info...
+14:33:13 [build] ✓ Completed in 216ms.
+14:33:13 [build] Building static entrypoints...
+14:33:14 [WARN] [astro-icon] Failed to load icons from "src/icons": ENOENT: no such file or directory, scandir 'src/icons/'
+14:33:14 [assets] Copying fonts (1 file)...
+14:33:14 [vite] ✓ built in 520ms
+14:33:14 [vite] ✓ built in 24ms
+14:33:14 [build] Rearranging server assets...
+
+ generating static routes 
+14:33:14   ├─ /404.html (+10ms) 
+14:33:14   ├─ /about/index.html (+9ms) 
+14:33:14   ├─ /contact/index.html (+2ms) 
+14:33:14   ├─ /dev/components/index.html (+7ms) 
+14:33:14   ├─ /dev/og/index.html (+2ms) 
+14:33:14   ├─ /dev/tokens/index.html (+1ms) 
+14:33:14   ├─ /og/home.png[astro-og-canvas] Loading ./src/assets/fonts/NotoSans-Regular.ttf
+[astro-og-canvas] Loaded 1 font families:
+Noto Sans
+ (+43ms) 
+14:33:14   ├─ /og/about.png (+1ms) 
+14:33:14   ├─ /og/services.png (+1ms) 
+14:33:14   ├─ /og/pricing.png (+1ms) 
+14:33:14   ├─ /og/contact.png (+0ms) 
+14:33:14   ├─ /og/thank-you.png (+0ms) 
+14:33:14   ├─ /pricing/index.html (+3ms) 
+14:33:14   ├─ /privacy/index.html (+2ms) 
+14:33:14   ├─ /rss.xml (+18ms) (file not created, response body was empty)
+14:33:14   ├─ /services/index.html (+2ms) 
+14:33:14   ├─ /terms/index.html (+1ms) 
+14:33:14   ├─ /thank-you/index.html (+1ms) 
+14:33:14   ├─ /index.html (+2ms) 
+14:33:14 ✓ Completed in 181ms.
+
+ generating optimized images 
+14:33:14   ▶ /_astro/default._YCQvLAp_2dGHBi.jpg (reused cache entry) (+1ms) (1/1)
+14:33:14 ✓ Completed in 1ms.
+
+14:33:14 [build] ✓ Completed in 742ms.
+14:33:14 [@astrojs/sitemap] `sitemap-index.xml` created at `dist`
+✓ Successfully compressed a total of 12 HTML files for 28.69 KB.
+✓ Successfully compressed a total of 1 JavaScript file for 18 Bytes.
+14:33:14 [astrowind] Updating `robots.txt` with `sitemap-index.xml` ...
+14:33:14 [build] 12 page(s) built in 1.43s
+14:33:14 [build] Complete!
+
+> dodai-astrowind@0.1.0 check
+> npm run check:astro && npm run check:eslint && npm run check:prettier && npm run check:init
+
+
+> dodai-astrowind@0.1.0 check:astro
+> astro check
+
+14:33:15 [astrowind] Astrowind `./src/config.yaml` has been loaded.
+14:33:15 [content] Syncing content
+14:33:15 [content] Synced content
+14:33:15 [types] Generated 169ms
+14:33:15 [check] Getting diagnostics for Astro files in /Users/antunzebec/Work/dodai-astrowind/.worktrees/phase4-quality-gates...
+[96mtests/quality-gates.test.mjs[0m:[93m9[0m:[93m7[0m - [93mwarning[0m[90m ts(6133): [0m'require' is declared but its value is never read.
+
+[7m9[0m const require = createRequire(import.meta.url);
+[7m [0m [93m      ~~~~~~~[0m
+
+Result (132 files): 
+- 0 errors
+- 0 warnings
+- 1 hint
+
+
+> dodai-astrowind@0.1.0 check:eslint
+> eslint .
+
+
+> dodai-astrowind@0.1.0 check:prettier
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> dodai-astrowind@0.1.0 check:init
+> node scripts/init-client.mjs --check
+
+init-client --check: 22/22 matches present
+
+> dodai-astrowind@0.1.0 test:quality
+> node --test tests/*.test.mjs
+
+✔ starter-page widgets are client-owned and use balanced layout roles (4.8425ms)
+✔ client initialization leaves gates blocked by an empty shared manifest (510.623ms)
+✔ balanced layout variables and utilities remain defined (2.218542ms)
+✔ Lighthouse has one exact route assertion and three median runs (1.026875ms)
+✔ CI pins the browser toolchain and runs portable gates (1.779042ms)
+✔ route grammar and classification reject ambiguous coverage (1.294666ms)
+✔ inventory catches uncovered and stale routes, including noindex pages (1.358ms)
+✔ starter pages do not import parts-bin widgets (4.096084ms)
+  ! home/light-mobile.png: no baseline (run "npm run screenshot" first)
+  - home/light-mobile.png
+  ! home/light-mobile.png: size changed (8x8 -> 9x8)
+  ! home/light-mobile.png: 64 px differ
+✔ missing, matching, dimensions, and pixel changes produce correct outcomes (10.009167ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 565.246667
+
+> dodai-astrowind@0.1.0 test:routes
+> node scripts/check-quality-routes.mjs
+
+Quality route manifest covers the production HTML inventory.
+
+> dodai-astrowind@0.1.0 test:analytics
+> node --test tests/analytics-events.browser.mjs
+
+✔ grant, unset, denial, revocation, missing API, missing GA and non-consent mode (1614.260083ms)
+✔ valid submit attempt and confirmed success are separate, with no field data (186.27575ms)
+✔ closed values reject personal/free text, long values and wrong event semantics (437.638417ms)
+✔ reinstall and page-load events retain exactly one listener per interaction (117.02725ms)
+✔ built component stays active through two actual ClientRouter navigations (2095.955542ms)
+✔ all recognized parameter validation is enforced before emission (215.281875ms)
+✔ submit without success and direct success-page load never confirm a lead (83.230333ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5442.226
+
+> dodai-astrowind@0.1.0 test:links
+> linkinator ./dist --config linkinator.config.json
+
+→ crawling ./dist
+[200] dist
+[200] dist/sitemap-index.xml
+[200] dist/_astro/favicon.CGiRCjPI.ico
+[200] dist/_astro/favicon.vp_fBu0c.svg
+[200] dist/_astro/apple-touch-icon.DHIlG7dp.png
+[200] dist/_astro/ClientRouter.astro_astro_type_script_index_0_lang.8JqLyJGz.js
+[200] dist/_astro/fonts/f0341d128c7d9a6e.woff2
+[200] dist/_astro/Layout.DeLXaM-6.css
+[200] dist/_astro/page.DUP3bs27.js
+[200] dist/_astro/placeholder-hero.BJQ9-mag.svg
+[200] dist/services
+[200] dist/pricing
+[200] dist/about
+[200] dist/contact
+[200] dist/terms
+[200] dist/privacy
+
+  [200] dist
+dist
+  [200] dist/sitemap-index.xml
+  [200] dist/_astro/favicon.CGiRCjPI.ico
+  [200] dist/_astro/favicon.vp_fBu0c.svg
+  [200] dist/_astro/apple-touch-icon.DHIlG7dp.png
+  [200] dist/_astro/ClientRouter.astro_astro_type_script_index_0_lang.8JqLyJGz.js
+  [200] dist/_astro/fonts/f0341d128c7d9a6e.woff2
+  [200] dist/_astro/Layout.DeLXaM-6.css
+  [200] dist/_astro/page.DUP3bs27.js
+  [200] dist/_astro/placeholder-hero.BJQ9-mag.svg
+  [200] dist/services
+  [200] dist/pricing
+  [200] dist/about
+  [200] dist/contact
+  [200] dist/terms
+  [200] dist/privacy
+✓ Successfully scanned 16 links in 0.058 seconds.
+
+> dodai-astrowind@0.1.0 test:lhci
+> lhci autorun
+
+✅  .lighthouseci/ directory writable
+✅  Configuration file found
+✅  Chrome installation found
+Healthcheck passed!
+
+Started a web server on port 52294...
+Running Lighthouse 3 time(s) on http://localhost:52294/
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:52294/about/
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:52294/services/
+Run #1...done.
+Run #2...done.
+Run #3...
+=== NOTE: full 'npm run verify' was SIGTERM-terminated during stage 7 (test:lhci) ===
+=== per mid-task scope change: stages 1-6 ran fully and passed; lhci re-run reduced; screenshot:check run separately ===

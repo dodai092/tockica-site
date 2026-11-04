@@ -1,0 +1,14 @@
+dist
+node_modules
+.github
+.changeset
+.claude
+.superpowers
+.impeccable
+
+docs/superpowers/plans
+docs/superpowers/specs
+docs/reviews/**/evidence/lighthouse/
+
+# Frozen point-in-time backups: exact snapshots, never reformatted after the fact.
+SETUP.v1.md

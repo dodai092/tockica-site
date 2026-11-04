@@ -1,0 +1,13 @@
+---
+import AnalyticsEvents from './AnalyticsEvents.astro';
+
+// The one client-layer mount point rendered on every page, once, at the end of <body>.
+// Core Layout.astro renders this; you fill it in. Put site-wide client embeds here so
+// they do not have to be added to each page or a (core, off-limits) layout:
+//
+//   - a cookie-consent banner (src/components/client/CookieConsent.astro)
+//   - a live-chat / support widget
+//   - a client's own analytics or pixel snippet
+---
+
+<AnalyticsEvents />

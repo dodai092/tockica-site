@@ -1,0 +1,100 @@
+---
+import { ANALYTICS } from 'astrowind:config';
+
+const ga = ANALYTICS?.vendors?.googleAnalytics ?? {};
+const id = ga.id ? String(ga.id) : '';
+const requireConsent = !!ga.requireConsent;
+
+// Partytown proxying is only honoured when consent is NOT required. In the consent
+// path GA is injected at runtime after opt-in, not rendered as a tagged script here.
+const partytown = !!ga.partytown && !requireConsent;
+const scriptType = partytown ? 'text/partytown' : undefined;
+---
+
+{
+  id && !requireConsent && (
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${id}`} type={scriptType} />
+  )
+}
+
+<script
+  is:inline
+  id="ga-init"
+  data-id={id}
+  data-consent={requireConsent ? 'required' : ''}
+  type={!requireConsent && id ? scriptType : undefined}
+>
+  (function () {
+    var el = document.getElementById('ga-init');
+    var id = el.dataset.id;
+    if (!id) return;
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      dataLayer.push(arguments);
+    };
+
+    function loadGaScript() {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+      document.head.appendChild(s);
+    }
+
+    function startGa() {
+      gtag('js', new Date());
+      gtag('config', id);
+    }
+
+    if (el.dataset.consent !== 'required') {
+      // No consent gate: the tagged loader above (or Partytown) fetches gtag/js.
+      startGa();
+      return;
+    }
+
+    // Consent gate. Define Consent Mode before anything, keep everything denied, and
+    // do not fetch gtag/js until the visitor opts in via window.awAnalytics.grant().
+    var STORAGE_KEY = 'aw-analytics-consent';
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      wait_for_update: 500,
+    });
+
+    var started = false;
+    function grant() {
+      try {
+        localStorage.setItem(STORAGE_KEY, 'granted');
+      } catch {
+        // Silently fail if localStorage is not available
+      }
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+      if (!started) {
+        started = true;
+        loadGaScript();
+        startGa();
+      }
+    }
+    function deny() {
+      try {
+        localStorage.setItem(STORAGE_KEY, 'denied');
+      } catch {
+        // Silently fail if localStorage is not available
+      }
+    }
+    function status() {
+      try {
+        return localStorage.getItem(STORAGE_KEY) || 'unset';
+      } catch {
+        // Silently fail and return unset if localStorage is not available
+        return 'unset';
+      }
+    }
+
+    window.awAnalytics = { grant: grant, deny: deny, status: status };
+
+    if (status() === 'granted') grant();
+  })();
+</script>

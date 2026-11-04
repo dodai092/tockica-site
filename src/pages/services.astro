@@ -1,0 +1,81 @@
+---
+import CallToAction from '~/components/client/CallToAction.astro';
+import Content from '~/components/client/Content.astro';
+import Features2 from '~/components/client/Features2.astro';
+import Hero from '~/components/client/Hero.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import placeholderHero from '~/assets/images/placeholder-hero.svg';
+
+const metadata = {
+  title: 'Services',
+  openGraph: { images: [{ url: '/og/services.png', width: 1200, height: 630 }] },
+};
+
+// Local SVG placeholder, passed as an inline <img> string so the widgets skip
+// Sharp (SVG processing is disabled in this template's image config).
+const heroImage = `<img src="${placeholderHero.src}" width="${placeholderHero.width}" height="${placeholderHero.height}" alt="" loading="eager" decoding="async" class="mx-auto w-full rounded-(--aw-radius-card) shadow-(--aw-shadow-card)" />`;
+
+const services = (await getCollection('services')).sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
+
+  <Hero tagline="Services" actions={[{ variant: 'primary', text: 'Get in touch', href: '/contact' }]} image={heroImage}>
+    <Fragment slot="title">
+      <!-- REPLACE: a one-line summary of what the company offers. Source: docs/intake.md -->
+      What we offer
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      <!-- REPLACE: one or two sentences on the range of services and who they are for. Source: docs/intake.md -->
+      A short summary of the services below and who they are for.
+    </Fragment>
+  </Hero>
+
+  <!-- Services grid **************** -->
+  <!-- Renders from the `services` collection; falls back to one placeholder item when empty. -->
+
+  <Features2
+    title="What we do"
+    columns={3}
+    items={services.length > 0
+      ? services.map((s) => ({ title: s.data.title, description: s.data.summary, icon: s.data.icon }))
+      : [{ title: 'Service', description: 'REPLACE: describe a service. Source: docs/intake.md' }]}
+  />
+
+  <!-- Content Widget **************** -->
+
+  <!-- REPLACE Content: heading and every item with detail on how the company works. Source: docs/intake.md -->
+  <Content
+    isReversed
+    title="How we deliver"
+    items={[
+      {
+        title: 'Point one',
+        description: 'REPLACE: describe one part of the delivery. Source: docs/intake.md',
+        icon: 'tabler:check',
+      },
+      {
+        title: 'Point two',
+        description: 'REPLACE: describe one part of the delivery. Source: docs/intake.md',
+        icon: 'tabler:check',
+      },
+      {
+        title: 'Point three',
+        description: 'REPLACE: describe one part of the delivery. Source: docs/intake.md',
+        icon: 'tabler:check',
+      },
+    ]}
+    image={heroImage}
+  />
+
+  <!-- CallToAction Widget *********** -->
+
+  <CallToAction
+    actions={[{ variant: 'primary', text: 'Get in touch', href: '/contact' }]}
+    title="Have a project in mind?"
+    subtitle="Tell us what you need and we will get back to you."
+  />
+</Layout>

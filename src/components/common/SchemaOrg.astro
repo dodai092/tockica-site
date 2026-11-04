@@ -1,0 +1,68 @@
+---
+// Emits an Organization / LocalBusiness JSON-LD block from src/schema.ts.
+// Empty fields are dropped; @type upgrades to LocalBusiness once an address is present,
+// and picks up any extra types listed in schema.ts `additionalType`.
+import { organization as o } from '~/schema';
+
+const clean = (obj: Record<string, unknown>) =>
+  Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => {
+      if (v == null || v === '') return false;
+      if (Array.isArray(v)) return v.length > 0;
+      if (typeof v === 'object') return Object.keys(v as object).length > 0;
+      return true;
+    })
+  );
+
+const site = typeof o.url === 'string' ? o.url.replace(/\/$/, '') : '';
+const abs = (path: string) => (path.startsWith('http') ? path : `${site}${path.startsWith('/') ? '' : '/'}${path}`);
+
+const address = clean(o.address);
+const geo = clean(o.geo);
+const isLocalBusiness = Object.keys(address).length > 0;
+
+const baseType = isLocalBusiness ? 'LocalBusiness' : 'Organization';
+const extraTypes = Array.isArray(o.additionalType) ? o.additionalType.filter(Boolean) : [];
+const type = extraTypes.length ? [baseType, ...extraTypes] : baseType;
+
+const offerItems = Array.isArray(o.offerCatalog?.items) ? o.offerCatalog.items.filter((i) => i && i.name) : [];
+const hasOfferCatalog = offerItems.length
+  ? clean({
+      '@type': 'OfferCatalog',
+      name: o.offerCatalog.name,
+      itemListElement: offerItems.map((i) =>
+        clean({
+          '@type': 'Offer',
+          itemOffered: clean({ '@type': 'Service', name: i.name, description: i.description }),
+          price: i.price,
+          priceCurrency: i.priceCurrency,
+        })
+      ),
+    })
+  : '';
+
+let data: Record<string, unknown> | null = null;
+
+if (site && o.name) {
+  data = clean({
+    '@context': 'https://schema.org',
+    '@type': type,
+    name: o.name,
+    url: site,
+    logo: o.logo ? abs(o.logo) : '',
+    image: o.logo ? abs(o.logo) : '',
+    founder: o.founder ? { '@type': 'Person', name: o.founder } : '',
+    foundingDate: o.foundingDate,
+    telephone: o.telephone,
+    email: o.email,
+    priceRange: o.priceRange,
+    address: Object.keys(address).length ? { '@type': 'PostalAddress', ...address } : '',
+    geo: Object.keys(geo).length ? { '@type': 'GeoCoordinates', ...geo } : '',
+    openingHours: o.openingHours,
+    sameAs: o.sameAs,
+    hasOfferCatalog,
+  });
+}
+---
+
+{data && <script type="application/ld+json" is:inline set:html={JSON.stringify(data)} />}

@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "placeholder-hero.svg",
+        "createdAt": "2026-09-06T14:56:22.968Z",
+        "reason": "Phase 2 ADR 0005 specifies this local neutral starter asset."
+      }
+    ]
+  }
+}

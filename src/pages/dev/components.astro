@@ -1,0 +1,180 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Announcement from '~/components/widgets/Announcement.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Features from '~/components/widgets/Features.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Features3 from '~/components/widgets/Features3.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import Steps2 from '~/components/widgets/Steps2.astro';
+import Content from '~/components/widgets/Content.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Stats from '~/components/widgets/Stats.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
+import Pricing from '~/components/widgets/Pricing.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Contact from '~/components/widgets/Contact.astro';
+import Brands from '~/components/widgets/Brands.astro';
+import Note from '~/components/widgets/Note.astro';
+
+const metadata = {
+  title: 'Components',
+  robots: { index: false, follow: false },
+};
+
+const featureItems = [
+  { title: 'First feature', description: 'Short description of the first feature.', icon: 'tabler:rocket' },
+  { title: 'Second feature', description: 'Short description of the second feature.', icon: 'tabler:bulb' },
+  { title: 'Third feature', description: 'Short description of the third feature.', icon: 'tabler:list-check' },
+];
+
+const stepItems = [
+  { title: 'Step one', description: 'Do the first thing.', icon: 'tabler:number-1' },
+  { title: 'Step two', description: 'Do the second thing.', icon: 'tabler:number-2' },
+  { title: 'Done', icon: 'tabler:check' },
+];
+
+const heading = 'text-center py-8 bg-gray-100';
+---
+
+<Layout metadata={metadata}>
+  <h2 class={heading}>Announcement</h2>
+  <Announcement />
+
+  <h2 class={heading}>Hero</h2>
+  <Hero
+    tagline="Hero"
+    title="Hero widget"
+    subtitle="A minimal representative Hero."
+    actions={[
+      { variant: 'primary', text: 'Primary', href: '#' },
+      { text: 'Secondary', href: '#' },
+    ]}
+  />
+
+  <h2 class={heading}>Hero2</h2>
+  <Hero2
+    tagline="Hero2"
+    title="Hero2 widget"
+    subtitle="A minimal representative Hero2."
+    actions={[{ variant: 'primary', text: 'Primary', href: '#' }]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Sample',
+    }}
+  />
+
+  <h2 class={heading}>HeroText</h2>
+  <HeroText tagline="HeroText" title="HeroText widget" subtitle="A minimal representative HeroText." />
+
+  <h2 class={heading}>Features</h2>
+  <Features tagline="Features" title="Features widget" subtitle="Minimal props." items={featureItems} />
+
+  <h2 class={heading}>Features2</h2>
+  <Features2 tagline="Features2" title="Features2 widget" items={featureItems} />
+
+  <h2 class={heading}>Features3</h2>
+  <Features3 tagline="Features3" title="Features3 widget" columns={3} items={featureItems} />
+
+  <h2 class={heading}>Steps</h2>
+  <Steps title="Steps widget" items={stepItems} />
+
+  <h2 class={heading}>Steps2</h2>
+  <Steps2 title="Steps2 widget" subtitle="Minimal props." items={featureItems} />
+
+  <h2 class={heading}>Content</h2>
+  <Content
+    tagline="Content"
+    title="Content widget"
+    items={featureItems}
+    image={{
+      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Sample',
+    }}
+  >
+    <Fragment slot="content">Body content for the Content widget.</Fragment>
+  </Content>
+
+  <h2 class={heading}>CallToAction</h2>
+  <CallToAction
+    title="CallToAction widget"
+    subtitle="Minimal props."
+    actions={[{ variant: 'primary', text: 'Get started', href: '#' }]}
+  />
+
+  <h2 class={heading}>Stats</h2>
+  <Stats
+    stats={[
+      { title: 'Downloads', amount: '132K' },
+      { title: 'Stars', amount: '24.8K' },
+      { title: 'Users', amount: '48.4K' },
+    ]}
+  />
+
+  <h2 class={heading}>Testimonials</h2>
+  <Testimonials
+    title="Testimonials widget"
+    testimonials={[
+      { testimonial: 'A short, representative quote from a happy client.', name: 'Jane Doe', job: 'CEO' },
+      { testimonial: 'Another short quote for the second card.', name: 'John Roe', job: 'CTO' },
+    ]}
+  />
+
+  <h2 class={heading}>Pricing</h2>
+  <Pricing
+    title="Pricing widget"
+    prices={[
+      {
+        title: 'Basic',
+        subtitle: 'For personal use',
+        price: 29,
+        period: 'per month',
+        items: [{ description: 'Feature one' }, { description: 'Feature two' }],
+        callToAction: { text: 'Get started', href: '#' },
+      },
+      {
+        title: 'Pro',
+        subtitle: 'For teams',
+        price: 69,
+        period: 'per month',
+        items: [{ description: 'Everything in Basic' }, { description: 'Feature three' }],
+        callToAction: { text: 'Get started', href: '#' },
+        hasRibbon: true,
+        ribbonTitle: 'popular',
+      },
+    ]}
+  />
+
+  <h2 class={heading}>FAQs</h2>
+  <FAQs
+    title="FAQs widget"
+    items={[
+      { title: 'First question?', description: 'Answer to the first question.' },
+      { title: 'Second question?', description: 'Answer to the second question.' },
+    ]}
+  />
+
+  <h2 class={heading}>Contact</h2>
+  <Contact
+    title="Contact widget"
+    inputs={[
+      { type: 'text', name: 'name', label: 'Name' },
+      { type: 'email', name: 'email', label: 'Email' },
+    ]}
+    textarea={{ label: 'Message' }}
+    description="Representative contact form."
+  />
+
+  <h2 class={heading}>Brands</h2>
+  <Brands
+    title="Brands widget"
+    icons={['tabler:brand-google', 'tabler:brand-meta', 'tabler:brand-github']}
+    images={[]}
+  />
+
+  <h2 class={heading}>Note</h2>
+  <Note title="Note:" description="A single-line note widget." />
+</Layout>

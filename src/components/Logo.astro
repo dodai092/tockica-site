@@ -1,0 +1,10 @@
+---
+import { SITE } from 'astrowind:config';
+import { Image } from 'astro:assets';
+import { brand } from '~/brand';
+---
+
+<div class="flex items-center self-center ml-2 rtl:ml-0 rtl:mr-2 whitespace-nowrap gap-2">
+  {brand.logo.image && <Image src={brand.logo.image} alt={brand.logo.alt || SITE?.name} class="h-8 w-auto" />}
+  {brand.logo.showName && <span class="text-2xl md:text-xl font-bold text-gray-900 dark:text-white">{SITE?.name}</span>}
+</div>

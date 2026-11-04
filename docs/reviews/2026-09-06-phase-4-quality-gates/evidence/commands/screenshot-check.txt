@@ -1,0 +1,75 @@
+
+> dodai-astrowind@0.1.0 screenshot:check
+> node scripts/screenshot.mjs --check
+
+  - home/light-mobile.png
+  - home/light-tablet.png
+  - home/light-desktop.png
+  - home/dark-mobile.png
+  - home/dark-tablet.png
+  - home/dark-desktop.png
+  - about/light-mobile.png
+  - about/light-tablet.png
+  - about/light-desktop.png
+  - about/dark-mobile.png
+  - about/dark-tablet.png
+  - about/dark-desktop.png
+  - services/light-mobile.png
+  - services/light-tablet.png
+  - services/light-desktop.png
+  - services/dark-mobile.png
+  - services/dark-tablet.png
+  - services/dark-desktop.png
+  - pricing/light-mobile.png
+  - pricing/light-tablet.png
+  - pricing/light-desktop.png
+  - pricing/dark-mobile.png
+  - pricing/dark-tablet.png
+  - pricing/dark-desktop.png
+  - contact/light-mobile.png
+  - contact/light-tablet.png
+  - contact/light-desktop.png
+  - contact/dark-mobile.png
+  - contact/dark-tablet.png
+  - contact/dark-desktop.png
+  - privacy/light-mobile.png
+  - privacy/light-tablet.png
+  - privacy/light-desktop.png
+  - privacy/dark-mobile.png
+  - privacy/dark-tablet.png
+  - privacy/dark-desktop.png
+  - terms/light-mobile.png
+  - terms/light-tablet.png
+  - terms/light-desktop.png
+  - terms/dark-mobile.png
+  - terms/dark-tablet.png
+  - terms/dark-desktop.png
+  - thank-you/light-mobile.png
+  - thank-you/light-tablet.png
+  - thank-you/light-desktop.png
+  - thank-you/dark-mobile.png
+  - thank-you/dark-tablet.png
+  - thank-you/dark-desktop.png
+  - dev-components/light-mobile.png
+  - dev-components/light-tablet.png
+  - dev-components/light-desktop.png
+  - dev-components/dark-mobile.png
+  - dev-components/dark-tablet.png
+  - dev-components/dark-desktop.png
+  - dev-og/light-mobile.png
+  - dev-og/light-tablet.png
+  - dev-og/light-desktop.png
+  - dev-og/dark-mobile.png
+  - dev-og/dark-tablet.png
+  - dev-og/dark-desktop.png
+  - dev-tokens/light-mobile.png
+  - dev-tokens/light-tablet.png
+  - dev-tokens/light-desktop.png
+  - dev-tokens/dark-mobile.png
+  - dev-tokens/dark-tablet.png
+  - dev-tokens/dark-desktop.png
+
+All 66 screenshots match golden-baselines/.
+SCREENSHOT_EXIT: 
+
+[exited with code 0]

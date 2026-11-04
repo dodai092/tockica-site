@@ -1,0 +1,13 @@
+# REPLACE all entries with the client's real FAQs (source: docs/intake.md).
+- id: how-long
+  question: How long does a project take?
+  answer: Most engagements run four to eight weeks depending on scope.
+  order: 1
+- id: how-priced
+  question: How is pricing structured?
+  answer: A fixed price per phase, agreed before the phase starts.
+  order: 2
+- id: after-launch
+  question: What happens after launch?
+  answer: A support window is included, with optional ongoing maintenance after that.
+  order: 3

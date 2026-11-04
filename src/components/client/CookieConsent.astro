@@ -1,0 +1,70 @@
+---
+// Example EU opt-in consent banner. CLIENT LAYER — copy and adapt (wording, the cookie
+// policy link, styling). Not wired in by default.
+//
+// Prerequisites:
+//   1. src/config.yaml -> analytics.vendors.googleAnalytics.id = "G-XXXXXXXXXX"
+//   2. src/config.yaml -> analytics.vendors.googleAnalytics.requireConsent: true
+//      (core Analytics.astro then defines window.awAnalytics and loads GA only on grant)
+//   3. Render <CookieConsent /> from src/components/client/GlobalEmbeds.astro (the
+//      blessed site-wide client mount point). Do not touch src/layouts/; it is core.
+//
+// window.awAnalytics.status() -> 'granted' | 'denied' | 'unset'
+// window.awAnalytics.grant() / .deny() persist the choice and (grant) load GA live.
+---
+
+<div
+  id="cookie-consent"
+  role="dialog"
+  aria-label="Cookie consent"
+  class="fixed bottom-0 inset-x-0 z-50 p-4 shadow-lg hidden"
+  style="background-color: var(--aw-color-bg-page); border-top: 1px solid var(--aw-color-text-muted);"
+>
+  <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4">
+    <p class="text-sm flex-1" style="color: var(--aw-color-text-default)">
+      We use cookies to measure site traffic. Is that OK?{' '}
+      <a href="/cookies" class="underline" style="color: var(--aw-color-secondary)">More information</a>.
+    </p>
+    <div class="flex gap-3 flex-shrink-0">
+      <button
+        id="cookie-decline"
+        type="button"
+        class="rounded-md px-4 py-2 text-sm font-medium border"
+        style="border-color: var(--aw-color-text-muted); color: var(--aw-color-text-default);"
+      >
+        Decline
+      </button>
+      <button
+        id="cookie-accept"
+        type="button"
+        class="rounded-md px-4 py-2 text-sm font-medium text-white"
+        style="background-color: var(--aw-color-primary);"
+      >
+        Accept
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const banner = document.getElementById('cookie-consent');
+
+  function currentStatus() {
+    return window.awAnalytics ? window.awAnalytics.status() : 'unset';
+  }
+
+  if (currentStatus() === 'unset') {
+    banner?.classList.remove('hidden');
+    document.getElementById('cookie-accept')?.focus();
+  }
+
+  document.getElementById('cookie-accept')?.addEventListener('click', () => {
+    window.awAnalytics?.grant();
+    banner?.classList.add('hidden');
+  });
+
+  document.getElementById('cookie-decline')?.addEventListener('click', () => {
+    window.awAnalytics?.deny();
+    banner?.classList.add('hidden');
+  });
+</script>

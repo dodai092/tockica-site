@@ -1,0 +1,17 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/client/HeroText.astro';
+
+const metadata = {
+  title: 'Thank you',
+  robots: { index: false, follow: false },
+  openGraph: { images: [{ url: '/og/thank-you.png', width: 1200, height: 630 }] },
+};
+---
+
+<Layout metadata={metadata}>
+  <HeroText title="Thank you" subtitle="Your message has been sent. We will get back to you shortly." />
+  <div class="mx-auto max-w-3xl px-4 pb-16 text-center">
+    <a href="/" class="text-primary underline">Back to home</a>
+  </div>
+</Layout>

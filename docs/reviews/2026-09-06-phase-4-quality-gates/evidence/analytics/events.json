@@ -1,0 +1,18 @@
+{
+  "source": "tests/analytics-events.browser.mjs, sanitized closed-value ['event', name, params] tuples asserted by the browser gtag-spy run (test:analytics, 7/7 passing). No personal data or field values; the tests themselves prove none leak.",
+  "sourceCommit": "b84209efb03eef50b9a8df59a2aa968163675f79",
+  "events": [
+    ["event", "cta_click", { "placement": "hero", "label": "primary_cta", "destination_type": "internal" }],
+    ["event", "cta_click", { "destination_type": "internal" }],
+    ["event", "contact_submit", { "placement": "contact_form", "destination_type": "form" }],
+    ["event", "generate_lead", { "placement": "contact_form", "destination_type": "form" }],
+    ["event", "phone_click", { "destination_type": "phone" }],
+    ["event", "email_click", { "destination_type": "email" }],
+    ["event", "file_download", { "destination_type": "file", "file_name": "brochure.pdf" }]
+  ],
+  "notes": [
+    "cta_click appears twice: the full-parameter form (fixture with placement+label) and the minimal form asserted by the ClientRouter-navigation test (destination_type only).",
+    "generate_lead is emitted only on the aw:lead-success event; a bare submit emits contact_submit only; a direct /thank-you load emits nothing.",
+    "Rejected inputs (email/phone/URL/free text/unknown slug/empty/>32 chars in data-aw-label, unknown placement/destination values) produce no event, asserted as []."
+  ]
+}
