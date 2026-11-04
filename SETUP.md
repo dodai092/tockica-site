@@ -403,5 +403,13 @@ live and this stops being hypothetical.
 
 ## Bilingual (HR + EN)
 
-Out of scope for now. Single language per site. Revisit if a client needs it; AstroWind's
-i18n would need testing and a documented pattern.
+Supported per page, with one language per URL tree (default language at `/`, the other under
+`/en/` or similar). The template ships no language switcher and no translation files.
+
+- `i18n.language` in `src/config.yaml` stays the default language.
+- A page in another language sets `metadata.lang` (sets `<html lang>` and `og:locale`) and
+  `metadata.alternates` (hreflang links, include the page itself, hrefs are root-relative).
+- Pages, navigation and copy for the second language live in the client layer
+  (`src/pages/<lang>/`, `src/navigation.ts`, `src/components/client/`).
+- The client repo owns its own check that each page has a twin in the other language.
+- Not covered: sitemap language mapping (`astro.config.ts`), translated Open Graph images.

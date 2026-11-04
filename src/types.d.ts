@@ -43,6 +43,12 @@ export interface MetaData {
 
   canonical?: string;
 
+  /** Page language (BCP 47). Defaults to `i18n.language` in config.yaml. */
+  lang?: string;
+
+  /** Equivalent pages in other languages, rendered as hreflang links. Include the page itself. */
+  alternates?: { hreflang: string; href: string }[];
+
   robots?: MetaDataRobots;
 
   description?: string;
