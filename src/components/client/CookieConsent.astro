@@ -11,19 +11,30 @@
 //
 // window.awAnalytics.status() -> 'granted' | 'denied' | 'unset'
 // window.awAnalytics.grant() / .deny() persist the choice and (grant) load GA live.
+//
+// Točkica: language comes from the URL (GlobalEmbeds has no props). On phones the banner
+// sits above the fixed book bar, except on the schedule page, which has no bar.
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+const lang: Lang = Astro.url.pathname.startsWith('/en') ? 'en' : 'hr';
+const t = getCopy(lang).consent;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const hasBookBar = path !== pathFor('schedule', lang);
+const position = hasBookBar ? 'bottom-[calc(4.5rem+env(safe-area-inset-bottom))] md:bottom-0' : 'bottom-0';
 ---
 
 <div
   id="cookie-consent"
   role="dialog"
-  aria-label="Cookie consent"
-  class="fixed bottom-0 inset-x-0 z-50 p-4 shadow-lg hidden"
+  aria-label={t.label}
+  class={`fixed ${position} inset-x-0 z-50 p-4 shadow-lg hidden`}
   style="background-color: var(--aw-color-bg-page); border-top: 1px solid var(--aw-color-text-muted);"
 >
   <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4">
     <p class="text-sm flex-1" style="color: var(--aw-color-text-default)">
-      We use cookies to measure site traffic. Is that OK?{' '}
-      <a href="/cookies" class="underline" style="color: var(--aw-color-secondary)">More information</a>.
+      {t.text}{' '}
+      <a href={pathFor('privacy', lang)} class="underline">{t.more}</a>.
     </p>
     <div class="flex gap-3 flex-shrink-0">
       <button
@@ -32,7 +43,7 @@
         class="rounded-md px-4 py-2 text-sm font-medium border"
         style="border-color: var(--aw-color-text-muted); color: var(--aw-color-text-default);"
       >
-        Decline
+        {t.decline}
       </button>
       <button
         id="cookie-accept"
@@ -40,7 +51,7 @@
         class="rounded-md px-4 py-2 text-sm font-medium text-white"
         style="background-color: var(--aw-color-primary);"
       >
-        Accept
+        {t.accept}
       </button>
     </div>
   </div>

@@ -73,6 +73,7 @@ export type Copy = {
     formHeading: string;
     submit: string;
   };
+  consent: { label: string; text: string; more: string; decline: string; accept: string };
   contactPage: { description: string; submit: string };
   legalPage: { description: string; official: string };
   thanksPage: { title: string; text: string; back: string };

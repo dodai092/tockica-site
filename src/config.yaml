@@ -66,9 +66,8 @@ apps:
 analytics:
   vendors:
     googleAnalytics:
-      id: null # or "G-XXXXXXXXXX"
-      # requireConsent: true   # EU/GDPR: gate GA behind opt-in consent. See SETUP.md step B1d
-      #                        # and src/components/client/CookieConsent.astro.
+      id: null # TODO(client): GA4 Measurement ID, not given yet (intake)
+      requireConsent: true # EU/GDPR: gate GA behind opt-in consent (src/components/client/CookieConsent.astro)
 
 ui:
   theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"

@@ -96,6 +96,13 @@ export const en: Copy = {
     formHeading: 'Get in touch',
     submit: 'Send inquiry',
   },
+  consent: {
+    label: 'Cookie consent',
+    text: 'We use cookies to measure site traffic. Is that OK?',
+    more: 'More information',
+    decline: 'Decline',
+    accept: 'Accept',
+  },
   contactPage: {
     description: 'Get in touch with Točkica na i: address, phone, opening hours and a message form.',
     submit: 'Send message',

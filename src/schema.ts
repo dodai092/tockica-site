@@ -21,6 +21,9 @@ export const organization = {
   foundingDate: '', // ISO 8601, e.g. '2019' or '2019-06-01'
 
   // --- LocalBusiness fields: fill any of these to upgrade the @type ---
+  // TODO(client): telephone, email, address, geo, openingHours and sameAs stay empty until
+  // Dunia answers doc item 8 (old Rusanova 8 vs new Ulica Antuna Bauera 22) and item 18.
+  // The type upgrades from Organization to LocalBusiness once an address is set.
   telephone: '',
   email: '',
   priceRange: '', // e.g. '$$'

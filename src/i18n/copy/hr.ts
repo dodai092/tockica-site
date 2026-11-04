@@ -95,6 +95,13 @@ export const hr: Copy = {
     formHeading: 'Javi se',
     submit: 'Pošalji upit',
   },
+  consent: {
+    label: 'Kolačići',
+    text: 'Koristimo kolačiće za mjerenje posjeta. Je li to u redu?',
+    more: 'Više informacija',
+    decline: 'Odbij',
+    accept: 'Prihvati',
+  },
   contactPage: {
     description: 'Javi se Točkici na i: adresa, telefon, radno vrijeme i poruka.',
     submit: 'Pošalji poruku',
