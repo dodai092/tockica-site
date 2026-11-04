@@ -1,86 +1,73 @@
-# Client intake: {{CLIENT_NAME}}
+# Client intake: Točkica na i
 
-Fill this with the client before starting. Feeds `superpowers:brainstorming` (discovery)
-and the copywriting phase. Copy this file to `docs/intake.md` per project.
+Filled 2026-11-04 from the project folder (`Tockica/CONTEXT.md`, `REQUIREMENTS.md`, `docs/adr/`) and Dunia's first answers in the homepage doc (https://docs.google.com/document/d/1UFBuWAPTzEDWSU2H4Zo-GIBb3MDcf6ytVOAv6A9wYV8/edit). "OPEN" means Dunia has not answered yet, with the doc item number.
 
-- Discovery done here, or already completed in a prior engagement? If prior, link to
-  where that material lives:
-- Has the client already drafted and approved page copy? If yes, where does the source
-  file live? (This decides whether the build authors copy or transcribes it, which
-  changes the plan shape.):
-- Any verbatim-locked text (approved taglines, legal copy, regulated claims)? The
-  editing passes (no em dashes, humanizer) must leave these untouched:
-- Structured-data / schema draft from the client? (Attach or link. Note if it needs
-  types beyond LocalBusiness, e.g. ProfessionalService, founder, hasOfferCatalog.):
+- Discovery done here, or already completed in a prior engagement? Done in the booking-platform engagement. Material: `Tockica/CONTEXT.md`, `Tockica/REQUIREMENTS.md`, `Tockica/docs/adr/0001` to `0006`, the layout proposal in `Tockica/mockups/homepage-layout.html`.
+- Has the client already drafted and approved page copy? Partly. Dunia writes Croatian copy, Antun translates to English, Dunia approves. Received so far (doc items 4 and 11): instructor vibe lines, the About line, the FAQ draft (English). Source is the Google doc above, copied into `docs/copy/` when the plan starts. Still missing: slogan, Sculpt Room sentence, contact details, FAQ cancel answer.
+- Any verbatim-locked text? "The first and only rhythm spin studio in the heart of Zagreb" (Dunia's wording). Instructor vibe lines are hers, keep as written. Legal texts (Pravilnik, uvjeti, waiver, privacy): Croatian is official, English is a translation for her lawyer to review. OPEN item 14.
+- Structured-data / schema draft from the client? None. LocalBusiness is enough (SportsActivityLocation is a possible type).
 
 ## Business
 
-- What the business does, in one sentence:
-- Who the customer is:
-- What makes them different from competitors:
-- Competitors / sites they like:
+- What the business does, in one sentence: A rhythm spin studio in Zagreb with a 45-minute signature class in the Riders Room (20 bikes), plus a Sculpt Room that independent trainers rent by subscription.
+- Who the customer is: Women and men in Zagreb who want a fun, music-led group workout, from first-timers to regulars. Also expats, tourists and Multisport members (English version).
+- What makes them different from competitors: "The first and only rhythm spin studio in the heart of Zagreb." Choreography to the beat, personality-driven instructors, low lights and loud music.
+- Competitors / sites they like: OPEN, not asked.
 
 ## Goal of the site
 
-- Primary action a visitor should take (call, book, buy, enquire, sign up):
-- Secondary actions:
-- How success is measured:
+- Primary action a visitor should take: Book a class ("Rezerviraj trening").
+- Secondary actions: See the schedule, see instructors, see packs and prices, send a Sculpt Room inquiry, contact the studio.
+- How success is measured: Bookings made through the app. The site has GA4 with consent (EU). OPEN: Measurement ID.
 
 ## Pages
 
-- Required pages:
-- Blog needed? (yes/no, cadence):
-- Any page with special functionality (forms, calculators, maps, booking):
+- Required pages: Home, Raspored (booking starts here, lives in the booking app and is proxied under tockicanai.hr, ADR 0005 update), Instruktori, Paketi, Sculpt Room Rent, Prijava i registracija (booking app), footer pages: Pravilnik studija, Uvjeti korištenja, Privatnost, Kontakt. Every page exists in Croatian and English (`/en/`).
+- Blog needed? No. Old news and blog are dropped. OPEN item 7, Dunia can ask to keep it.
+- Any page with special functionality: Raspored and login (booking app, bike map, emailed-code login), contact form (OPEN item 16), Sculpt Room "Send inquiry" form, map in contact section. Homepage "Sljedeći treninzi" reads live data from the app.
 
 ## Brand
 
-- Logo files received? (format, has white/dark version?):
-- Brand colors (hex):
-- Fonts / typeface:
-- Photography / image assets received?:
-- Tone of voice notes: (brief note here; full guardrails and customer language go in Messaging and voice, below):
+- Logo files received? An older green SVG (`Tockica/TNI_logo.svg`) and my red recolor (`prototype/assets/tockica-logo.svg`). Not Dunia's official red file. Ask her for it. White/dark versions unknown.
+- Brand colors (hex): Estimated from AI images, not official. Red `#D71920` base, fill `#C8141C`, ink `#B3121A`, navy `#243F5C` (Dodai's navy, check whether it belongs to Točkica too). Dunia confirms.
+- Fonts / typeface: Montserrat ("fonts stay the same", Dunia).
+- Photography / image assets received? None. Real photos only, no AI images. Placeholders until she sends about 15 (item 9).
+- Tone of voice notes: Playful, music-led, direct. Croatian addresses the visitor with "ti". English is casual, same register. Spartan copy.
 
 ## Messaging and voice
 
-- Core differentiators / messaging pillars (the specific angles and language to lead with, beyond the one-line differentiation already captured under Business, above):
-- Guardrails, what not to say (named competitors to never reference, claims that don't
-  apply, anything the client has explicitly ruled out):
-- Real customer language (actual phrases/questions customers use, for FAQ/chat-style
-  copy, not necessarily used verbatim on the site):
-- Anti-persona (is there anyone this business does NOT want as a customer, and why? If
-  none, confirm that explicitly rather than leaving it blank):
+- Core differentiators / messaging pillars: Rhythm spin, 45 minutes, "your 45 minutes" at your own pace, all levels welcome, instructors with personality.
+- Guardrails, what not to say: No AI images. No Multisport claims until Benefit Systems answers. No Sculpt Room trainer promotion. Show instructor first names only.
+- Real customer language: FAQ questions from Dunia: beginner classes, what to bring (clean shoes, water, towel), when to arrive (15 minutes early if new), cancelling.
+- Anti-persona: None stated. Confirm with Dunia.
 
 ## Local presence (local-business clients)
 
-- Google Business Profile: exact name / address / phone as listed there (or "no GBP yet",
-  in which case flag creating one post-launch with the same NAP the site ships with):
-- Apple Maps / Bing Places listing, if any (same NAP check):
+- Google Business Profile: OPEN, item 18. Address on the old site is Rusanova 8, Zagreb, phone 095 865 1335. Dunia says a new seat, Ulica Antuna Bauera 22, is not yet on official papers. Do not publish the new address until she confirms which one is correct (item 8, item 13).
+- Apple Maps / Bing Places listing, if any: OPEN.
 
 ## Domain and infrastructure
 
-- Production domain:
-- Who controls DNS? (registrar, login access, who makes the change) - required before
-  launch, do not leave blank:
-- Existing site to migrate content/redirects from?:
-- Email provider (matters for SPF/DNS if we touch records):
-- Is the contact email printed on marketing materials actually receiving mail?
-  (confirm, don't assume, before publishing it in schema/contact pages):
+- Production domain: tockicanai.hr
+- Who controls DNS? OPEN, item 18. Required before launch.
+- Existing site to migrate content/redirects from: WordPress at https://www.tockicanai.hr/. Mirror at `Tockica/original-site/mirror/` (stuck preloader, use the live site for visuals). Redirects from old Cjenik, Pridruži se and program pages to the new Paketi, Instruktori and Home.
+- Email provider: OPEN. Booking emails come from info@tockicanai.hr for now.
+- Is the contact email printed on marketing materials actually receiving mail? info@tockicanai.hr is on the old site. Confirm it receives mail (item 8).
+- Hosting: Netlify, EU region. Booking app on a separate Netlify project, proxied under the same domain (ADR 0005).
 
 ## Analytics and legal
 
-- GA4 Measurement ID (analytics is GA4; blank if the client has no property yet):
-- Consent banner required? (EU/GDPR) yes/no:
-- Legal entity name (for terms/privacy):
-- Contact email for legal pages:
-- Jurisdiction:
-- Existing privacy policy / terms to reuse?:
-- Cookie/consent requirements:
-- EU consumer-facing client: possible European Accessibility Act exposure? (in force
-  since June 2025; note it here even if the answer is "no action needed" rather than
-  leaving it silently unconsidered):
+- GA4 Measurement ID: OPEN. Not asked yet.
+- Consent banner required? Yes, EU/GDPR. `requireConsent: true`.
+- Legal entity name: Točkica na i j.d.o.o., OIB HR37892279693, authorised person Dunia Mando. Seat: see Local presence.
+- Contact email for legal pages: info@tockicanai.hr
+- Jurisdiction: Croatia
+- Existing privacy policy / terms to reuse? Old terms exist on the old site (mention a newsletter database). Dunia is sending her own terms draft. Privacy policy unknown (item 14), Antun drafts one if none exists, Dunia or her lawyer approves.
+- Cookie/consent requirements: Consent Mode with all denied until accepted, adapt `src/components/client/CookieConsent.astro`.
+- EU consumer-facing client: possible European Accessibility Act exposure? Yes, it sells services to consumers online in the EU. A micro-enterprise exemption may apply for a company with fewer than 10 staff and low turnover, but I have not verified the numbers, so treat the site as needing WCAG 2.2 AA anyway (the template's contrast gate already enforces part of it).
 
 ## Timeline
 
-- Target launch date:
-- Hard deadlines / events:
-- Review cycles expected:
+- Target launch date: Mid-December 2026, with the booking system, not a promise. Dunia is flexible and accepts a slip (item 19).
+- Hard deadlines / events: None known.
+- Review cycles expected: Dunia reviews Croatian and English copy before publishing. Her lawyer reviews legal pages and the English translation.
