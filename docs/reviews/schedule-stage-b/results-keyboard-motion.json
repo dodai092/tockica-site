@@ -1,0 +1,132 @@
+{
+  "keyboard": {
+    "tabsToFirstBook": 12,
+    "afterEnter": "dialog:close",
+    "tabSequence": "dialog:bike20 > dialog:bike19 > dialog:bike18 > dialog:bike8 > dialog:bike17 > dialog:bike16 > dialog:bike6 > dialog:bike5 > dialog:bike14 > dialog:bike4 > dialog:bike13 > dialog:bike3 > dialog:bike12 > dialog:bike2 > dialog:bike11 > BODY > dialog:close > dialog:bike20 > dialog:bike19 > dialog:bike18 > dialog:bike8 > dialog:bike17 > dialog:bike16 > dialog:bike6",
+    "pickedBy": "true",
+    "reachedContinue": "dialog:continue",
+    "afterContinue": "dialog:email",
+    "afterSend": "dialog:back",
+    "afterEsc": "A",
+    "focusBackOnBook": true
+  },
+  "motion": {
+    "390": {
+      "open": {
+        "frames": 37,
+        "first": 734,
+        "last": 0,
+        "maxStepPerFrame": 146,
+        "opacity": {
+          "frames": 37,
+          "first": 1,
+          "last": 1,
+          "maxStepPerFrame": 0
+        },
+        "msToSettle": 302
+      },
+      "close": {
+        "frames": 22,
+        "first": 0,
+        "last": 733.8,
+        "maxStepPerFrame": 186.2,
+        "opacity": {
+          "frames": 22,
+          "first": 1,
+          "last": 1,
+          "maxStepPerFrame": 0
+        },
+        "frameCountWhileOpen": 22,
+        "spanMs": 342
+      },
+      "interruptOpenWithEsc": {
+        "maxYAtEsc": 734,
+        "biggestFrameJumpPx": 176.9,
+        "samples": "734,584.8,441.4,329.1,235.9,173.4,129,0,108.7,247.3,424.2,555.4,619.9,656.6,679.8,695.8,707.3,715.7,721.8,726.3,729.5,731.7,733.1,733.8"
+      },
+      "reopenAfterInterrupt": {
+        "open": true,
+        "transform": "none",
+        "opacity": "1"
+      }
+    },
+    "1280": {
+      "open": {
+        "frames": 36,
+        "first": 24,
+        "last": 0,
+        "maxStepPerFrame": 4.7,
+        "opacity": {
+          "frames": 36,
+          "first": 0,
+          "last": 1,
+          "maxStepPerFrame": 0.2
+        },
+        "msToSettle": 265
+      },
+      "close": {
+        "frames": 22,
+        "first": 0,
+        "last": 24,
+        "maxStepPerFrame": 5.9,
+        "opacity": {
+          "frames": 22,
+          "first": 1,
+          "last": 0,
+          "maxStepPerFrame": 0.24
+        },
+        "frameCountWhileOpen": 22,
+        "spanMs": 337
+      },
+      "interruptOpenWithEsc": {
+        "maxYAtEsc": 24,
+        "biggestFrameJumpPx": 5.7,
+        "samples": "24,19,14.4,10.6,7.8,5.7,4.2,0,3.6,8.1,13.8,18.2,20.3,21.5,22.2,22.7,23.1,23.4,23.6,23.7,23.9,23.9,24,24"
+      },
+      "reopenAfterInterrupt": {
+        "open": true,
+        "transform": "none",
+        "opacity": "1"
+      }
+    },
+    "390-reduced": {
+      "open": {
+        "frames": 36,
+        "first": 0,
+        "last": 0,
+        "maxStepPerFrame": 0,
+        "opacity": {
+          "frames": 36,
+          "first": 0,
+          "last": 1,
+          "maxStepPerFrame": 0.1
+        },
+        "msToSettle": 181
+      },
+      "close": {
+        "frames": 15,
+        "first": 0,
+        "last": 0,
+        "maxStepPerFrame": 0,
+        "opacity": {
+          "frames": 15,
+          "first": 1,
+          "last": 0.062,
+          "maxStepPerFrame": 0.11
+        },
+        "frameCountWhileOpen": 15,
+        "spanMs": 222
+      },
+      "interruptOpenWithEsc": {
+        "maxYAtEsc": 0,
+        "biggestFrameJumpPx": 0,
+        "samples": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
+      },
+      "reopenAfterInterrupt": {
+        "open": true,
+        "transform": "none",
+        "opacity": "1"
+      }
+    }
+  }
+}
