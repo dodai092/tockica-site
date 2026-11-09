@@ -1,0 +1,465 @@
+---
+// The schedule page's week picker, day strip and class rows. Built here from mock data (so the page works without
+// the feed), switched in the browser by the script below. The script tells the bike sheet about the classes
+// (`schedule:update`) and about a press on Book (`schedule:book`) with events on document. Without JS the buttons
+// link to the schedule.
+import { Icon } from 'astro-icon/components';
+import Placeholder from '~/components/client/Placeholder.astro';
+import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
+import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
+import { buildMockSchedule } from '~/lib/mock-schedule';
+import { STUDIO_ZONE, addDays, groupByDay, mondayOf } from '~/lib/schedule-days';
+import { seatLabel, seatState } from '~/lib/seats';
+import { firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getCopy(lang).schedulePage;
+const pick = getCopy(lang).bikeSheet;
+const labels = { book: getCopy(lang).home.nextClasses.book, waitlist: getCopy(lang).home.nextClasses.waitlist };
+const href = pathFor('schedule', lang);
+const locale = lang === 'hr' ? 'hr-HR' : 'en-GB';
+
+// MOCK until the booking app's feed answers. Upcoming classes only, no cap.
+const feed = parseSchedule({ classes: buildMockSchedule(new Date()) }, new Date(), 1000);
+const groups = groupByDay(feed?.classes ?? []);
+const mondays = [...new Set([...groups.keys()].map(mondayOf))].sort();
+const firstDay = [...groups.keys()][0];
+const selectedWeek = firstDay ? mondayOf(firstDay) : mondays[0];
+
+const time = new Intl.DateTimeFormat(locale, {
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+  timeZone: STUDIO_ZONE,
+});
+const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
+const dayNumber = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'numeric', timeZone: 'UTC' });
+const dayParts = new Intl.DateTimeFormat(locale, { day: 'numeric', timeZone: 'UTC' });
+// Just the number: Croatian adds a dot after it, which crowds the round mark for today.
+const dayOfMonth = {
+  format: (d: Date) => dayParts.formatToParts(d).find((p) => p.type === 'day')?.value ?? '',
+};
+const longDay = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+// Free places from the booked bikes, the number the feed is checked against.
+const seats = (c: { capacity: number; takenBikes: number[] }) => {
+  const free = c.capacity - c.takenBikes.length;
+  return { text: seatLabel(free, c.capacity, t.seats, locale), ...seatState(free, c.capacity) };
+};
+const utc = (ymd: string) => new Date(`${ymd}T12:00:00Z`);
+const weekLabel = (monday: string) => dayNumber.formatRange(utc(monday), utc(addDays(monday, 5)));
+const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays(monday, i));
+---
+
+<section
+  data-schedule
+  data-locale={locale}
+  data-empty-text={t.noClasses}
+  data-seat-labels={JSON.stringify(t.seats)}
+  class="mx-auto mt-8 max-w-7xl px-4 sm:px-6 md:mt-10"
+>
+  {/* The visitor's kept pick after a reload. The bike sheet script fills it in and shows it (BikeSheet.astro). */}
+  <div
+    data-pending
+    hidden
+    data-locale={locale}
+    data-text={pick.pendingText}
+    data-waitlist-text={pick.pendingWaitlist}
+    class="mb-4 flex flex-wrap items-center gap-3 rounded-(--aw-radius-card) border border-gray-200 bg-white p-3 dark:border-slate-600 dark:bg-slate-800"
+  >
+    <p data-pending-text class="min-w-0 flex-1 text-sm font-semibold text-heading"></p>
+    <button type="button" data-pending-continue class="btn-primary !px-4 !py-2 !text-sm">
+      {pick.pendingContinue}
+    </button>
+    <button type="button" data-pending-clear class="btn-secondary !px-4 !py-2 !text-sm">{pick.pendingClear}</button>
+  </div>
+  <div class="flex items-center justify-between gap-3 md:justify-start md:gap-4" role="group" aria-label={t.weeks}>
+    <button
+      type="button"
+      data-week-prev
+      aria-label={t.prevWeek}
+      disabled={selectedWeek === mondays[0]}
+      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 text-heading hover:bg-gray-100 disabled:opacity-40 dark:border-slate-600 dark:hover:bg-slate-700"
+    >
+      <Icon name="tabler:chevron-left" class="h-5 w-5" />
+    </button>
+    <p data-week-label aria-live="polite" class="text-lg font-bold tabular-nums text-heading">
+      {selectedWeek ? weekLabel(selectedWeek) : ''}
+    </p>
+    <button
+      type="button"
+      data-week-next
+      aria-label={t.nextWeek}
+      disabled={selectedWeek === mondays.at(-1)}
+      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 text-heading hover:bg-gray-100 disabled:opacity-40 dark:border-slate-600 dark:hover:bg-slate-700"
+    >
+      <Icon name="tabler:chevron-right" class="h-5 w-5" />
+    </button>
+  </div>
+
+  {
+    mondays.map((monday) => (
+      <div
+        data-week-strip={monday}
+        data-label={weekLabel(monday)}
+        hidden={monday !== selectedWeek}
+        role="group"
+        aria-label={t.days}
+        class="mt-4 grid grid-cols-6 gap-1.5 sm:gap-3 md:hidden"
+      >
+        {weekDays(monday).map((day) => (
+          <button
+            type="button"
+            data-day={day}
+            aria-pressed={day === firstDay ? 'true' : 'false'}
+            class="flex flex-col items-center gap-0.5 rounded-xl border border-gray-200 px-1 py-2 hover:bg-gray-100 aria-pressed:border-(--aw-color-text-heading) aria-pressed:bg-(--aw-color-text-heading) aria-pressed:text-(--aw-color-bg-page) aria-pressed:hover:bg-(--aw-color-text-heading) dark:border-slate-600 dark:hover:bg-slate-700"
+          >
+            <span class="text-[0.6875rem] font-bold uppercase tracking-wide opacity-80">
+              {weekday.format(utc(day))}
+            </span>
+            <span class="font-heading text-lg font-extrabold tabular-nums">{dayOfMonth.format(utc(day))}</span>
+            <span data-dots aria-hidden="true" class="flex min-h-[5px] gap-[3px]">
+              {(groups.get(day) ?? []).map((c) => (
+                <i
+                  {...(firstFreeBike(c) === null ? { 'data-full': '' } : {})}
+                  class="h-[5px] w-[5px] rounded-full bg-current data-full:opacity-30"
+                />
+              ))}
+            </span>
+          </button>
+        ))}
+      </div>
+    ))
+  }
+
+  <div data-panels class="mt-5 md:grid md:grid-cols-3 md:items-start md:gap-3 lg:grid-cols-6">
+    {
+      mondays.flatMap((monday) =>
+        weekDays(monday).map((day) => {
+          const rows = groups.get(day) ?? [];
+          // The selected week is shown. Below md only the selected day of it (data-off hides the others).
+          const hidden = monday !== selectedWeek;
+          const off = day !== firstDay ? { 'data-off': '' } : {};
+          return (
+            <div
+              data-day-panel={day}
+              hidden={hidden}
+              {...off}
+              class="group rounded-[1.125rem] border border-gray-200 bg-white px-4 pt-1 pb-1 max-md:data-off:hidden md:px-3.5 md:pt-3.5 dark:border-slate-700 dark:bg-slate-900"
+            >
+              <p data-sheet-head class="flex items-center justify-between gap-2 py-3 md:hidden">
+                <span class="font-heading font-bold first-letter:uppercase">{longDay.format(utc(day))}</span>
+                <span class="hidden rounded bg-red-50 px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-primary group-data-today:inline dark:bg-red-950 dark:text-red-300">
+                  {t.today}
+                </span>
+              </p>
+              <p data-day-head class="hidden items-center gap-2.5 pb-2.5 md:flex">
+                <span class="flex h-10 min-w-10 items-center justify-center rounded-full font-heading text-[1.75rem] font-extrabold tabular-nums group-data-today:bg-(--aw-color-text-heading) group-data-today:text-[1.375rem] group-data-today:text-(--aw-color-bg-page)">
+                  {dayOfMonth.format(utc(day))}
+                </span>
+                <span class="text-[0.6875rem] font-bold uppercase tracking-wider text-muted">
+                  {weekday.format(utc(day))}
+                  <span class="hidden group-data-today:inline"> · {t.today}</span>
+                </span>
+              </p>
+              <ul data-rows class="m-0 list-none p-0">
+                {rows.length ? (
+                  rows.map((c) => {
+                    const st = seats(c);
+                    return (
+                      <ScheduleRow
+                        id={c.id}
+                        time={time.format(new Date(c.startsAt))}
+                        instructor={c.instructor}
+                        name={c.themeName ?? c.name}
+                        seatsText={st.text}
+                        percent={st.percent}
+                        scarce={st.scarce}
+                        full={firstFreeBike(c) === null}
+                        href={href}
+                        labels={labels}
+                      />
+                    );
+                  })
+                ) : (
+                  <li data-empty class="border-t border-gray-200 py-4 text-sm text-muted dark:border-slate-700">
+                    {t.noClasses}
+                  </li>
+                )}
+              </ul>
+            </div>
+          );
+        })
+      )
+    }
+  </div>
+  {
+    /* Patterns the browser script clones when it rebuilds a day from the feed: a class with a free bike, and a full one. */
+  }
+  <template data-row="open">
+    <ScheduleRow
+      id=""
+      time=""
+      instructor=""
+      name=""
+      seatsText=""
+      percent={0}
+      scarce={false}
+      full={false}
+      href={href}
+      labels={labels}
+    />
+  </template>
+  <template data-row="full">
+    <ScheduleRow
+      id=""
+      time=""
+      instructor=""
+      name=""
+      seatsText=""
+      percent={100}
+      scarce={false}
+      full={true}
+      href={href}
+      labels={labels}
+    />
+  </template>
+  <script
+    is:inline
+    type="application/json"
+    data-schedule-data
+    set:html={JSON.stringify(feed?.classes ?? []).replace(/</g, '\\u003c')}
+  />
+  <BikeSheet lang={lang} />
+  <p class="mt-2">
+    <Placeholder lang={lang} label="the schedule is mock data until the booking app endpoint exists" />
+  </p>
+</section>
+
+<script>
+  import { fillRow } from '~/lib/class-row';
+  import { STUDIO_ZONE, addDays, groupByDay, mondayOf, studioDay } from '~/lib/schedule-days';
+  import type { SeatLabels } from '~/lib/seats';
+  import { SCHEDULE_FEED_URL, firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
+  import type { NextClass } from '~/lib/schedule-feed';
+  import { slideIn } from '~/lib/motion.js';
+
+  // Selection (week arrows, day buttons) only switches what is shown. The rows come from the page at first, then
+  // from the booking app's feed every 30 s while the tab is visible. A day is rebuilt only when its rows changed,
+  // so focus and scroll stay put. Any failure leaves what is on screen as it is.
+  const POLL_MS = 30_000;
+  let timer: number | undefined;
+
+  const rowText = (li: Element) => `${li.getAttribute('data-class-id')}|${li.textContent?.replace(/\s+/g, ' ').trim()}`;
+
+  function setup(root: HTMLElement) {
+    const q = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
+    const all = <T extends HTMLElement>(sel: string) => [...root.querySelectorAll<T>(sel)];
+    const strips = all('[data-week-strip]');
+    const weeks = strips.map((s) => s.dataset.weekStrip!);
+    const panels = all('[data-day-panel]');
+    const timeFormat = new Intl.DateTimeFormat(root.dataset.locale, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+      timeZone: STUDIO_ZONE,
+    });
+    const seatLabels = JSON.parse(root.dataset.seatLabels ?? '{}') as SeatLabels;
+    const open = root.querySelector<HTMLTemplateElement>('template[data-row="open"]')!;
+    const full = root.querySelector<HTMLTemplateElement>('template[data-row="full"]')!;
+    let selected = root.querySelector<HTMLElement>('[data-day][aria-pressed="true"]')?.dataset.day ?? '';
+
+    const onDesktop = () => window.matchMedia('(min-width: 768px)').matches;
+    // The day panels on screen: the six of the selected week from md up, the selected day below it.
+    const onScreen = () => panels.filter((p) => !p.hidden && (onDesktop() || !p.hasAttribute('data-off')));
+
+    function select(day: string, animate = true) {
+      const panel = panels.find((p) => p.dataset.dayPanel === day);
+      if (!panel) return;
+      const before = selected;
+      selected = day;
+      const monday = mondayOf(day);
+      for (const s of strips) s.hidden = s.dataset.weekStrip !== monday;
+      for (const b of all('[data-day]')) b.setAttribute('aria-pressed', String(b.dataset.day === day));
+      for (const p of panels) {
+        p.hidden = mondayOf(p.dataset.dayPanel!) !== monday;
+        p.toggleAttribute('data-off', p !== panel);
+      }
+      q('[data-week-label]').textContent = strips.find((s) => s.dataset.weekStrip === monday)?.dataset.label ?? '';
+      q<HTMLButtonElement>('[data-week-prev]').disabled = monday === weeks[0];
+      q<HTMLButtonElement>('[data-week-next]').disabled = monday === weeks.at(-1);
+      // From md up the whole week of columns slides, below it the one day.
+      if (animate && before && before !== day)
+        void slideIn(onDesktop() ? q('[data-panels]') : panel, day > before ? 1 : -1);
+    }
+
+    root.addEventListener('click', (e) => {
+      const book = (e.target as Element).closest<HTMLAnchorElement>('li[data-class-id] a');
+      if (book) {
+        const li = book.closest<HTMLElement>('li[data-class-id]')!;
+        e.preventDefault();
+        document.dispatchEvent(
+          new CustomEvent('schedule:book', {
+            detail: { classId: li.dataset.classId, full: li.hasAttribute('data-full') },
+          })
+        );
+        return;
+      }
+      const hit = (e.target as Element).closest<HTMLElement>('[data-day], [data-week-prev], [data-week-next]');
+      if (!hit || (hit as HTMLButtonElement).disabled) return;
+      if (hit.dataset.day) select(hit.dataset.day);
+      else select(addDays(selected, hit.hasAttribute('data-week-next') ? 7 : -7));
+    });
+
+    const buildRow = (c: NextClass) => {
+      const li = (firstFreeBike(c) === null ? full : open).content.firstElementChild!.cloneNode(true) as HTMLElement;
+      li.setAttribute('data-class-id', c.id);
+      fillRow(li, c, {
+        time: timeFormat.format(new Date(c.startsAt)),
+        locale: root.dataset.locale ?? 'hr',
+        seatLabels,
+      });
+      return li;
+    };
+
+    // One dot per class on a day button: dark when it can be booked, pale when it is full.
+    const drawDots = (day: string, rows: NextClass[]) => {
+      const dots = root.querySelector(`[data-day="${day}"] [data-dots]`);
+      if (!dots) return;
+      dots.replaceChildren(
+        ...rows.map((c) => {
+          const i = document.createElement('i');
+          i.className = 'h-[5px] w-[5px] rounded-full bg-current data-full:opacity-30';
+          if (firstFreeBike(c) === null) i.setAttribute('data-full', '');
+          return i;
+        })
+      );
+    };
+
+    // The sheet of today carries data-today (the page is built once, so "today" is worked out here).
+    const markToday = () => {
+      const today = studioDay(new Date());
+      for (const p of panels) p.toggleAttribute('data-today', p.dataset.dayPanel === today);
+    };
+
+    function render(classes: NextClass[]) {
+      const groups = groupByDay(classes);
+      markToday();
+      for (const b of all('[data-day]')) drawDots(b.dataset.day!, groups.get(b.dataset.day!) ?? []);
+      const wasShowingClasses = onScreen().some((p) => p.querySelector('[data-class-id]'));
+      for (const panel of panels) {
+        const list = panel.querySelector<HTMLElement>('[data-rows]')!;
+        const rows = groups.get(panel.dataset.dayPanel!) ?? [];
+        const items = rows.length ? rows.map(buildRow) : [list.querySelector('[data-empty]') ?? emptyItem(root)];
+        if ([...list.children].map(rowText).join() === items.map(rowText).join()) continue;
+        list.replaceChildren(...items);
+      }
+      // Everything on screen lost its classes (the last one has started): move on to the next day that has some.
+      if (wasShowingClasses && !onScreen().some((p) => groups.has(p.dataset.dayPanel!))) {
+        const next = [...groups.keys()].find((d) => d > selected) ?? [...groups.keys()][0];
+        if (next) select(next);
+      }
+    }
+
+    // The classes the page was built with, for the bike sheet. Read once, the feed replaces them later.
+    const embedded = () => {
+      try {
+        return JSON.parse(root.querySelector('[data-schedule-data]')?.textContent ?? '[]') as NextClass[];
+      } catch {
+        return [];
+      }
+    };
+
+    markToday();
+    return { render, embedded };
+  }
+
+  function emptyItem(root: HTMLElement) {
+    const li = document.createElement('li');
+    li.setAttribute('data-empty', '');
+    li.className = 'border-t border-gray-200 py-4 text-sm text-muted dark:border-slate-700';
+    li.textContent = root.dataset.emptyText ?? '';
+    return li;
+  }
+
+  let current: ReturnType<typeof setup> | undefined;
+
+  const publish = (classes: NextClass[]) =>
+    document.dispatchEvent(new CustomEvent('schedule:update', { detail: classes }));
+
+  const showFeed = async () => {
+    const root = document.querySelector<HTMLElement>('[data-schedule]');
+    if (!root || !current) return;
+    try {
+      const res = await fetch(SCHEDULE_FEED_URL, { headers: { accept: 'application/json' }, cache: 'no-store' });
+      if (!res.ok) return;
+      const feed = parseSchedule(await res.json(), new Date(), 1000);
+      if (!feed || !feed.classes.length) return;
+      current.render(feed.classes);
+      publish(feed.classes);
+      if (feed.source !== 'mock') root.querySelector('[data-todo]')?.remove();
+      root.setAttribute('data-feed-live', feed.source ?? 'app');
+    } catch {
+      // Offline or the feed is down: what is on screen stays.
+    }
+  };
+
+  document.addEventListener('astro:page-load', () => {
+    window.clearInterval(timer);
+    const root = document.querySelector<HTMLElement>('[data-schedule]');
+    current = root ? setup(root) : undefined;
+    if (!current) return;
+    publish(current.embedded());
+    void showFeed();
+    timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') void showFeed();
+    }, POLL_MS);
+  });
+  // Back on the tab after a while: do not wait for the next tick.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') void showFeed();
+  });
+</script>
+
+<style>
+  /* Press feedback like the site's buttons (animation-rules 4): squeezed on press, released on the spring.
+     Colour changes run 200 ms. Reduced motion keeps the colour change and drops the squeeze. */
+  [data-week-prev],
+  [data-week-next],
+  [data-day] {
+    transition:
+      transform 0.35s var(--ease-spring),
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  [data-day]:active {
+    transform: scale(0.96);
+    transition-duration: 0.08s;
+  }
+  [data-week-prev]:active:not(:disabled),
+  [data-week-next]:active:not(:disabled) {
+    transform: scale(0.92);
+    transition-duration: 0.08s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-week-prev],
+    [data-week-next],
+    [data-day] {
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+    }
+    [data-day]:active,
+    [data-week-prev]:active:not(:disabled),
+    [data-week-next]:active:not(:disabled) {
+      transform: none;
+    }
+  }
+</style>

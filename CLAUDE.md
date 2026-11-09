@@ -9,6 +9,8 @@ template for Točkica na i (AstroWind fork). Read in this order:
    plan or reviewing a client branch.
 4. [docs/quality-gates.md](./docs/quality-gates.md), the canonical client quality-gate
    policy (gate order, thresholds, route coverage, review rubric).
+5. [docs/animation-rules.md](./docs/animation-rules.md), before adding or changing any
+   animation, transition or scroll behaviour. Apple-style motion rules and the tokens to use.
 
 ## Hard rules
 

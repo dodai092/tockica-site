@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { getCopy, otherLang, pathFor } from '../src/i18n/index.ts';
+import { bookBarEnabled } from '../src/lib/book-bar.ts';
 
 const ORIGIN = 'https://tockicanai.hr';
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), 'utf8');
@@ -65,8 +66,12 @@ for (const { lang, file, self } of pages) {
     assert.ok(!/<span[^>]*data-todo/.test(link), 'visible placeholder badge inside the nav link');
   });
 
-  test(`${lang}: fixed mobile book bar is present and links to the schedule`, async () => {
+  test(`${lang}: fixed mobile book bar follows the bookBarEnabled switch`, async () => {
     const html = await read(file);
+    if (!bookBarEnabled) {
+      assert.ok(!html.includes('data-book-bar'), 'book bar rendered while disabled');
+      return;
+    }
     const m = html.match(/<div[^>]*class="([^"]*)"[^>]*>\s*<a[^>]*data-book-bar[^>]*>/);
     assert.ok(m, 'no mobile book bar');
     assert.match(m[1], /\bfixed\b/);
@@ -106,13 +111,11 @@ for (const { lang, file } of [
   { lang: 'hr', file: 'raspored/index.html' },
   { lang: 'en', file: 'en/schedule/index.html' },
 ]) {
-  test(`${lang}: schedule stub shows next classes, a booking-soon notice and an open booking placeholder`, async () => {
+  test(`${lang}: schedule page shows the class list, a booking-soon notice and an open booking placeholder`, async () => {
     const html = await read(file);
     assert.match(html, new RegExp(`<html[^>]*\\slang="${lang}"`));
     assert.equal([...html.matchAll(/<h1\b/g)].length, 1);
-    const list = html.match(/<section[^>]*data-section="next-classes"[\s\S]*?<\/section>/)?.[0];
-    assert.ok(list, 'next classes list missing');
-    assert.equal([...list.matchAll(/data-next-class/g)].length, 4);
+    assert.ok(html.includes('data-schedule'), 'class list missing');
     assert.ok(/data-schedule-notice/.test(html), 'booking-soon notice missing');
     assert.ok(/data-todo="[^"]*book[^"]*"/.test(html), 'where-to-book placeholder missing');
   });

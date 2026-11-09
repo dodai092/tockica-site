@@ -24,6 +24,14 @@
     "kind": "public"
   },
   {
+    "path": "/prvi-put/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/first-time/",
+    "kind": "public"
+  },
+  {
     "path": "/sculpt-room/",
     "kind": "public"
   },
@@ -78,5 +86,17 @@
   {
     "path": "/en/contact/",
     "kind": "public"
+  },
+  {
+    "path": "/demo/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/en/demo/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/demo-app/",
+    "kind": "noindex"
   }
 ]

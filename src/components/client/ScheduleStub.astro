@@ -1,12 +1,12 @@
 ---
 // STUB. At launch /raspored and /en/schedule are replaced by a Netlify proxy to the
 // booking app (Tockica ADR 0005 update 2026-11-04, proxied under tockicanai.hr), and
-// this component and the two page files go away. Until then it shows the mock next
-// classes, a notice, and a placeholder for how to book.
+// this component and the two page files go away. Until then it shows the mock
+// schedule, a notice, and a placeholder for how to book.
 import Page from '~/components/client/Page.astro';
 import Placeholder from '~/components/client/Placeholder.astro';
-import NextClasses from '~/components/client/home/NextClasses.astro';
-import { getCopy } from '~/i18n';
+import ScheduleList from '~/components/client/schedule/ScheduleList.astro';
+import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
 interface Props {
@@ -21,7 +21,18 @@ const t = getCopy(lang).schedulePage;
   <section class="mx-auto max-w-7xl px-4 sm:px-6 pt-12 md:pt-16">
     <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
     <p data-schedule-notice class="mt-4 text-xl text-default">{t.soon}</p>
+    <p class="mt-4 text-default">
+      {t.demo.text}
+      <a class="font-semibold text-link underline" href={pathFor('demo', lang)} data-demo-link>{t.demo.link}</a>
+    </p>
     <p class="mt-4"><Placeholder lang={lang} label="how to book until the booking app launches" /></p>
   </section>
-  <NextClasses lang={lang} />
+  <ScheduleList lang={lang} />
 </Page>
+
+<style is:global>
+  /* The schedule sits on a plain white page, so the day sheets read as outlines. Dark keeps the site's dark page. */
+  html:not(.dark) body {
+    background-color: #fff;
+  }
+</style>

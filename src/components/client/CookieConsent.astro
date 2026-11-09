@@ -14,6 +14,7 @@
 //
 // Točkica: language comes from the URL (GlobalEmbeds has no props). On phones the banner
 // sits above the fixed book bar, except on the schedule page, which has no bar.
+import { bookBarEnabled } from '~/lib/book-bar';
 import { ANALYTICS } from 'astrowind:config';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
@@ -24,7 +25,7 @@ const hasAnalytics = Boolean(ANALYTICS?.vendors?.googleAnalytics?.id);
 const lang: Lang = Astro.url.pathname.startsWith('/en') ? 'en' : 'hr';
 const t = getCopy(lang).consent;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const hasBookBar = path !== pathFor('schedule', lang);
+const hasBookBar = bookBarEnabled && path !== pathFor('schedule', lang);
 const position = hasBookBar ? 'bottom-[calc(4.5rem+env(safe-area-inset-bottom))] md:bottom-0' : 'bottom-0';
 ---
 
@@ -69,24 +70,34 @@ const position = hasBookBar ? 'bottom-[calc(4.5rem+env(safe-area-inset-bottom))]
 }
 
 <script>
+  import { fadeIn, fadeOut, release } from '~/lib/motion.js';
+
   const banner = document.getElementById('cookie-consent');
 
   function currentStatus() {
     return window.awAnalytics ? window.awAnalytics.status() : 'unset';
   }
 
+  // Fades out, then hides.
+  const hide = () =>
+    fadeOut(banner).then(() => {
+      banner?.classList.add('hidden');
+      if (banner) release(banner);
+    });
+
   if (currentStatus() === 'unset') {
     banner?.classList.remove('hidden');
+    fadeIn(banner);
     document.getElementById('cookie-accept')?.focus();
   }
 
   document.getElementById('cookie-accept')?.addEventListener('click', () => {
     window.awAnalytics?.grant();
-    banner?.classList.add('hidden');
+    hide();
   });
 
   document.getElementById('cookie-decline')?.addEventListener('click', () => {
     window.awAnalytics?.deny();
-    banner?.classList.add('hidden');
+    hide();
   });
 </script>

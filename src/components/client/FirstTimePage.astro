@@ -1,0 +1,26 @@
+---
+import Page from '~/components/client/Page.astro';
+import Button from '~/components/ui/Button.astro';
+import HowItWorks from '~/components/client/home/HowItWorks.astro';
+import Faq from '~/components/client/home/Faq.astro';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang);
+const t = copy.firstTimePage;
+---
+
+<Page lang={lang} route="firstTime" title={t.title} description={t.description}>
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 pt-12 md:pt-16">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
+    <p class="mt-4 text-xl text-default">{t.lead}</p>
+    <div class="mt-8"><Button variant="primary" text={copy.cta.book} href={pathFor('schedule', lang)} /></div>
+  </section>
+  <HowItWorks lang={lang} />
+  <Faq lang={lang} />
+</Page>

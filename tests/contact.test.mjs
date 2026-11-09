@@ -17,12 +17,13 @@ for (const { lang, file, h1 } of pages) {
     assert.match(html, new RegExp(`<h1[^>]*>${h1}</h1>`));
   });
 
-  test(`${lang}: address, phone, e-mail and hours are open placeholders, nothing unconfirmed ships`, async () => {
+  test(`${lang}: address, e-mail and hours from Dunia ship, phone stays an open placeholder`, async () => {
     const html = await read(file);
-    for (const label of ['address', 'phone', 'e-mail', 'opening hours'])
-      assert.ok(new RegExp(`data-todo="[^"]*${label}[^"]*"`).test(html), label);
-    for (const secret of ['Bauera', 'Rusanova', '865 1335', 'info@tockicanai.hr'])
-      assert.ok(!html.includes(secret), secret);
+    assert.ok(/data-todo="[^"]*phone[^"]*"/.test(html), 'phone placeholder missing');
+    for (const fact of ['Ulica Ferde Rusana 8', 'info@tockicanai.hr', '17:00-20:00'])
+      assert.ok(html.includes(fact), fact);
+    for (const secret of ['Bauera', 'Rusanova', '865 1335'])
+      assert.ok(!html.includes(secret), `${secret} must not ship until Dunia confirms`);
   });
 
   test(`${lang}: message form follows docs/forms.md`, async () => {

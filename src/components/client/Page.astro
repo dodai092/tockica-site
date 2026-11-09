@@ -5,6 +5,8 @@ import PageLayout from '~/layouts/PageLayout.astro';
 import SiteHeader from '~/components/client/SiteHeader.astro';
 import SiteFooter from '~/components/client/SiteFooter.astro';
 import BookBar from '~/components/client/BookBar.astro';
+import MotionStyles from '~/components/client/MotionStyles.astro';
+import { bookBarEnabled } from '~/lib/book-bar';
 import { alternatesFor } from '~/i18n';
 import type { Lang, RouteKey } from '~/i18n';
 
@@ -27,10 +29,11 @@ const metadata = {
 };
 // The schedule page is the booking entry, so it has no extra book bar. The footer gets
 // bottom space so the fixed bar never covers its last line.
-const showBookBar = route !== 'schedule';
+const showBookBar = bookBarEnabled && route !== 'schedule';
 ---
 
 <PageLayout metadata={metadata}>
+  <MotionStyles />
   <Fragment slot="announcement"></Fragment>
   <SiteHeader slot="header" lang={lang} route={route} />
   <slot />

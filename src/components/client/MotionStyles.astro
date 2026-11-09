@@ -1,0 +1,103 @@
+---
+// Motion tokens and site-wide motion rules. The values are the prototype's (../prototype/styles.css), so the
+// booking app and the site move the same way. tests/motion-contract.test.mjs checks they have not drifted.
+// Rules and reasons: docs/animation-rules.md.
+---
+
+<style is:global>
+  :root {
+    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1); /* enter and fold motion */
+    --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1); /* flick exits */
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* sheet close and spring-back, indicators */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* press release, pops */
+  }
+
+  /* Press feedback: a small squeeze, released with a spring. Buttons are template components, so this is
+     done here by class. The round icon buttons in the header squeeze a little more. */
+  .btn-primary,
+  .btn-secondary,
+  .btn-tertiary {
+    transition:
+      transform 0.35s var(--ease-spring),
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .btn-primary:active,
+  .btn-secondary:active,
+  .btn-tertiary:active {
+    transform: scale(0.96);
+    transition-duration: 0.08s;
+  }
+  #header [data-lang-switch]:active,
+  #header [data-aw-toggle-color-scheme]:active,
+  #header [data-aw-toggle-menu]:active {
+    transform: scale(0.92);
+    transition-duration: 0.08s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary,
+    .btn-secondary,
+    .btn-tertiary {
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+    }
+    .btn-primary:active,
+    .btn-secondary:active,
+    .btn-tertiary:active,
+    #header [data-lang-switch]:active,
+    #header [data-aw-toggle-color-scheme]:active,
+    #header [data-aw-toggle-menu]:active {
+      transform: none;
+    }
+  }
+
+  /* Page change (ClientRouter): one 400 ms crossfade of the whole page, like the prototype. This replaces
+     Astro's default 90 ms fade. The header is its own layer (SiteHeader.astro) and does not fade. */
+  html[data-astro-transition]::view-transition-old(root) {
+    animation: -ua-view-transition-fade-out 400ms ease-in-out both !important;
+  }
+  html[data-astro-transition]::view-transition-new(root) {
+    animation: -ua-view-transition-fade-in 400ms ease-in-out both !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html[data-astro-transition]::view-transition-old(root),
+    html[data-astro-transition]::view-transition-new(root) {
+      animation-duration: 200ms !important;
+    }
+  }
+
+  /* Language switch: the old page fades out, then the new one fades in, so the text change is not seen as
+     a cut. Same as the prototype. SiteHeader.astro sets html[data-vt='lang'] around the navigation. */
+  html[data-vt='lang']::view-transition-old(root),
+  html[data-vt='lang']::view-transition-new(root) {
+    mix-blend-mode: normal;
+  }
+  html[data-vt='lang']::view-transition-old(root) {
+    animation: tk-lang-out 180ms ease-in both !important;
+  }
+  html[data-vt='lang']::view-transition-new(root) {
+    animation: tk-lang-in 260ms ease-out 140ms both !important;
+  }
+  @keyframes tk-lang-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes tk-lang-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html[data-vt='lang']::view-transition-old(root) {
+      animation-duration: 100ms !important;
+    }
+    html[data-vt='lang']::view-transition-new(root) {
+      animation-duration: 140ms !important;
+      animation-delay: 80ms !important;
+    }
+  }
+</style>

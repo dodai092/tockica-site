@@ -1,0 +1,52 @@
+---
+// /demo and /en/demo: the booking prototype (public/demo-app, copied by scripts/sync-demo.mjs) in a frame under
+// the normal site header and footer, so the navigation is the site's own. Demo only: it goes away when the real
+// booking app is proxied under /raspored (ADR 0005). Not indexed.
+import Page from '~/components/client/Page.astro';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getCopy(lang).demoPage;
+---
+
+<Page lang={lang} route="demo" title={t.title} description={t.description} noindex>
+  {/* The frame is the same origin, so the theme and language are handed over through localStorage before it loads. */}
+  <script is:inline define:vars={{ lang }}>
+    try {
+      localStorage.setItem('tockica-lang', lang);
+      localStorage.setItem('tockica-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    } catch {
+      // No storage: the demo opens in its own defaults.
+    }
+  </script>
+  <iframe class="demo-frame block w-full border-0" src="/demo-app/index.html" title={t.frame} data-demo-frame></iframe>
+</Page>
+
+<style is:global>
+  /* Fills the screen under the sticky bar (4.5rem), so the prototype scrolls in its own frame and its tab bar
+     stays at the bottom of the screen. */
+  .demo-frame {
+    height: calc(100dvh - 4.5rem);
+    min-height: 32rem;
+  }
+</style>
+
+<script>
+  // The site's theme button drives the frame: same origin, so the frame's root is set directly.
+  document.addEventListener('aw:theme-change', () => {
+    const frame = document.querySelector<HTMLIFrameElement>('[data-demo-frame]');
+    const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    try {
+      localStorage.setItem('tockica-theme', theme);
+      const root = frame?.contentDocument?.documentElement;
+      if (root) root.dataset.theme = theme;
+    } catch {
+      // Frame not reachable: it picks the theme up on its next load.
+    }
+  });
+</script>

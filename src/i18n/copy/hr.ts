@@ -26,7 +26,6 @@ export const hr: Copy = {
     description: 'Prvi i jedini rhythm spin studio u srcu Zagreba.',
     nextClasses: {
       heading: 'Sljedeći treninzi',
-      freeBikes: 'Slobodno bicikala',
       waitlist: 'Lista čekanja',
       book: 'Rezerviraj',
       all: 'Svi termini',
@@ -42,11 +41,15 @@ export const hr: Copy = {
     how: {
       heading: 'Kako to ide',
       steps: [
-        { title: 'Registriraj se', text: 'Prijava e-mailom, bez lozinke.' },
-        { title: 'Kupi paket', text: 'Intro paketi: 1 trening 10 EUR, 3 treninga 30 EUR.' },
-        { title: 'Odaberi bicikl', text: 'Odaberi trening i svoj bicikl na karti.' },
+        { title: 'Odaberi trening', text: 'Raspored i instruktori su otvoreni svima.' },
+        { title: 'Odaberi bicikl', text: 'Svoj bicikl biraš na karti.' },
+        {
+          title: 'Prijavi se i plati',
+          text: 'Tek kod potvrde, e-mailom bez lozinke. Intro: 1 trening 10 EUR, 3 treninga 30 EUR.',
+        },
       ],
     },
+    offer: { first: 'Prvi trening', firstTime: 'Prvi put kod nas', packs: 'Svi paketi' },
     sculptBand: {
       heading: 'Sculpt Room Rent',
       text: 'Za samostalne trenere.',
@@ -65,6 +68,12 @@ export const hr: Copy = {
   instructorsPage: {
     title: 'Instruktori',
     description: 'Upoznaj instruktore Točkice na i.',
+  },
+  // Croatian lead is Antun's translation of Dunia's FAQ answer, Dunia approves.
+  firstTimePage: {
+    title: 'Prvi put',
+    description: 'Što očekivati na prvom treningu u Točkici na i.',
+    lead: 'Svi treninzi su prikladni za početnike. Ti biraš tempo.',
   },
   packsPage: {
     title: 'Paketi',
@@ -119,6 +128,48 @@ export const hr: Copy = {
     title: 'Raspored',
     description: 'Raspored treninga u Točkici na i.',
     soon: 'Online rezervacija uskoro stiže.',
+    demo: { text: 'Isprobaj demo rezervacija (nije prava rezervacija).', link: 'Otvori demo' },
+    weeks: 'Tjedan',
+    prevWeek: 'Prethodni tjedan',
+    nextWeek: 'Sljedeći tjedan',
+    days: 'Dan u tjednu',
+    noClasses: 'Taj dan nema treninga.',
+    today: 'Danas',
+    seats: {
+      full: 'Popunjeno',
+      plenty: '{n} slobodnih',
+      scarce: { one: 'Još {n} slobodan', few: 'Još {n} slobodna', other: 'Još {n} slobodnih' },
+    },
+  },
+  bikeSheet: {
+    title: 'Odaberi bicikl',
+    close: 'Zatvori',
+    bike: 'Bicikl {n}',
+    free: 'Slobodan',
+    taken: 'Zauzet',
+    picked: 'Odabran',
+    instructor: 'Instruktor',
+    pickBike: 'Odaberi bicikl',
+    continue: 'Rezerviraj bicikl {n}',
+    taken_now: 'Bicikl {n} je upravo zauzet. Odaberi drugi.',
+    loginTitle: 'Prijava',
+    loginIntro: 'Upiši email za prijavu ili registraciju.',
+    email: 'Email',
+    sendCode: 'Pošalji kod',
+    soonTitle: 'Rezervacije uskoro',
+    soonText: 'Online rezervacija uskoro stiže. Ovo još nije prava rezervacija.',
+    changeBike: 'Promijeni bicikl',
+    backToSchedule: 'Natrag na raspored',
+    waitlist: 'Lista čekanja',
+    pendingText: 'Tvoj odabir: {when}, bicikl {n}',
+    pendingWaitlist: 'Lista čekanja: {when}',
+    pendingContinue: 'Nastavi',
+    pendingClear: 'Očisti',
+  },
+  demoPage: {
+    title: 'Demo rezervacija',
+    description: 'Prototip sustava za rezervacije. Nije prava rezervacija.',
+    frame: 'Demo sustava za rezervacije',
   },
   todoLabel: 'Nedostaje',
 };

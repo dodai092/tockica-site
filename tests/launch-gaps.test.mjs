@@ -8,8 +8,10 @@ const pages = ['dist/index.html', 'dist/en/index.html', 'dist/raspored/index.htm
 for (const file of pages) {
   test(`${file}: mock next classes are marked data-todo so a launch build fails`, async () => {
     const html = await read(file);
-    assert.ok(/data-section="?next-classes[^>]*>/.test(html));
-    assert.ok(/data-todo="[^"]*next classes[^"]*"/.test(html), 'mock schedule needs a data-todo marker');
+    // The homepage shows next-class cards, the schedule page shows the full mock schedule.
+    const schedulePage = /raspored|schedule/.test(file);
+    assert.ok(schedulePage ? /data-schedule[\s>]/.test(html) : /data-section="?next-classes[^>]*>/.test(html));
+    assert.ok(/data-todo="[^"]*(next classes|schedule)[^"]*"/.test(html), 'mock schedule needs a data-todo marker');
   });
 }
 

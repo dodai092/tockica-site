@@ -1,22 +1,58 @@
 ---
-// Flat slate placeholder naming the photo's role. Swap for <Image> when Dunia sends
-// real photos. No stock or AI images.
+// Photo slot. Without `src` it is a flat slate placeholder naming the photo's role. With `src`
+// it renders an optimized avif/webp <Picture> and flags it as a placeholder image until Dunia's
+// real photo replaces it (Placeholder is data-todo, so a LAUNCH=1 build fails while it remains).
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+
 interface Props {
   role: string;
   ratio?: string;
   class?: string;
+  src?: ImageMetadata;
+  widths?: number[];
+  sizes?: string;
+  position?: string;
 }
 
-const { role, ratio = '16 / 9', class: className = '' } = Astro.props;
+const {
+  role,
+  ratio = '16 / 9',
+  class: className = '',
+  src,
+  widths = [480, 768, 1200],
+  sizes = '(min-width: 768px) 50vw, 100vw',
+  position = 'center',
+} = Astro.props;
 ---
 
-<div
-  data-photo={role}
-  class:list={[
-    'flex items-center justify-center rounded-(--aw-radius-card) bg-accent p-4 text-center text-sm font-medium text-white',
-    className,
-  ]}
-  style={`aspect-ratio: ${ratio}`}
->
-  {role}
-</div>
+{
+  src ? (
+    <figure data-photo={role} class={className}>
+      <Picture
+        src={src}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={widths}
+        sizes={sizes}
+        class="w-full rounded-(--aw-radius-card) object-cover"
+        style={`aspect-ratio: ${ratio}; object-position: ${position}`}
+      />
+      <figcaption class="mt-1 text-xs">
+        <Placeholder label={`${role}, placeholder image from the Multisport deck`} />
+      </figcaption>
+    </figure>
+  ) : (
+    <div
+      data-photo={role}
+      class:list={[
+        'flex items-center justify-center rounded-(--aw-radius-card) bg-accent p-4 text-center text-sm font-medium text-white',
+        className,
+      ]}
+      style={`aspect-ratio: ${ratio}`}
+    >
+      {role}
+    </div>
+  )
+}

@@ -46,9 +46,11 @@ test('every route has an HR and EN path with no trailing slash except home', () 
   assert.equal(pathFor('home', 'en'), '/en');
 });
 
-test('route table lists the ten agreed pages', () => {
+test('route table lists the eleven agreed pages and the booking demo', () => {
   assert.deepEqual([...routeKeys].sort(), [
     'contact',
+    'demo',
+    'firstTime',
     'home',
     'instructors',
     'packs',

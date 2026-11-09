@@ -6,19 +6,32 @@ export type Lang = 'hr' | 'en';
 export const defaultLang: Lang = 'hr';
 
 export type RouteKey =
-  'home' | 'schedule' | 'instructors' | 'packs' | 'sculpt' | 'contact' | 'rules' | 'terms' | 'privacy' | 'thanks';
+  | 'home'
+  | 'schedule'
+  | 'instructors'
+  | 'packs'
+  | 'firstTime'
+  | 'sculpt'
+  | 'contact'
+  | 'rules'
+  | 'terms'
+  | 'privacy'
+  | 'thanks'
+  | 'demo';
 
 const paths: Record<RouteKey, Record<Lang, string>> = {
   home: { hr: '/', en: '/en' },
   schedule: { hr: '/raspored', en: '/en/schedule' },
   instructors: { hr: '/instruktori', en: '/en/instructors' },
   packs: { hr: '/paketi', en: '/en/packs' },
+  firstTime: { hr: '/prvi-put', en: '/en/first-time' },
   sculpt: { hr: '/sculpt-room', en: '/en/sculpt-room' },
   contact: { hr: '/kontakt', en: '/en/contact' },
   rules: { hr: '/pravilnik', en: '/en/rules' },
   terms: { hr: '/uvjeti', en: '/en/terms' },
   privacy: { hr: '/privatnost', en: '/en/privacy' },
   thanks: { hr: '/hvala', en: '/en/thanks' },
+  demo: { hr: '/demo', en: '/en/demo' },
 };
 
 export const routeKeys = Object.keys(paths) as RouteKey[];

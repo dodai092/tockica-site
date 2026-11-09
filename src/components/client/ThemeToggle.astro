@@ -1,6 +1,6 @@
 ---
-// Light/dark toggle, same behaviour as the template's ToggleTheme but with the sun drawn
-// inline. The template version relies on astro-icon's shared <symbol>, which is emitted
+// Light/dark toggle, same behaviour as the template's ToggleTheme but with the icons drawn
+// inline (moon in light mode, sun in dark mode: it shows what a click switches to). The template version relies on astro-icon's shared <symbol>, which is emitted
 // once per build rather than per page, so the icon came out empty on most pages.
 import { UI } from 'astrowind:config';
 
@@ -16,11 +16,29 @@ const { label = 'Toggle between Dark and Light mode' } = Astro.props;
     <tk-theme-toggle>
       <button
         type="button"
-        class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+        class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
         aria-label={label}
         data-aw-toggle-color-scheme
       >
-        <svg class="w-6 h-6 md:w-5 md:h-5" viewBox="0 0 24 24" aria-hidden="true">
+        <svg
+          class="h-[1.625rem] w-[1.625rem] xl:h-[1.625rem] xl:w-[1.625rem] dark:hidden"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 3q.2 0 .4 0a7.5 7.5 0 0 0 7.9 12.4A9 9 0 1 1 12 3z"
+          />
+        </svg>
+        <svg
+          class="hidden h-[1.625rem] w-[1.625rem] xl:h-[1.625rem] xl:w-[1.625rem] dark:block"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
           <path
             fill="none"
             stroke="currentColor"
@@ -41,13 +59,53 @@ const { label = 'Toggle between Dark and Light mode' } = Astro.props;
   }
 </style>
 
+<style is:global>
+  /* Theme change: the whole page crossfades as one snapshot (same as the prototype), so text, backgrounds
+     and icons switch together. Scoped to data-vt so page navigation keeps its own transition. The header
+     normally has its own view-transition layer; during a theme change it joins the root snapshot. */
+  html[data-vt='theme'] #header {
+    view-transition-name: none;
+  }
+  html[data-vt='theme']::view-transition-old(root),
+  html[data-vt='theme']::view-transition-new(root) {
+    animation-duration: 400ms;
+    animation-timing-function: ease-in-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html[data-vt='theme']::view-transition-old(root),
+    html[data-vt='theme']::view-transition-new(root) {
+      animation-duration: 200ms;
+    }
+  }
+</style>
+
 <script>
   class TkThemeToggle extends HTMLElement {
     connectedCallback() {
-      this.querySelector('[data-aw-toggle-color-scheme]')?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark');
-        localStorage.theme = isDark ? 'dark' : 'light';
-        document.dispatchEvent(new CustomEvent('aw:theme-change'));
+      const button = this.querySelector<HTMLElement>('[data-aw-toggle-color-scheme]');
+      button?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const swap = () => {
+          const isDark = root.classList.toggle('dark');
+          localStorage.theme = isDark ? 'dark' : 'light';
+          document.dispatchEvent(new CustomEvent('aw:theme-change'));
+          // The icon turns in from -60deg on the drawer curve. Reduced motion keeps the dissolve only.
+          if (!reduce) {
+            button.querySelectorAll('svg').forEach((icon) =>
+              icon.animate([{ transform: 'rotate(-60deg)' }, { transform: 'none' }], {
+                duration: 300,
+                easing: 'cubic-bezier(0.32, 0.72, 0, 1)',
+              })
+            );
+          }
+        };
+        if (!document.startViewTransition) {
+          swap();
+          return;
+        }
+        root.dataset.vt = 'theme';
+        document.startViewTransition(swap).finished.finally(() => delete root.dataset.vt);
       });
     }
   }

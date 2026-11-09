@@ -84,11 +84,20 @@ test('the theme toggle in the header draws its icon and flips dark mode', async 
   const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
   await page.goto(origin + '/paketi');
   const btn = page.locator('header [data-aw-toggle-color-scheme]');
-  const box = await btn.locator('svg').boundingBox();
+  // One svg per mode (moon in light, sun in dark), only one is displayed.
+  const box = await btn.locator('svg:visible').boundingBox();
   assert.ok(box && box.width > 10, 'icon svg must have size');
-  const drawn = await btn.locator('svg').evaluate((svg) => svg.querySelectorAll('path, circle').length);
+  const drawn = await btn.locator('svg:visible').evaluate((svg) => svg.querySelectorAll('path, circle').length);
   assert.ok(drawn > 0, 'icon svg must contain its own shapes (no external sprite reference)');
   const before = await page.evaluate(() => document.documentElement.classList.contains('dark'));
+  // The class flips inside the view-transition callback, a frame after the click.
+  const isDark = () => document.documentElement.classList.contains('dark');
   await btn.click();
-  assert.notEqual(await page.evaluate(() => document.documentElement.classList.contains('dark')), before);
+  await page.waitForFunction((was) => document.documentElement.classList.contains('dark') !== was, before);
+  assert.notEqual(await page.evaluate(isDark), before);
+  const after = await btn.locator('svg:visible').evaluate((svg) => svg.querySelector('path')?.getAttribute('d'));
+  await btn.click();
+  await page.waitForFunction((was) => document.documentElement.classList.contains('dark') === was, before);
+  const back = await btn.locator('svg:visible').evaluate((svg) => svg.querySelector('path')?.getAttribute('d'));
+  assert.notEqual(after, back, 'light and dark mode must show different icons');
 });

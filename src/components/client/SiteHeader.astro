@@ -1,7 +1,7 @@
 ---
 // Client header. Structure copied from widgets/Header.astro (parts bin, never edited):
 // the <aw-header> script below drives the mobile menu and sticky state.
-import Logo from '~/components/Logo.astro';
+import Logo from '~/components/client/Logo.astro';
 import ToggleTheme from '~/components/client/ThemeToggle.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
@@ -28,51 +28,24 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
   <header
     class="top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out sticky"
     data-aw-sticky-header
+    data-hdr="clear"
+    data-hero={route === 'home' ? '' : undefined}
     id="header"
   >
     <div class="absolute inset-0"></div>
-    <div
-      class="relative text-default py-3 px-3 md:px-6 mx-auto w-full md:grid md:grid-cols-3 md:items-center max-w-7xl"
-    >
-      <div class="flex justify-between">
-        <a class="flex items-center" href={pathFor('home', lang)}>
+    <div class="relative text-default py-3 px-3 xl:px-6 mx-auto w-full xl:flex xl:items-center max-w-7xl">
+      {
+        /* Phones: logo left, language, theme and menu button right. lg and up: this row and the cluster inside it
+           are `contents`, so logo, controls and Book become one flex row, with the nav centred over it. */
+      }
+      <div class="flex items-center justify-between xl:contents" data-bar-row>
+        <a class="flex items-center xl:order-1" href={pathFor('home', lang)}>
           <Logo />
         </a>
-        <div class="flex items-center md:hidden">
-          <ToggleMenu label={lang === 'hr' ? 'Izbornik' : 'Menu'} />
-        </div>
-      </div>
-      <nav
-        class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-visible md:justify-self-center"
-        aria-label={lang === 'hr' ? 'Glavni izbornik' : 'Main navigation'}
-      >
-        <ul
-          class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
-        >
-          {
-            links.map(({ text, href }) => (
-              <li>
-                <a class:list={[linkClass, { 'aw-link-active': href === currentPath }]} href={href}>
-                  {text}
-                </a>
-              </li>
-            ))
-          }
-          <li>
-            {/* TODO(client): the login target is the booking app, proxied under tockicanai.hr (ADR 0005). */}
-            <a class={linkClass} href="#" data-login data-todo="Prijava link (booking app proxy)">
-              {copy.nav.login}
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <div
-        class="hidden md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 bottom-0 p-3 md:p-0 md:justify-self-end"
-      >
-        <div class="items-center flex justify-between w-full md:w-auto">
-          <div class="flex items-center">
+        <div class="flex items-center gap-1 xl:contents">
+          <div class="flex items-center gap-2 xl:order-3 xl:ml-auto" data-bar-controls>
             <a
-              class="text-muted hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm font-semibold px-2.5 py-2.5 inline-flex items-center"
+              class="text-muted hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm font-semibold px-2.5 py-2.5 inline-flex items-center"
               href={pathFor(route, other)}
               hreflang={other}
               lang={other}
@@ -84,22 +57,59 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
                 alt=""
                 width="28"
                 height="28"
-                class="h-7 w-7 rounded-full object-cover"
+                class="h-[1.5rem] w-[1.5rem] rounded-full object-cover xl:h-[1.375rem] xl:w-[1.375rem]"
               />
             </a>
             <ToggleTheme />
           </div>
-          <span class="ml-4">
+          <div class="flex items-center xl:hidden">
+            <ToggleMenu label={lang === 'hr' ? 'Izbornik' : 'Menu'} />
+          </div>
+        </div>
+      </div>
+      {/* Phones: this wrapper is the dropdown panel while the menu is open (styles below). lg and up: no box. */}
+      <div class="contents" data-menu-panel id="menu-panel">
+        <nav
+          class="items-center w-full xl:w-auto hidden xl:flex xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 text-default overflow-y-auto overflow-x-hidden xl:overflow-visible"
+          aria-label={lang === 'hr' ? 'Glavni izbornik' : 'Main navigation'}
+        >
+          <ul
+            class="flex flex-col xl:flex-row xl:self-center w-full xl:w-auto text-xl xl:text-[0.9375rem] tracking-[0.01rem] font-medium xl:justify-center"
+          >
+            {
+              links.map(({ text, href }) => (
+                <li>
+                  <a class:list={[linkClass, { 'aw-link-active': href === currentPath }]} href={href}>
+                    {text}
+                  </a>
+                </li>
+              ))
+            }
+            <li class="max-xl:mt-2 max-xl:border-t max-xl:border-gray-200 max-xl:pt-2 dark:max-xl:border-slate-700">
+              {/* TODO(client): the login target is the booking app, proxied under tockicanai.hr (ADR 0005). */}
+              <a class={linkClass} href="#" data-login data-todo="Prijava link (booking app proxy)">
+                {copy.nav.login}
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="hidden xl:flex items-center xl:order-4 xl:ml-3" data-menu-extras>
+          <span>
             <Button
               variant="primary"
               text={copy.cta.book}
               href={pathFor('schedule', lang)}
-              class="ml-2 py-2.5 px-5.5 md:px-6 font-semibold shadow-none text-sm w-auto"
+              class="py-2.5 px-5.5 xl:px-6 font-semibold shadow-none text-sm w-auto"
               data-book
             />
           </span>
         </div>
       </div>
+    </div>
+    {
+      /* Phones: dim layer under the open menu. Keep it AFTER the bar layer: the bar styles below target `#header > div:first-child`. */
+    }
+    <div class="xl:hidden fixed inset-x-0 bottom-0 top-[4.5rem] bg-black/40" data-menu-backdrop aria-hidden="true">
     </div>
   </header>
 </aw-header>
@@ -110,51 +120,573 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
   }
 </style>
 
+<style is:global>
+  /* Every page: clear at rest, frosted glass once content moves under the bar (data-hdr, kept in sync by
+     the script). Homepage only (data-hero): the bar also overlays the hero photo with white text and a
+     scrim until the hero has left the header area.
+     The bar layer carries the same properties in both states so clear -> glass interpolates. The change is
+     staged: tint first, blur follows, text colour flips once the tint can back it. Leaving glass runs it in
+     reverse. --ease-drawer is front-loaded and is only for movement, never for a material fade: fades use
+     ease-in-out. Tokens and durations are the prototype's, see MotionStyles.astro. */
+  #header[data-hero] {
+    margin-bottom: calc(var(--hdr-h, 4.5rem) * -1);
+  }
+  #header[data-hdr] {
+    transition:
+      transform 0.3s var(--ease-drawer),
+      opacity 0.3s ease;
+  }
+  #header[data-hdr] > div:first-child {
+    background-color: rgb(255 255 255 / 0%) !important;
+    backdrop-filter: blur(0) saturate(100%) !important;
+    -webkit-backdrop-filter: blur(0) saturate(100%) !important;
+    border-bottom: 1px solid rgb(0 0 0 / 0%) !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0%) !important;
+  }
+  /* To clear: blur lets go first, the tint follows. */
+  #header[data-hdr='clear'] > div:first-child {
+    transition:
+      backdrop-filter 0.25s ease-in-out,
+      -webkit-backdrop-filter 0.25s ease-in-out,
+      background-color 0.25s ease-in-out 0.08s,
+      border-color 0.25s ease-in-out 0.08s,
+      box-shadow 0.25s ease-in-out 0.08s;
+  }
+  :root.dark #header[data-hdr] > div:first-child {
+    background-color: rgb(28 32 40 / 0%) !important;
+    border-bottom-color: rgb(255 255 255 / 0%) !important;
+  }
+  /* Scrim under the white text while the bar is clear. Its own layer, since gradients cannot interpolate. */
+  #header[data-hdr] > div:first-child::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(0 0 0 / 45%), rgb(0 0 0 / 0%));
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  #header[data-hero][data-hdr='clear'] > div:first-child::before {
+    opacity: 1;
+  }
+  #header[data-hdr='glass'] > div:first-child {
+    background-color: rgb(255 255 255 / 55%) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border-bottom-color: rgb(0 0 0 / 8%) !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 70%) !important;
+    /* To glass: tint first, blur starts 100 ms later and eases in, so small radii do not pop. */
+    transition:
+      background-color 0.25s ease-in-out,
+      border-color 0.25s ease-in-out,
+      box-shadow 0.25s ease-in-out,
+      backdrop-filter 0.3s ease-in-out 0.1s,
+      -webkit-backdrop-filter 0.3s ease-in-out 0.1s;
+  }
+  :root.dark #header[data-hdr='glass'] > div:first-child {
+    background-color: rgb(28 32 40 / 45%) !important;
+    border-bottom-color: rgb(255 255 255 / 12%) !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 22%) !important;
+  }
+  #header[data-hero][data-hdr='clear']:not(.expanded) {
+    color: #fff;
+  }
+  #header[data-hero][data-hdr='clear']:not(.expanded) :is(a, button, .text-default, .text-muted, .text-gray-900) {
+    color: #fff;
+  }
+  #header[data-hero][data-hdr='clear']:not(.expanded) [data-aw-toggle-menu] span {
+    background-color: #fff;
+  }
+  /* Menu open over the clear hero bar: the bar keeps its look (white logo and button). Only the dropdown panel
+     below switches to dark text, since it sits on its own glass. */
+  #header[data-hero][data-hdr='clear'].expanded [data-bar-row] {
+    color: #fff;
+  }
+  #header[data-hero][data-hdr='clear'].expanded [data-bar-row] :is(a, button, .text-default, .text-gray-900) {
+    color: #fff;
+  }
+  #header[data-hero][data-hdr='clear'].expanded [data-bar-row] [data-aw-toggle-menu] span {
+    background-color: #fff;
+  }
+  #header[data-hero][data-hdr='clear'].expanded [data-bar-row] .tk-logo-dark-text {
+    opacity: 0;
+  }
+  #header[data-hero][data-hdr='clear'].expanded [data-bar-row] .tk-logo-white-text {
+    opacity: 1;
+  }
+  /* Text colour flips once the tint can back it (to glass), and first (to clear). Only on the leaves:
+     wrappers such as nav are inherited from, so a transition on them would stack with the link's own. */
+  #header[data-hdr='clear'] :is(a:not([class*='btn']), button, .text-muted, .text-gray-900) {
+    transition:
+      color 0.2s ease-in-out,
+      transform 0.35s var(--ease-spring);
+  }
+  #header[data-hdr='glass'] :is(a:not([class*='btn']), button, .text-muted, .text-gray-900) {
+    transition:
+      color 0.2s ease-in-out 0.1s,
+      transform 0.35s var(--ease-spring);
+  }
+  /* Logo wordmark: white text over the hero photo, otherwise follows the theme. Cross-fades on the same
+     timing as the link colour. */
+  #header[data-hero][data-hdr='clear']:not(.expanded) .tk-logo-dark-text {
+    opacity: 0;
+  }
+  #header[data-hero][data-hdr='clear']:not(.expanded) .tk-logo-white-text {
+    opacity: 1;
+  }
+  #header[data-hdr='clear'] .tk-logo > img {
+    transition: opacity 0.2s ease-in-out;
+  }
+  #header[data-hdr='glass'] .tk-logo > img {
+    transition: opacity 0.2s ease-in-out 0.1s;
+  }
+  #header[data-hide]:not(:has(:focus-visible)):not(.expanded) {
+    transform: translateY(-100%);
+  }
+  /* Navigation: the bar itself must not animate between pages. State changes are applied instantly for
+     two frames, then the active link animates on its own (indicator below). */
+  #header[data-instant],
+  #header[data-instant] *,
+  #header[data-instant] *::before,
+  #header[data-instant] *::after {
+    transition: none !important;
+  }
+  /* Active link: desktop gets an underline that grows from the centre, mobile menu gets the brand colour. */
+  #header nav a {
+    position: relative;
+  }
+  #header nav a::after {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.4rem;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--aw-color-primary, currentColor);
+    transform: scaleX(0);
+    opacity: 0;
+    transition:
+      transform 0.3s var(--ease-drawer),
+      opacity 0.2s var(--ease-drawer);
+  }
+  #header nav a.aw-link-active::after {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  @media (max-width: 1279px) {
+    #header nav a::after {
+      display: none;
+    }
+    #header.expanded nav a.aw-link-active {
+      color: var(--aw-color-primary);
+    }
+    /* Dark mode: the brand red is 3.1:1 on the navy panel, so the active link uses a lighter red (5.8:1). */
+    :root.dark #header.expanded nav a.aw-link-active {
+      color: #ff6b6b;
+    }
+    /* The active page is also marked by a bar on the right edge, so it does not rely on colour alone. The bar
+       sits in the panel padding, so no row moves. */
+    #header.expanded [data-menu-panel] nav a.aw-link-active::after {
+      display: block;
+      left: auto;
+      right: -0.5rem;
+      top: 0.6rem;
+      bottom: 0.6rem;
+      width: 3px;
+      height: auto;
+      transform: none;
+      opacity: 1;
+      transition: none;
+    }
+  }
+  /* Phones: the open menu is a dropdown panel under the bar, right-aligned, over a dimmed page. The bar keeps
+     whatever background it had. The panel uses the same glass as the bar (see data-hdr='glass' above). */
+  @media (max-width: 1279px) {
+    /* No backdrop-filter on the panel on purpose: the header is its own view-transition layer, which stops
+       the blur from seeing the page, except while the theme change runs. The panel then flickered more opaque
+       for 400 ms. A tint alone looks the same at rest, during that change and after it. */
+    #header.expanded [data-menu-panel] {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+      position: fixed;
+      top: 4.75rem;
+      right: 0.75rem;
+      z-index: 1;
+      width: min(20rem, calc(100vw - 1.5rem));
+      max-height: calc(100dvh - 6rem);
+      overflow-y: auto;
+      padding: 0.5rem 1rem 1rem;
+      border-radius: 1rem;
+      /* Closed look: no tint, no shadow. data-menu-shown moves it to the open look below, and the transitions
+         run both ways, so a tap mid-way reverses from where it is. */
+      border: 1px solid transparent;
+      background-color: rgb(255 255 255 / 0%);
+      box-shadow:
+        0 12px 40px rgb(0 0 0 / 0%),
+        inset 0 1px 0 rgb(255 255 255 / 0%);
+      transform: translateY(-8px);
+      transform-origin: top right;
+      transition:
+        background-color 0.25s ease-in-out 0.08s,
+        border-color 0.25s ease-in-out 0.08s,
+        box-shadow 0.25s ease-in-out 0.08s,
+        transform 0.3s var(--ease-drawer);
+    }
+    :root.dark #header.expanded [data-menu-panel] {
+      background-color: rgb(28 32 40 / 0%);
+    }
+    /* More tint than the bar (55% light, 45% dark): the panel carries text over whatever is behind it. The
+       measured worst-case contrast at the bar's tint was 2.7:1 in dark mode. Now 80% light, 85% dark. */
+    #header[data-menu-shown] [data-menu-panel] {
+      border-color: rgb(0 0 0 / 8%);
+      background-color: rgb(255 255 255 / 80%);
+      box-shadow:
+        0 12px 40px rgb(0 0 0 / 25%),
+        inset 0 1px 0 rgb(255 255 255 / 70%);
+      transform: none;
+      transition:
+        background-color 0.25s ease-in-out,
+        border-color 0.25s ease-in-out,
+        box-shadow 0.25s ease-in-out,
+        transform 0.3s var(--ease-drawer);
+    }
+    :root.dark #header[data-menu-shown] [data-menu-panel] {
+      background-color: rgb(28 32 40 / 85%);
+      border-color: rgb(255 255 255 / 22%);
+      box-shadow:
+        0 12px 40px rgb(0 0 0 / 60%),
+        inset 0 1px 0 rgb(255 255 255 / 22%);
+    }
+    /* The links and the button fade in with the panel. */
+    #header.expanded [data-menu-panel] :is(nav, [data-menu-extras]) {
+      opacity: 0;
+      transition: opacity 0.24s ease-out;
+    }
+    #header[data-menu-shown] [data-menu-panel] :is(nav, [data-menu-extras]) {
+      opacity: 1;
+    }
+    /* The dim under the panel. Only its opacity animates (compositor only). The panel's own area is cut out
+       with a clip-path the script sets (positionDimHole), so the panel sits on the undimmed page like the bar. */
+    [data-menu-backdrop] {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.25s ease-in-out,
+        visibility 0s linear 0.25s;
+    }
+    #header[data-menu-shown] [data-menu-backdrop] {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.25s ease-in-out;
+    }
+    #header.expanded [data-menu-panel] nav {
+      position: static;
+      padding: 0;
+      overflow: visible;
+    }
+    #header.expanded [data-menu-panel] nav ul {
+      align-items: flex-end;
+      text-align: right;
+    }
+    #header.expanded [data-menu-panel] nav li {
+      width: 100%;
+    }
+    #header.expanded [data-menu-panel] nav a {
+      justify-content: flex-end;
+      min-height: 2.75rem;
+      padding-right: 0;
+    }
+    #header.expanded [data-menu-extras] {
+      position: static;
+      display: block;
+    }
+    #header.expanded [data-menu-extras] > span {
+      display: block;
+      margin: 0;
+    }
+    #header.expanded [data-menu-extras] [data-book] {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 0;
+    }
+  }
+  /* The fixed book bar sits under the dim layer; hide it while the menu is open so nothing shows through. */
+  [data-book-bar-wrap] {
+    transition: opacity 0.15s ease;
+  }
+  html[data-menu-open] [data-book-bar-wrap] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* The header is its own view-transition layer (old snapshot hidden, new one not animated), so the page
+     cross-fade never touches it. It is not persisted: its links and language switch are per page. */
+  #header {
+    view-transition-name: site-header;
+  }
+  ::view-transition-group(site-header),
+  ::view-transition-new(site-header) {
+    animation: none;
+  }
+  ::view-transition-old(site-header) {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #header nav a::after {
+      transform: none;
+      transition: opacity 0.2s linear;
+    }
+    #header[data-hdr] > div:first-child,
+    #header[data-hdr] > div:first-child::before,
+    #header[data-hdr] :is(a, button, .text-muted, .text-gray-900) {
+      transition-duration: 0.2s !important;
+      transition-delay: 0s !important;
+    }
+    #header[data-hide]:not(:has(:focus-visible)):not(.expanded) {
+      transform: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #header.expanded [data-menu-panel],
+    #header[data-menu-shown] [data-menu-panel] {
+      transform: none;
+      transition-duration: 0.2s !important;
+      transition-delay: 0s !important;
+    }
+    #header.expanded [data-menu-panel] :is(nav, [data-menu-extras]),
+    [data-menu-backdrop] {
+      transition-duration: 0.2s !important;
+      transition-delay: 0s !important;
+    }
+  }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    #header[data-hdr='glass'] > div:first-child {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      background-color: #fff !important;
+    }
+    :root.dark #header[data-hdr='glass'] > div:first-child {
+      background-color: #1c2028 !important;
+    }
+    #header.expanded [data-menu-panel],
+    #header[data-menu-shown] [data-menu-panel] {
+      background-color: #fff;
+      opacity: 0;
+    }
+    #header[data-menu-shown] [data-menu-panel] {
+      opacity: 1;
+    }
+    :root.dark #header.expanded [data-menu-panel],
+    :root.dark #header[data-menu-shown] [data-menu-panel] {
+      background-color: #1c2028;
+    }
+  }
+</style>
+
 <script>
+  // Language switch: the prototype's out-then-in page fade (MotionStyles.astro). The flag is on <html> for the
+  // whole transition. Astro drops it on swap (root attributes come from the new page), so it is put back.
+  let langSwitching = false;
+
+  // The switch keeps the reader in the same section. The HR and EN pages build the same blocks in the same order
+  // (direct children of <main>), so the spot is saved as "block number plus how far into it" and put back after
+  // the swap. A pixel offset would drift, because the two languages wrap differently.
+  type Anchor = { index: number; count: number; fraction: number };
+  let anchor: Anchor | null = null;
+  // Fixed reading line, not the header's height: on phones the open menu makes the header fill the screen.
+  const READING_LINE = 96;
+  // The page's blocks: <main>'s children, or one level down when the page wraps everything in a single element.
+  const pageBlocks = () => {
+    let el: Element | null = document.querySelector('main');
+    while (el && el.children.length === 1) el = el.children[0];
+    return [...(el?.children ?? [])];
+  };
+  const saveAnchor = (): Anchor | null => {
+    const blocks = pageBlocks();
+    if (!blocks.length) return null;
+    const line = READING_LINE;
+    let index = blocks.findIndex((b) => b.getBoundingClientRect().bottom > line);
+    if (index === -1) index = blocks.length - 1;
+    const rect = blocks[index].getBoundingClientRect();
+    const fraction = rect.height ? Math.min(1, Math.max(0, (line - rect.top) / rect.height)) : 0;
+    return { index, count: blocks.length, fraction };
+  };
+  const restoreAnchor = (saved: Anchor) => {
+    const blocks = pageBlocks();
+    if (blocks.length !== saved.count) return; // not a twin of the old page: start at the top
+    const rect = blocks[saved.index].getBoundingClientRect();
+    const top = window.scrollY + rect.top + saved.fraction * rect.height - READING_LINE;
+    window.scrollTo({ left: 0, top: Math.max(0, top), behavior: 'instant' });
+  };
+
+  document.addEventListener('click', (e) => {
+    const ev = e as MouseEvent;
+    if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    if ((e.target as HTMLElement)?.closest('[data-lang-switch]')) {
+      langSwitching = true;
+      anchor = saveAnchor();
+      document.documentElement.dataset.vt = 'lang';
+    }
+  });
+  // Astro scrolls to the top before this event, inside the same view-transition step, so the new page never shows the top.
+  document.addEventListener('astro:after-swap', () => {
+    if (!langSwitching) return;
+    document.documentElement.dataset.vt = 'lang';
+    if (anchor) restoreAnchor(anchor);
+    anchor = null;
+  });
+  document.addEventListener('astro:before-swap', (e) => {
+    if (!langSwitching) return;
+    (e as Event & { viewTransition?: ViewTransition }).viewTransition?.finished.finally(() => {
+      delete document.documentElement.dataset.vt;
+      langSwitching = false;
+    });
+  });
+
+  // Href of the active nav link on the previous page. The header is rebuilt on every navigation, so the new
+  // one starts from it and then moves the active class, which lets the underline animate between links.
+  let previousActive: string | null = null;
+
   class AwHeader extends HTMLElement {
     private onScroll?: () => void;
     private mql?: MediaQueryList;
     private onMqlChange?: () => void;
+    private onResize?: () => void;
+    private sync?: () => void;
     private onPageLoad = () => {
-      this.updateActiveLinks();
       this.closeOpenDropdown();
+      this.sync?.();
     };
 
     connectedCallback() {
       const header = this.querySelector<HTMLElement>('#header');
       const toggle = this.querySelector<HTMLElement>('[data-aw-toggle-menu]');
       const nav = this.querySelector<HTMLElement>('#header nav');
-      const lastChild = this.querySelector<HTMLElement>('#header > div > div:last-child');
+      const lastChild = this.querySelector<HTMLElement>('[data-menu-extras]');
+      const controls = this.querySelector<HTMLElement>('[data-bar-controls]');
 
-      // The header persists across view transitions (transition:persist), so
-      // the server-rendered `aw-link-active` class would go stale. Re-compute it
-      // on every navigation (astro:page-load fires on load and after each swap).
-      this.updateActiveLinks();
+      // The header is rebuilt on every client-side navigation (ClientRouter), so this runs per page.
       document.addEventListener('astro:page-load', this.onPageLoad);
 
+      const ssrActive = this.querySelector('nav a.aw-link-active')?.getAttribute('href') ?? null;
+      if (previousActive && previousActive !== ssrActive) {
+        this.querySelectorAll<HTMLAnchorElement>('nav a[href]').forEach((a) => {
+          a.classList.toggle('aw-link-active', a.getAttribute('href') === previousActive);
+        });
+      }
+      previousActive = ssrActive;
+
+      const panel = this.querySelector<HTMLElement>('[data-menu-panel]');
+      const backdrop = this.querySelector<HTMLElement>('[data-menu-backdrop]');
+      const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      toggle?.setAttribute('aria-controls', 'menu-panel');
+
+      // The menu is driven by data-menu-shown on the header: CSS transitions do all the motion (see the styles
+      // above), so every change can be reversed from its current value. `expanded` keeps the layout of the open
+      // menu until the close has settled.
+      let settleTimer: number | undefined;
+      const isShown = () => header?.hasAttribute('data-menu-shown') ?? false;
+      const settleMs = () => (reduceMotion() ? 200 : 400);
+
       const closeMenu = () => {
+        window.clearTimeout(settleTimer);
+        header?.removeAttribute('data-menu-shown');
         toggle?.classList.remove('expanded');
         toggle?.setAttribute('aria-expanded', 'false');
         document.body.classList.remove('overflow-hidden');
-        header?.classList.remove('h-screen', 'expanded', 'bg-page');
+        document.documentElement.removeAttribute('data-menu-open');
+        header?.classList.remove('expanded');
         nav?.classList.add('hidden');
         lastChild?.classList.add('hidden');
       };
 
-      // Mobile menu toggle.
-      toggle?.addEventListener('click', () => {
-        const expanded = toggle.classList.toggle('expanded');
-        toggle.setAttribute('aria-expanded', String(expanded));
-        document.body.classList.toggle('overflow-hidden');
-        header?.classList.toggle('h-screen');
-        header?.classList.toggle('expanded');
-        header?.classList.toggle('bg-page');
-        nav?.classList.toggle('hidden');
-        lastChild?.classList.toggle('hidden');
-      });
+      // The panel's final box (it slides 8px, so read its layout box, not its painted one), as a hole in the dim.
+      const positionDimHole = () => {
+        if (!panel || !backdrop) return;
+        const w = backdrop.clientWidth;
+        const h = backdrop.clientHeight;
+        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        const width = Math.min(20 * rem, window.innerWidth - 1.5 * rem);
+        const right = 0.75 * rem;
+        const top = 4.75 * rem - 4.5 * rem; // the dim starts at 4.5rem, the panel at 4.75rem
+        const x = window.innerWidth - right - width;
+        const y = top;
+        const ph = panel.offsetHeight;
+        const r = 16;
+        backdrop.style.clipPath =
+          `path(evenodd, 'M0 0H${w}V${h}H0Z ` +
+          `M${x + r} ${y}H${x + width - r}A${r} ${r} 0 0 1 ${x + width} ${y + r}V${y + ph - r}` +
+          `A${r} ${r} 0 0 1 ${x + width - r} ${y + ph}H${x + r}A${r} ${r} 0 0 1 ${x} ${y + ph - r}` +
+          `V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z')`;
+      };
+      window.addEventListener('resize', () => isShown() && positionDimHole());
 
-      // Close the mobile menu when a nav link is clicked.
-      nav?.addEventListener('click', closeMenu);
+      const open = () => {
+        window.clearTimeout(settleTimer);
+        if (!header?.classList.contains('expanded')) {
+          header?.classList.add('expanded');
+          nav?.classList.remove('hidden');
+          lastChild?.classList.remove('hidden');
+          // Apply the closed look without animating to it (transitions off for one style flush), so that
+          // data-menu-shown below starts the open transition from it.
+          const parts = [panel, nav, lastChild].filter((el): el is HTMLElement => !!el);
+          parts.forEach((el) => (el.style.transition = 'none'));
+          parts.forEach((el) => void getComputedStyle(el).opacity);
+          parts.forEach((el) => (el.style.transition = ''));
+        }
+        toggle?.classList.add('expanded');
+        toggle?.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('overflow-hidden');
+        document.documentElement.setAttribute('data-menu-open', '');
+        positionDimHole();
+        header?.setAttribute('data-menu-shown', '');
+      };
+
+      const close = () => {
+        if (!isShown()) return;
+        header?.removeAttribute('data-menu-shown');
+        toggle?.classList.remove('expanded');
+        toggle?.setAttribute('aria-expanded', 'false');
+        window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(closeMenu, settleMs());
+      };
+
+      // Mobile menu toggle.
+      toggle?.addEventListener('click', () => (isShown() ? close() : open()));
+
+      // Close on a tap outside the panel, on Escape (focus goes back to the button), and when a link is clicked.
+      backdrop?.addEventListener('click', close);
+      nav?.addEventListener('click', close);
+      this.addEventListener('keydown', (e) => {
+        if (!isShown()) return;
+        if (e.key === 'Escape') {
+          close();
+          toggle?.focus();
+          return;
+        }
+        // Keep Tab inside the bar controls, the button and the panel while the menu is open.
+        if (e.key !== 'Tab' || !toggle) return;
+        const items = [
+          ...(controls?.querySelectorAll<HTMLElement>('a[href], button') ?? []),
+          toggle,
+          ...(panel?.querySelectorAll<HTMLElement>('a[href], button') ?? []),
+        ].filter((el) => el.offsetParent !== null);
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
 
       // Desktop dropdowns open on hover/`:focus-within`. When a dropdown link is
       // clicked it keeps focus, and because the header uses `transition:persist`
@@ -167,25 +699,95 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       });
 
       // Close it when leaving the mobile breakpoint.
-      this.mql = window.matchMedia('(max-width: 767px)');
+      this.mql = window.matchMedia('(max-width: 1279px)');
       this.onMqlChange = () => closeMenu();
       this.mql.addEventListener('change', this.onMqlChange);
 
       // Sticky header: toggle the `scroll` class past a small threshold.
       if (header?.hasAttribute('data-aw-sticky-header')) {
         let ticking = false;
+        let hero: Element | null = null;
+        let last = window.scrollY;
+        let down = 0;
+        let up = 0;
+        const measure = () => {
+          if (hero && !header.classList.contains('expanded')) {
+            header.style.setProperty('--hdr-h', `${header.offsetHeight}px`);
+          }
+        };
+        // Clear at rest, glass once content is under the bar (homepage: once the hero has left). Past
+        // that the bar hides after 150px of continuous scrolling down and returns after 80px up.
+        // Always shown near the top (homepage: near the hero edge).
+        const homeState = () => {
+          if (header.classList.contains('expanded')) return;
+          const glass = header.dataset.hdr === 'glass';
+          let past: boolean;
+          let near: boolean;
+          if (hero) {
+            const bottom = hero.getBoundingClientRect().bottom;
+            // 16px of hysteresis on the way back so scrolling to and fro at the edge does not chatter.
+            past = bottom <= header.offsetHeight + (glass ? 16 : 0);
+            near = bottom > -200;
+          } else {
+            // No hero: page titles reach the bar at about 64px of scroll, so glass starts just before.
+            past = window.scrollY > 48 - (glass ? 16 : 0);
+            near = window.scrollY < 200;
+          }
+          header.dataset.hdr = past ? 'glass' : 'clear';
+          const delta = window.scrollY - last;
+          last = window.scrollY;
+          if (near) {
+            down = 0;
+            up = 0;
+            header.removeAttribute('data-hide');
+          } else if (delta > 0) {
+            down += delta;
+            up = 0;
+            if (down > 150) header.setAttribute('data-hide', '');
+          } else if (delta < 0) {
+            up -= delta;
+            down = 0;
+            if (up > 80) header.removeAttribute('data-hide');
+          }
+        };
         const applyStyles = () => {
           if (window.scrollY > 60) header.classList.add('scroll');
           else header.classList.remove('scroll');
+          homeState();
           ticking = false;
         };
+        // Page changed (or first load): re-read the hero, reset the state without animating the bar,
+        // then let the active link animate on its own.
+        this.sync = () => {
+          header.setAttribute('data-instant', '');
+          hero = document.querySelector('[data-section="hero"]');
+          header.toggleAttribute('data-hero', !!hero);
+          header.removeAttribute('data-hide');
+          header.dataset.hdr = 'clear';
+          down = 0;
+          up = 0;
+          last = window.scrollY;
+          measure();
+          applyStyles();
+          window.requestAnimationFrame(() =>
+            window.requestAnimationFrame(() => {
+              header.removeAttribute('data-instant');
+              this.updateActiveLinks();
+            })
+          );
+        };
+        this.onResize = () => {
+          measure();
+          homeState();
+        };
+        window.addEventListener('resize', this.onResize);
         this.onScroll = () => {
           if (!ticking) {
             window.requestAnimationFrame(applyStyles);
             ticking = true;
           }
         };
-        applyStyles();
+        this.sync();
         document.addEventListener('scroll', this.onScroll, { passive: true });
       }
 
@@ -194,13 +796,12 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
 
     disconnectedCallback() {
       if (this.onScroll) document.removeEventListener('scroll', this.onScroll);
+      if (this.onResize) window.removeEventListener('resize', this.onResize);
       if (this.mql && this.onMqlChange) this.mql.removeEventListener('change', this.onMqlChange);
       document.removeEventListener('astro:page-load', this.onPageLoad);
     }
 
-    // With `transition:persist` the header (and its focus) survives client-side
-    // navigations, so a clicked dropdown link keeps `:focus-within` and its menu
-    // would stay open on the next page. Drop the focus so the CSS closes it.
+    // Drop the focus from a clicked dropdown link so its menu closes (`:focus-within`).
     private closeOpenDropdown() {
       const active = document.activeElement as HTMLElement | null;
       if (active && this.contains(active) && active.closest('.dropdown')) active.blur();
@@ -210,7 +811,9 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       const norm = (p: string) => '/' + p.replace(/^\/+|\/+$/g, '');
       const current = norm(window.location.pathname);
       this.querySelectorAll<HTMLAnchorElement>('nav a[href]').forEach((a) => {
-        a.classList.toggle('aw-link-active', norm(new URL(a.href).pathname) === current);
+        // A bare "#" (the login placeholder) would resolve to the current path and always look active.
+        const active = a.getAttribute('href') !== '#' && norm(new URL(a.href).pathname) === current;
+        a.classList.toggle('aw-link-active', active);
       });
     }
   }

@@ -1,5 +1,6 @@
 ---
 import Photo from '~/components/client/Photo.astro';
+import receptionPhoto from '~/assets/images/placeholders/reception.jpg';
 import { getCopy } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -17,6 +18,6 @@ const copy = getCopy(lang).home;
       <h2 class="text-3xl font-extrabold text-heading">{copy.about.heading}</h2>
       <p class="mt-4 text-xl text-default">{copy.about.line}</p>
     </div>
-    <Photo role={copy.photo.space} ratio="4 / 3" />
+    <Photo role={copy.photo.space} ratio="4 / 3" src={receptionPhoto} />
   </div>
 </section>

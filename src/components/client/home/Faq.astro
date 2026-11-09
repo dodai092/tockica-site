@@ -40,3 +40,33 @@ const copy = getCopy(lang).home.faq;
     }
   </div>
 </section>
+
+<script>
+  import { collapse, expand, release } from '~/lib/motion.js';
+
+  // The answer opens and closes with the prototype's fold (height, spacing and opacity, 240 ms).
+  // Delegated once, so it keeps working after client-side navigation.
+  document.addEventListener('click', (e) => {
+    const summary = (e.target as HTMLElement)?.closest<HTMLElement>('details[data-faq-item] > summary');
+    if (!summary) return;
+    e.preventDefault();
+    const item = summary.parentElement as HTMLDetailsElement;
+    const body = item.querySelector<HTMLElement>(':scope > div');
+    if (!body) return;
+    if (item.open && !item.dataset.closing) {
+      item.dataset.closing = '1';
+      collapse(body).then(() => {
+        if (!item.dataset.closing) return;
+        delete item.dataset.closing;
+        item.open = false;
+        release(body);
+      });
+    } else {
+      // Opening, or opening again while it is still folding shut.
+      delete item.dataset.closing;
+      release(body);
+      item.open = true;
+      expand(body);
+    }
+  });
+</script>

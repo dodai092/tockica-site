@@ -12,3 +12,10 @@ docs/reviews/**/evidence/lighthouse/
 
 # Frozen point-in-time backups: exact snapshots, never reformatted after the fact.
 SETUP.v1.md
+
+# Verbatim copy of the prototype file (tests/motion-contract.test.mjs), kept byte for byte.
+src/lib/motion.js
+src/lib/sheet.js
+
+# Generated copy of the booking prototype (scripts/sync-demo.mjs), kept byte for byte.
+public/demo-app

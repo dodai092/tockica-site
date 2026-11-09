@@ -8,6 +8,15 @@
         "value": "placeholder-hero.svg",
         "createdAt": "2026-09-06T14:56:22.968Z",
         "reason": "Phase 2 ADR 0005 specifies this local neutral starter asset."
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "docs/reviews/schedule-options/schedule-card-options.html"
+        ],
+        "createdAt": "2026-11-09T22:57:53.817Z",
+        "reason": "false positive: the scanner pairs the dark-theme token values (#a2abb8, #edeff2) with the light white surface; they only apply under the dark blocks on dark surfaces. Contrast of the mock-ups checked by hand, not user confirmed"
       }
     ]
   }

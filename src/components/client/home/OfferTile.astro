@@ -1,0 +1,28 @@
+---
+import { packs } from '~/data/packs';
+import { formatEur } from '~/lib/packs';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getCopy(lang).home.offer;
+const first = packs.find((p) => p.id === 'intro-1')!;
+---
+
+<section data-section="offer" class="mx-auto max-w-7xl px-4 sm:px-6 py-10">
+  <div
+    class="flex flex-col gap-4 rounded-(--aw-radius-card) border border-gray-200 dark:border-slate-600 p-6 md:flex-row md:items-center md:justify-between"
+  >
+    <h2 class="text-2xl md:text-3xl font-extrabold text-heading">
+      {`${copy.first} ${formatEur(first.priceEur!, lang)}`}
+    </h2>
+    <p class="flex flex-wrap gap-x-6 gap-y-2">
+      <a class="font-semibold underline" href={pathFor('firstTime', lang)}>{copy.firstTime}</a>
+      <a class="font-semibold underline" href={pathFor('packs', lang)}>{copy.packs}</a>
+    </p>
+  </div>
+</section>

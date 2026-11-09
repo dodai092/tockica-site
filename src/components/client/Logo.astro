@@ -1,0 +1,41 @@
+---
+// Logo with two wordmark versions: white text (for dark backgrounds, the original negative file) and dark
+// text (for light backgrounds). The text sits inside the red ring, so it shows directly on the page.
+// Light theme shows the dark text, dark theme the white text, and the homepage header over the hero photo
+// the white text. The two images are stacked and cross-fade, see the rules below and SiteHeader.astro.
+import { SITE } from 'astrowind:config';
+import { Image } from 'astro:assets';
+import { brand } from '~/brand';
+import logoDarkText from '~/assets/images/logo-dark-text.svg';
+---
+
+<div class="flex items-center self-center ml-2 rtl:ml-0 rtl:mr-2 whitespace-nowrap gap-2">
+  {
+    brand.logo.image && (
+      <span class="tk-logo grid">
+        <Image src={logoDarkText} alt={brand.logo.alt || SITE?.name} class="tk-logo-dark-text h-11 xl:h-8 w-auto" />
+        <Image src={brand.logo.image} alt="" aria-hidden="true" class="tk-logo-white-text h-11 xl:h-8 w-auto" />
+      </span>
+    )
+  }
+  {
+    brand.logo.showName && (
+      <span class="tk-logo-name hidden text-xl font-bold text-gray-900 dark:text-white">{SITE?.name}</span>
+    )
+  }
+</div>
+
+<style is:global>
+  .tk-logo > img {
+    grid-area: 1 / 1;
+  }
+  .tk-logo-white-text {
+    opacity: 0;
+  }
+  .dark .tk-logo-dark-text {
+    opacity: 0;
+  }
+  .dark .tk-logo-white-text {
+    opacity: 1;
+  }
+</style>

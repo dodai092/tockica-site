@@ -80,6 +80,12 @@ function collectContrastFailures() {
   function effectiveBackground(el) {
     let node = el;
     while (node) {
+      // The homepage header is transparent over the hero photo, so judge it against the hero's
+      // background (bg-black under the photo), not the page behind it.
+      if (node.id === 'header' && node.dataset.hdr === 'clear') {
+        node = document.querySelector('[data-section="hero"]') ?? node.parentElement;
+        continue;
+      }
       const bg = parseRGBA(getComputedStyle(node).backgroundColor);
       if (bg && bg.a > 0) return bg;
       node = node.parentElement;

@@ -13,6 +13,7 @@ const { lang } = Astro.props;
 ---
 
 <div
+  data-book-bar-wrap
   class="md:hidden fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 dark:border-slate-700 bg-page px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
 >
   <a class="btn-primary w-full" href={pathFor('schedule', lang)} data-book-bar>{getCopy(lang).cta.book}</a>

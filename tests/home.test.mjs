@@ -42,10 +42,10 @@ for (const { lang, file } of pages) {
     assert.ok(links.some((l) => /btn-primary/.test(l)));
   });
 
-  test(`${lang}: hero has no image element, only the placeholder`, async () => {
+  test(`${lang}: hero photo is a flagged placeholder image until Dunia sends a real one`, async () => {
     const hero = section(await read(file), 'hero');
-    assert.ok(!/<img\b/.test(hero));
-    assert.ok(/data-photo="[^"]+"/.test(hero));
+    assert.ok(/<picture\b[\s\S]*<img\b/.test(hero));
+    assert.ok(/data-todo="[^"]*hero photo[^"]*"/.test(hero));
   });
 
   test(`${lang}: hero slogan is an open placeholder, not a guess`, async () => {
@@ -54,11 +54,30 @@ for (const { lang, file } of pages) {
   });
 
   test(`${lang}: next classes lists four items with a free-bike count`, async () => {
-    const block = section(await read(file), 'next-classes');
+    const block = section(await read(file), 'next-classes').replace(/<template[\s\S]*?<\/template>/g, '');
     const items = [...block.matchAll(/<li\b[^>]*data-next-class[^>]*>/g)].map((m) => m[0]);
     assert.equal(items.length, 4);
     for (const item of items) assert.match(item, /data-free-bikes="\d+"/);
     assert.ok(block.includes(`href="${pathFor('schedule', lang)}"`));
+  });
+
+  test(`${lang}: a next-class card reads time, instructor, training name, with avatar, seats and meter`, async () => {
+    const block = section(await read(file), 'next-classes').replace(/<template[\s\S]*?<\/template>/g, '');
+    const li = block.match(/<li\b[^>]*data-next-class[^>]*>[\s\S]*?<\/li>/)?.[0] ?? '';
+    const at = (f) => li.indexOf(`data-f="${f}"`);
+    assert.ok(at('time') > -1 && at('time') < at('instructor') && at('instructor') < at('name'), 'order of the lines');
+    assert.ok(at('initial') > -1 && at('seats') > -1 && li.includes('data-meter'), 'avatar, seats and meter');
+    assert.ok(!/Slobodno bicikala|Free bikes/.test(block), 'the old free-bikes line is gone');
+    assert.ok(!block.includes("50' Riders Room"), 'no room name on the cards');
+  });
+
+  test(`${lang}: the full mock class says so and offers the waiting list`, async () => {
+    const block = section(await read(file), 'next-classes').replace(/<template[\s\S]*?<\/template>/g, '');
+    const li = block.match(/<li\b(?=[^>]*data-free-bikes="0")[^>]*>[\s\S]*?<\/li>/)?.[0] ?? '';
+    assert.ok(li, 'the mock has a full class');
+    assert.ok(li.includes(lang === 'en' ? 'Full' : 'Popunjeno'));
+    assert.ok(li.includes(lang === 'en' ? 'Waiting list' : 'Lista čekanja'));
+    assert.match(li, /data-meter[^>]*style="[^"]*width:\s*100%/);
   });
 
   test(`${lang}: class times use the 24-hour clock`, async () => {
@@ -136,15 +155,15 @@ for (const { lang, file } of pages) {
     assert.equal([...block.matchAll(/<summary\b/g)].length, 4);
   });
 
-  test(`${lang}: contact block shows only open placeholders, no unconfirmed facts`, async () => {
+  test(`${lang}: contact block has Dunia's address, e-mail and hours, phone stays a placeholder`, async () => {
     const html = await read(file);
     const block = section(html, 'contact');
-    assert.ok([...block.matchAll(/data-todo="/g)].length >= 4);
-    for (const label of ['address', 'phone', 'e-mail', 'hours']) {
-      assert.ok(new RegExp(`data-todo="[^"]*${label}[^"]*"`).test(block), `${label} placeholder missing`);
+    assert.ok(/data-todo="[^"]*phone[^"]*"/.test(block), 'phone placeholder missing');
+    for (const fact of ['Ulica Ferde Rusana 8', 'info@tockicanai.hr', '17:00-20:00']) {
+      assert.ok(block.includes(fact), `${fact} missing`);
     }
-    for (const fact of ['Rusanova', '095 865', 'Bauera', 'info@tockicanai.hr']) {
-      assert.ok(!html.includes(fact), `${fact} must not ship until Dunia confirms (item 8)`);
+    for (const fact of ['Rusanova', '095 865', 'Bauera']) {
+      assert.ok(!html.includes(fact), `${fact} must not ship until Dunia confirms`);
     }
     assert.ok(block.includes(`href="${pathFor('contact', lang)}"`));
   });

@@ -1,0 +1,29 @@
+---
+import Placeholder from '~/components/client/Placeholder.astro';
+import { contact } from '~/data/contact';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<ul class="space-y-3">
+  <li data-contact="address">{contact.address}</li>
+  <li data-contact="phone"><Placeholder lang={lang} label="phone (doc item 8)" /></li>
+  <li data-contact="email"><a class="underline" href={`mailto:${contact.email}`}>{contact.email}</a></li>
+  <li data-contact="hours">
+    <ul>
+      {
+        contact.hours.map((h) => (
+          <li class="tabular-nums">
+            <span class="inline-block w-12 font-semibold">{h.days[lang]}</span>
+            {h.time}
+          </li>
+        ))
+      }
+    </ul>
+  </li>
+</ul>
