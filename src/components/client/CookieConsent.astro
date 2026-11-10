@@ -16,13 +16,14 @@
 // sits above the fixed book bar, except on the schedule page, which has no bar.
 import { bookBarEnabled } from '~/lib/book-bar';
 import { ANALYTICS } from 'astrowind:config';
+import { withBase } from '~/lib/base';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
 // With no GA id core Analytics never defines window.awAnalytics, so a banner could not
 // remember the choice and there is nothing to consent to. Render it only once an id is set.
 const hasAnalytics = Boolean(ANALYTICS?.vendors?.googleAnalytics?.id);
-const lang: Lang = Astro.url.pathname.startsWith('/en') ? 'en' : 'hr';
+const lang: Lang = Astro.url.pathname.startsWith(withBase('/en')) ? 'en' : 'hr';
 const t = getCopy(lang).consent;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const hasBookBar = bookBarEnabled && path !== pathFor('schedule', lang);

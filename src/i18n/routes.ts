@@ -2,6 +2,8 @@
 // Links, the language switch, hreflang alternates and the twin test all read from here.
 // Paths have no trailing slash (site is trailingSlash: false), except home at '/'.
 
+import { withBase } from '../lib/base.ts';
+
 export type Lang = 'hr' | 'en';
 export const defaultLang: Lang = 'hr';
 
@@ -38,11 +40,11 @@ export const routeKeys = Object.keys(paths) as RouteKey[];
 
 export const otherLang = (lang: Lang): Lang => (lang === 'hr' ? 'en' : 'hr');
 
-export const pathFor = (key: RouteKey, lang: Lang): string => paths[key][lang];
+export const pathFor = (key: RouteKey, lang: Lang): string => withBase(paths[key][lang]);
 
 // Root-relative. The layout turns these into absolute URLs.
 export const alternatesFor = (key: RouteKey): { hreflang: string; href: string }[] => [
-  { hreflang: 'hr', href: paths[key].hr },
-  { hreflang: 'en', href: paths[key].en },
-  { hreflang: 'x-default', href: paths[key][defaultLang] },
+  { hreflang: 'hr', href: withBase(paths[key].hr) },
+  { hreflang: 'en', href: withBase(paths[key].en) },
+  { hreflang: 'x-default', href: withBase(paths[key][defaultLang]) },
 ];

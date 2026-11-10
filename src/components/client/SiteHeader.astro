@@ -6,6 +6,7 @@ import ToggleTheme from '~/components/client/ThemeToggle.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
 import { sculpt } from '~/data/sculpt';
+import { withBase } from '~/lib/base';
 import { headerRoutes } from '~/lib/nav';
 import { getCopy, otherLang, pathFor } from '~/i18n';
 import type { Lang, RouteKey } from '~/i18n';
@@ -54,7 +55,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
               data-lang-switch
             >
               <img
-                src={other === 'en' ? '/flags/flag-gb.svg' : '/flags/flag-hr.webp'}
+                src={withBase(other === 'en' ? '/flags/flag-gb.svg' : '/flags/flag-hr.webp')}
                 alt=""
                 width="28"
                 height="28"

@@ -13,6 +13,8 @@
 // Until the app exists, src/pages/api/schedule.json.ts serves mock data at the same path and marks it with
 // "source": "mock". When the app is live: proxy this path to the app (Netlify redirect, status 200), delete the
 // mock page and the Placeholder in NextClasses.astro, and src/data/next-classes.ts stays as the offline fallback.
+import { withBase } from './base.ts';
+
 export type NextClass = {
   id: string;
   startsAt: string;
@@ -27,7 +29,7 @@ export type NextClass = {
   takenBikes: number[];
 };
 
-export const SCHEDULE_FEED_URL = '/api/schedule.json';
+export const SCHEDULE_FEED_URL = withBase('/api/schedule.json');
 export const MAX_CARDS = 4;
 
 const isCount = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v >= 0;

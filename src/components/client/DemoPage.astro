@@ -3,6 +3,7 @@
 // the normal site header and footer, so the navigation is the site's own. Demo only: it goes away when the real
 // booking app is proxied under /raspored (ADR 0005). Not indexed.
 import Page from '~/components/client/Page.astro';
+import { withBase } from '~/lib/base';
 import { getCopy } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -24,7 +25,11 @@ const t = getCopy(lang).demoPage;
       // No storage: the demo opens in its own defaults.
     }
   </script>
-  <iframe class="demo-frame block w-full border-0" src="/demo-app/index.html" title={t.frame} data-demo-frame></iframe>
+  <iframe
+    class="demo-frame block w-full border-0"
+    src={withBase('/demo-app/index.html')}
+    title={t.frame}
+    data-demo-frame></iframe>
 </Page>
 
 <style is:global>

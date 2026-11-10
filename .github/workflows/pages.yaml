@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages
+
+# A preview of the site at https://<owner>.github.io/<repo>/. The repo's config stays pointed at tockicanai.hr:
+# this workflow changes the address and the base path for its own build only, and asks search engines not to
+# index the preview.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-24.04
+    env:
+      TZ: UTC
+      LANG: C.UTF-8
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.3'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Point the build at its Pages address and keep it out of search
+        run: |
+          export SITE_URL="https://$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]').github.io"
+          export SITE_BASE="/${GITHUB_REPOSITORY#*/}"
+          perl -pi -e 's|^  site: .https://tockicanai.hr.|  site: \x27$ENV{SITE_URL}\x27|; s|^  base: .\/.|  base: \x27$ENV{SITE_BASE}\x27|' src/config.yaml
+          perl -0pi -e 's|(  robots:\n    index: )true|${1}false|' src/config.yaml
+          git diff src/config.yaml
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
