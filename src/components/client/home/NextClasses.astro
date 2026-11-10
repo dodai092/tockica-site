@@ -1,5 +1,6 @@
 ---
 import Placeholder from '~/components/client/Placeholder.astro';
+import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
 import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
 import { nextClasses } from '~/data/next-classes';
 import { seatLabel, seatState } from '~/lib/seats';
@@ -104,16 +105,53 @@ const when = new Intl.DateTimeFormat(lang, {
     <Placeholder lang={lang} label="next classes are mock data until the booking app endpoint exists" />
   </p>
 </section>
+{/* Book on a card opens the same bike map as on the schedule page. The classes are handed to it by the script. */}
+<script
+  is:inline
+  type="application/json"
+  data-next-data
+  set:html={JSON.stringify(nextClasses).replace(/</g, '\\u003c')}
+/>
+<BikeSheet lang={lang} />
 
 <script>
   import { fillRow } from '~/lib/class-row';
   import { SCHEDULE_FEED_URL, parseSchedule } from '~/lib/schedule-feed';
+  import type { NextClass } from '~/lib/schedule-feed';
   import type { SeatLabels } from '~/lib/seats';
 
   // Cards are built from mock data (see the frontmatter), so the page works without the feed. In the browser they
   // are replaced by the booking app's feed, and refreshed while the tab is visible, so a booked bike shows up as one
   // fewer free bike. Any failure leaves what is on screen as it is.
   const POLL_MS = 30_000;
+
+  // The bike map (BikeSheet.astro) listens for these two events, the same ones the schedule list sends: the classes
+  // on screen, and a press on Book. Without the script the buttons stay plain links to the schedule page.
+  const publish = (classes: NextClass[]) =>
+    document.dispatchEvent(new CustomEvent('schedule:update', { detail: classes }));
+
+  const setup = () => {
+    const root = document.querySelector<HTMLElement>('[data-section="next-classes"]');
+    if (!root || root.dataset.sheetBound) return;
+    root.dataset.sheetBound = '';
+    try {
+      publish(JSON.parse(document.querySelector('[data-next-data]')?.textContent ?? '[]') as NextClass[]);
+    } catch {
+      // No classes for the sheet: the links still lead to the schedule.
+    }
+    root.addEventListener('click', (e) => {
+      const ev = e as MouseEvent;
+      if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+      const li = (e.target as Element).closest<HTMLElement>('li[data-next-class]');
+      if (!li || !(e.target as Element).closest('a')) return;
+      e.preventDefault();
+      document.dispatchEvent(
+        new CustomEvent('schedule:book', {
+          detail: { classId: li.dataset.nextClass, full: li.hasAttribute('data-full') },
+        })
+      );
+    });
+  };
 
   const showFeed = async () => {
     const root = document.querySelector<HTMLElement>('[data-section="next-classes"]');
@@ -146,6 +184,7 @@ const when = new Intl.DateTimeFormat(lang, {
       });
       list.replaceChildren(...items);
       root.dataset.feedSig = signature;
+      publish(feed.classes);
       if (feed.source !== 'mock') root.querySelector('[data-todo]')?.remove();
       root.setAttribute('data-feed-live', feed.source ?? 'app');
     } catch {
@@ -156,6 +195,7 @@ const when = new Intl.DateTimeFormat(lang, {
   let timer: number | undefined;
   const start = () => {
     window.clearInterval(timer);
+    setup();
     void showFeed();
     timer = window.setInterval(() => {
       if (document.visibilityState === 'visible') void showFeed();

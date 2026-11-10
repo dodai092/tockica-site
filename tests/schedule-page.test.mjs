@@ -146,3 +146,16 @@ test('the homepage still has its four next-class cards', async () => {
   const html = (await read('index.html')).replace(/<template[\s\S]*?<\/template>/g, '');
   assert.equal([...html.matchAll(/data-next-class=/g)].length, 4);
 });
+
+const demoText = {
+  hr: 'Isprobaj demo rezervacija (nije prava rezervacija).',
+  en: 'Try the booking demo (not a real booking).',
+};
+for (const { lang, file } of pages) {
+  test(`${lang}: the demo line has a space between its text and the link`, async () => {
+    const html = await read(file);
+    const link = html.match(/<a\b[^>]*\bdata-demo-link\b[^>]*>/);
+    assert.ok(link, 'demo link missing');
+    assert.ok(html.slice(0, link.index).endsWith(`${demoText[lang]} `), 'a space before the link');
+  });
+}

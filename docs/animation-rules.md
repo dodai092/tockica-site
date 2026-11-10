@@ -80,7 +80,9 @@ Reduced motion: no scale, colour change only.
 
 ## 5. Materials (glass)
 
-- Light theme: `rgb(255 255 255 / 55%)`. Dark theme: `rgb(28 32 40 / 45%)`.
+- Light theme: `rgb(255 255 255 / 55%)`. Dark theme: `rgb(28 32 40 / 45%)`. The header bar is the exception:
+  it uses 90% in both themes, because its blur cannot see the page (the header has a `view-transition-name`) and
+  at 55% the page text showed through the links.
   Both with `blur(24px) saturate(180%)`, a 1 px inner top highlight and a hairline below.
 - Clear state has the same properties at zero (`rgb(.. / 0%)`, `blur(0)`), so clear to glass interpolates.
 - Stage the change, on `ease-in-out`. To glass: tint 250 ms, blur 300 ms starting 100 ms later (a slow

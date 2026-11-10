@@ -239,7 +239,18 @@ test('resizing across lg switches between one day and the whole week and keeps t
 test('desktop: a refresh updates a row in a column that is not the selected day, and leaves another week alone', async () => {
   const { page, setEdit } = await open((b) => b, { width: 1280 });
   const days = await shownDays(page);
-  const other = days.find((d) => d !== null && d !== days[0]);
+  const selected = await selectedDay(page);
+  // A column other than the selected day that still has a class to book. Classes that have started are hidden, so
+  // which columns qualify depends on the day and the time the test runs.
+  let other;
+  for (const d of days) {
+    if (d === selected) continue;
+    if ((await page.locator(`[data-day-panel="${d}"] [data-class-id]:not([data-full])`).count()) > 0) {
+      other = d;
+      break;
+    }
+  }
+  assert.ok(other, 'a column other than the selected day has a class that can be booked');
   const rows = page.locator(`[data-day-panel="${other}"] [data-class-id]`);
   const ids = await rows.evaluateAll((els) => els.map((e) => e.getAttribute('data-class-id')));
   assert.ok(ids.length > 0);
@@ -443,7 +454,9 @@ test('a refresh that fills a class turns its dot pale, says it is full, and fill
 
 test('a refresh that leaves a few places marks the seats as scarce and sets the meter', async () => {
   const { page, setEdit } = await open();
-  const row = visibleDays(page).locator('[data-class-id]:not([data-full])').first();
+  // A class that is not scarce yet. One with 3 places or fewer already carries the marker, so the wait below would
+  // return before the refresh arrived.
+  const row = visibleDays(page).locator('[data-class-id]:not([data-full]):not([data-scarce])').first();
   const id = await row.getAttribute('data-class-id');
   setEdit((body) => {
     const c = body.classes.find((x) => x.id === id);
@@ -475,7 +488,9 @@ test('phone: a row is a rail, time left, instructor and training next to it, act
 
 test('desktop: a row stacks inside its sheet, time with seats on top, then instructor, training, meter, action', async () => {
   const { page } = await open(undefined, { width: 1280 });
-  const li = visibleDays(page).locator('[data-class-id]:not([data-full])').first();
+  // From md up the whole week is on screen, so any bookable class will do. The selected day alone can be empty:
+  // classes that have started are hidden.
+  const li = page.locator('[data-day-panel]:not([hidden]) [data-class-id]:not([data-full])').first();
   const box = (sel) => li.locator(sel).boundingBox();
   const [time, seats, who, kind, meter, action] = await Promise.all(
     ['[data-f="time"]', '[data-f="seats"]', '[data-f="instructor"]', '[data-f="name"]', '[data-meter]', 'a'].map(box)

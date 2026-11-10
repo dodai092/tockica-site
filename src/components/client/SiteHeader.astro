@@ -33,17 +33,18 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     id="header"
   >
     <div class="absolute inset-0"></div>
-    <div class="relative text-default py-3 px-3 xl:px-6 mx-auto w-full xl:flex xl:items-center max-w-7xl">
+    <div class="relative text-default py-3 px-3 bar:px-6 mx-auto w-full bar:flex bar:items-center max-w-7xl">
       {
-        /* Phones: logo left, language, theme and menu button right. lg and up: this row and the cluster inside it
-           are `contents`, so logo, controls and Book become one flex row, with the nav centred over it. */
+        /* Phones: logo left, language, theme and menu button right. From the `bar` breakpoint (1150px) up: this row
+           and the cluster inside it are `contents`, so logo, nav, controls and Book become one flex row. The nav
+           has auto margins, so it sits in the space between the logo and the controls, at least 24px from each. */
       }
-      <div class="flex items-center justify-between xl:contents" data-bar-row>
-        <a class="flex items-center xl:order-1" href={pathFor('home', lang)}>
+      <div class="flex items-center justify-between bar:contents" data-bar-row>
+        <a class="flex items-center bar:order-1 bar:mr-6" href={pathFor('home', lang)}>
           <Logo />
         </a>
-        <div class="flex items-center gap-1 xl:contents">
-          <div class="flex items-center gap-2 xl:order-3 xl:ml-auto" data-bar-controls>
+        <div class="flex items-center gap-1 bar:contents">
+          <div class="flex items-center gap-2 bar:order-3 bar:ml-6" data-bar-controls>
             <a
               class="text-muted hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm font-semibold px-2.5 py-2.5 inline-flex items-center"
               href={pathFor(route, other)}
@@ -57,12 +58,12 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
                 alt=""
                 width="28"
                 height="28"
-                class="h-[1.5rem] w-[1.5rem] rounded-full object-cover xl:h-[1.375rem] xl:w-[1.375rem]"
+                class="h-[1.5rem] w-[1.5rem] rounded-full object-cover bar:h-[1.375rem] bar:w-[1.375rem]"
               />
             </a>
             <ToggleTheme />
           </div>
-          <div class="flex items-center xl:hidden">
+          <div class="flex items-center bar:hidden">
             <ToggleMenu label={lang === 'hr' ? 'Izbornik' : 'Menu'} />
           </div>
         </div>
@@ -70,11 +71,11 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       {/* Phones: this wrapper is the dropdown panel while the menu is open (styles below). lg and up: no box. */}
       <div class="contents" data-menu-panel id="menu-panel">
         <nav
-          class="items-center w-full xl:w-auto hidden xl:flex xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 text-default overflow-y-auto overflow-x-hidden xl:overflow-visible"
+          class="items-center w-full bar:w-auto hidden bar:flex bar:order-2 bar:mx-auto text-default overflow-y-auto overflow-x-hidden bar:overflow-visible"
           aria-label={lang === 'hr' ? 'Glavni izbornik' : 'Main navigation'}
         >
           <ul
-            class="flex flex-col xl:flex-row xl:self-center w-full xl:w-auto text-xl xl:text-[0.9375rem] tracking-[0.01rem] font-medium xl:justify-center"
+            class="flex flex-col bar:flex-row bar:self-center w-full bar:w-auto text-xl bar:text-[0.9375rem] tracking-[0.01rem] font-medium bar:justify-center"
           >
             {
               links.map(({ text, href }) => (
@@ -85,7 +86,9 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
                 </li>
               ))
             }
-            <li class="max-xl:mt-2 max-xl:border-t max-xl:border-gray-200 max-xl:pt-2 dark:max-xl:border-slate-700">
+            <li
+              class="max-bar:mt-2 max-bar:border-t max-bar:border-gray-200 max-bar:pt-2 dark:max-bar:border-slate-700"
+            >
               {/* TODO(client): the login target is the booking app, proxied under tockicanai.hr (ADR 0005). */}
               <a class={linkClass} href="#" data-login data-todo="Prijava link (booking app proxy)">
                 {copy.nav.login}
@@ -93,13 +96,13 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
             </li>
           </ul>
         </nav>
-        <div class="hidden xl:flex items-center xl:order-4 xl:ml-3" data-menu-extras>
+        <div class="hidden bar:flex items-center bar:order-4 bar:ml-3" data-menu-extras>
           <span>
             <Button
               variant="primary"
               text={copy.cta.book}
               href={pathFor('schedule', lang)}
-              class="py-2.5 px-5.5 xl:px-6 font-semibold shadow-none text-sm w-auto"
+              class="py-2.5 px-5.5 bar:px-6 font-semibold shadow-none text-sm w-auto"
               data-book
             />
           </span>
@@ -109,7 +112,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     {
       /* Phones: dim layer under the open menu. Keep it AFTER the bar layer: the bar styles below target `#header > div:first-child`. */
     }
-    <div class="xl:hidden fixed inset-x-0 bottom-0 top-[4.5rem] bg-black/40" data-menu-backdrop aria-hidden="true">
+    <div class="bar:hidden fixed inset-x-0 bottom-0 top-[4.5rem] bg-black/40" data-menu-backdrop aria-hidden="true">
     </div>
   </header>
 </aw-header>
@@ -169,7 +172,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     opacity: 1;
   }
   #header[data-hdr='glass'] > div:first-child {
-    background-color: rgb(255 255 255 / 55%) !important;
+    background-color: rgb(255 255 255 / 90%) !important;
     backdrop-filter: blur(24px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
     border-bottom-color: rgb(0 0 0 / 8%) !important;
@@ -183,7 +186,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       -webkit-backdrop-filter 0.3s ease-in-out 0.1s;
   }
   :root.dark #header[data-hdr='glass'] > div:first-child {
-    background-color: rgb(28 32 40 / 45%) !important;
+    background-color: rgb(28 32 40 / 90%) !important;
     border-bottom-color: rgb(255 255 255 / 12%) !important;
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 22%) !important;
   }
@@ -195,6 +198,11 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
   }
   #header[data-hero][data-hdr='clear']:not(.expanded) [data-aw-toggle-menu] span {
     background-color: #fff;
+  }
+  /* The flag and theme buttons have a light grey hover fill. Over the hero their icons are white, so on that fill
+     the moon vanished. Here the fill is a faint white instead. */
+  #header[data-hero][data-hdr='clear']:not(.expanded) [data-bar-controls] :is(a, button):hover {
+    background-color: rgb(255 255 255 / 18%);
   }
   /* Menu open over the clear hero bar: the bar keeps its look (white logo and button). Only the dropdown panel
      below switches to dark text, since it sits on its own glass. */
@@ -242,6 +250,20 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
   #header[data-hide]:not(:has(:focus-visible)):not(.expanded) {
     transform: translateY(-100%);
   }
+  /* Keyboard focus: one ring for every link and button in the bar. Brand red on light, the lighter red on dark
+     (the same one as the active link), white while the bar is clear over the hero photo. The ring utilities on
+     the flag and theme buttons are a pale grey shadow, switched off here. */
+  #header :is(a, button):focus-visible {
+    outline: 2px solid var(--aw-color-primary);
+    outline-offset: 3px;
+    box-shadow: none;
+  }
+  :root.dark #header :is(a, button):focus-visible {
+    outline-color: #ff6b6b;
+  }
+  #header[data-hero][data-hdr='clear']:not(.expanded) :is(a, button):focus-visible {
+    outline-color: #fff;
+  }
   /* Navigation: the bar itself must not animate between pages. State changes are applied instantly for
      two frames, then the active link animates on its own (indicator below). */
   #header[data-instant],
@@ -273,7 +295,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     transform: scaleX(1);
     opacity: 1;
   }
-  @media (max-width: 1279px) {
+  @media (max-width: 1149px) {
     #header nav a::after {
       display: none;
     }
@@ -301,7 +323,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
   }
   /* Phones: the open menu is a dropdown panel under the bar, right-aligned, over a dimmed page. The bar keeps
      whatever background it had. The panel uses the same glass as the bar (see data-hdr='glass' above). */
-  @media (max-width: 1279px) {
+  @media (max-width: 1149px) {
     /* No backdrop-filter on the panel on purpose: the header is its own view-transition layer, which stops
        the blur from seeing the page, except while the theme change runs. The panel then flickered more opaque
        for 400 ms. A tint alone looks the same at rest, during that change and after it. */
@@ -314,7 +336,9 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       top: 4.75rem;
       right: 0.75rem;
       z-index: 1;
-      width: min(20rem, calc(100vw - 1.5rem));
+      width: max-content;
+      min-width: 12.5rem;
+      max-width: calc(100vw - 1.5rem);
       max-height: calc(100dvh - 6rem);
       overflow-y: auto;
       padding: 0.5rem 1rem 1rem;
@@ -337,11 +361,12 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     :root.dark #header.expanded [data-menu-panel] {
       background-color: rgb(28 32 40 / 0%);
     }
-    /* More tint than the bar (55% light, 45% dark): the panel carries text over whatever is behind it. The
-       measured worst-case contrast at the bar's tint was 2.7:1 in dark mode. Now 80% light, 85% dark. */
+    /* More tint than the bar (90% both): the panel carries text over whatever is behind it. The
+       measured worst-case contrast at the bar's tint was 2.7:1 in dark mode. Now 97%: at 80% the page text under
+       the panel (the dim has a hole there) showed through the labels. There is no blur to hide it. */
     #header[data-menu-shown] [data-menu-panel] {
       border-color: rgb(0 0 0 / 8%);
-      background-color: rgb(255 255 255 / 80%);
+      background-color: rgb(255 255 255 / 97%);
       box-shadow:
         0 12px 40px rgb(0 0 0 / 25%),
         inset 0 1px 0 rgb(255 255 255 / 70%);
@@ -353,18 +378,18 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         transform 0.3s var(--ease-drawer);
     }
     :root.dark #header[data-menu-shown] [data-menu-panel] {
-      background-color: rgb(28 32 40 / 85%);
+      background-color: rgb(28 32 40 / 97%);
       border-color: rgb(255 255 255 / 22%);
       box-shadow:
         0 12px 40px rgb(0 0 0 / 60%),
         inset 0 1px 0 rgb(255 255 255 / 22%);
     }
     /* The links and the button fade in with the panel. */
-    #header.expanded [data-menu-panel] :is(nav, [data-menu-extras]) {
+    #header.expanded [data-menu-panel] nav {
       opacity: 0;
       transition: opacity 0.24s ease-out;
     }
-    #header[data-menu-shown] [data-menu-panel] :is(nav, [data-menu-extras]) {
+    #header[data-menu-shown] [data-menu-panel] nav {
       opacity: 1;
     }
     /* The dim under the panel. Only its opacity animates (compositor only). The panel's own area is cut out
@@ -399,20 +424,6 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       justify-content: flex-end;
       min-height: 2.75rem;
       padding-right: 0;
-    }
-    #header.expanded [data-menu-extras] {
-      position: static;
-      display: block;
-    }
-    #header.expanded [data-menu-extras] > span {
-      display: block;
-      margin: 0;
-    }
-    #header.expanded [data-menu-extras] [data-book] {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      margin: 0;
     }
   }
   /* The fixed book bar sits under the dim layer; hide it while the menu is open so nothing shows through. */
@@ -459,7 +470,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       transition-duration: 0.2s !important;
       transition-delay: 0s !important;
     }
-    #header.expanded [data-menu-panel] :is(nav, [data-menu-extras]),
+    #header.expanded [data-menu-panel] nav,
     [data-menu-backdrop] {
       transition-duration: 0.2s !important;
       transition-delay: 0s !important;
@@ -568,7 +579,6 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       const header = this.querySelector<HTMLElement>('#header');
       const toggle = this.querySelector<HTMLElement>('[data-aw-toggle-menu]');
       const nav = this.querySelector<HTMLElement>('#header nav');
-      const lastChild = this.querySelector<HTMLElement>('[data-menu-extras]');
       const controls = this.querySelector<HTMLElement>('[data-bar-controls]');
 
       // The header is rebuilt on every client-side navigation (ClientRouter), so this runs per page.
@@ -603,7 +613,6 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         document.documentElement.removeAttribute('data-menu-open');
         header?.classList.remove('expanded');
         nav?.classList.add('hidden');
-        lastChild?.classList.add('hidden');
       };
 
       // The panel's final box (it slides 8px, so read its layout box, not its painted one), as a hole in the dim.
@@ -612,7 +621,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         const w = backdrop.clientWidth;
         const h = backdrop.clientHeight;
         const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-        const width = Math.min(20 * rem, window.innerWidth - 1.5 * rem);
+        const width = panel.offsetWidth;
         const right = 0.75 * rem;
         const top = 4.75 * rem - 4.5 * rem; // the dim starts at 4.5rem, the panel at 4.75rem
         const x = window.innerWidth - right - width;
@@ -632,10 +641,9 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         if (!header?.classList.contains('expanded')) {
           header?.classList.add('expanded');
           nav?.classList.remove('hidden');
-          lastChild?.classList.remove('hidden');
           // Apply the closed look without animating to it (transitions off for one style flush), so that
           // data-menu-shown below starts the open transition from it.
-          const parts = [panel, nav, lastChild].filter((el): el is HTMLElement => !!el);
+          const parts = [panel, nav].filter((el): el is HTMLElement => !!el);
           parts.forEach((el) => (el.style.transition = 'none'));
           parts.forEach((el) => void getComputedStyle(el).opacity);
           parts.forEach((el) => (el.style.transition = ''));
@@ -698,9 +706,24 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         if (link) link.blur();
       });
 
+      // Tab order follows what you see. Phones: the controls sit in the bar, before the menu panel, so the DOM
+      // keeps them there. In the full bar they sit after the nav links and before Book, so they are moved
+      // there (the layout is the same, both parents are `contents`) and put back when the bar collapses.
+      const extras = this.querySelector<HTMLElement>('[data-menu-extras]');
+      const controlsHome = controls?.parentElement ?? null;
+      const placeControls = () => {
+        if (!controls || !controlsHome || !panel || !extras) return;
+        if (this.mql?.matches) controlsHome.prepend(controls);
+        else panel.insertBefore(controls, extras);
+      };
+
       // Close it when leaving the mobile breakpoint.
-      this.mql = window.matchMedia('(max-width: 1279px)');
-      this.onMqlChange = () => closeMenu();
+      this.mql = window.matchMedia('(max-width: 1149px)');
+      placeControls();
+      this.onMqlChange = () => {
+        closeMenu();
+        placeControls();
+      };
       this.mql.addEventListener('change', this.onMqlChange);
 
       // Sticky header: toggle the `scroll` class past a small threshold.

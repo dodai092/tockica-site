@@ -13,6 +13,10 @@
   --color-default: var(--aw-color-text-default);
   --color-muted: var(--aw-color-text-muted);
 
+  /* The header switches from the menu button to the full bar here (bar: variant, SiteHeader.astro). Croatian
+     is the tightest: nav, controls and Book still clear each other by 24px at this width. */
+  --breakpoint-bar: 71.875rem;
+
   --font-sans:
     var(--aw-font-sans, ui-sans-serif), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';

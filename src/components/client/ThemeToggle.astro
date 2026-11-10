@@ -16,7 +16,7 @@ const { label = 'Toggle between Dark and Light mode' } = Astro.props;
     <tk-theme-toggle>
       <button
         type="button"
-        class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+        class="text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
         aria-label={label}
         data-aw-toggle-color-scheme
       >
@@ -82,6 +82,10 @@ const { label = 'Toggle between Dark and Light mode' } = Astro.props;
 <script>
   class TkThemeToggle extends HTMLElement {
     connectedCallback() {
+      // The header moves this element when the bar changes size (SiteHeader.astro), which connects it again.
+      // Bind once, or one click would toggle the theme twice.
+      if (this.hasAttribute('data-bound')) return;
+      this.setAttribute('data-bound', '');
       const button = this.querySelector<HTMLElement>('[data-aw-toggle-color-scheme]');
       button?.addEventListener('click', () => {
         const root = document.documentElement;

@@ -23,7 +23,7 @@ export function openSheet(sheet) {
 const scrims = new WeakMap();
 const scrimOpacity = (sheet) => {
   const scrim = scrims.get(sheet);
-  return scrim ? 1 - scrim.currentTime / 1000 : 1;
+  return scrim ? 1 - scrim.currentTime / 1000 : Number(getComputedStyle(sheet, '::backdrop').opacity);
 };
 function dropScrim(sheet) {
   scrims.get(sheet)?.cancel();
@@ -39,20 +39,23 @@ export function closeSheet(sheet, fromY = 0, velocity = 0) {
   if (closing.has(sheet) || !sheet.open) return Promise.resolve();
   closing.add(sheet);
   sheet.style.transform = '';
+  // Start from what is on screen now. Esc during the open animation must not jump to fully open first.
+  const shown = getComputedStyle(sheet);
+  const opacity = Number(shown.opacity);
   const scrim = scrimOpacity(sheet);
   dropScrim(sheet);
   let backdrop;
   let slide;
   if (reduced()) {
     backdrop = sheet.animate([{ opacity: scrim }, { opacity: 0 }], { duration: 160, pseudoElement: '::backdrop', fill: 'forwards' });
-    slide = sheet.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' });
+    slide = sheet.animate([{ opacity }, { opacity: 0 }], { duration: 160, fill: 'forwards' });
   } else {
     const to = narrow() ? 'translateY(100%)' : 'translateY(24px) scale(.97)';
-    const start = fromY ? `translateY(${fromY}px)` : 'none';
+    const start = fromY ? `translateY(${fromY}px)` : shown.transform;
     // Dragged away: leave fast, in proportion to what is left. Tapped away: the open path, mirrored.
     const duration = fromY ? Math.min(280, Math.max(180, (sheet.offsetHeight - fromY) / Math.max(velocity, 0.8))) : 280;
     backdrop = sheet.animate([{ opacity: scrim }, { opacity: 0 }], { duration, pseudoElement: '::backdrop', fill: 'forwards' });
-    slide = sheet.animate([{ transform: start, opacity: 1 }, { transform: to, opacity: narrow() ? 1 : 0 }], { duration, easing: fromY ? EASE_OUT_STRONG : EASE_DRAWER, fill: 'forwards' });
+    slide = sheet.animate([{ transform: start, opacity }, { transform: to, opacity: narrow() ? 1 : 0 }], { duration, easing: fromY ? EASE_OUT_STRONG : EASE_DRAWER, fill: 'forwards' });
   }
   const done = () => {
     sheet.close();

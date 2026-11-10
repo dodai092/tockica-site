@@ -166,7 +166,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
 
 <script>
   import { clearChoice, loadChoice, saveChoice } from '~/lib/booking-choice';
-  import { CLASS_MIN, STUDIO_ZONE } from '~/lib/schedule-days';
+  import { STUDIO_ZONE } from '~/lib/schedule-days';
   import type { NextClass } from '~/lib/schedule-feed';
   import { fadeIn, fadeOut, pop, release } from '~/lib/motion.js';
   import { bindSheet, closeSheet, openSheet } from '~/lib/sheet.js';
@@ -199,7 +199,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
       timeZone: STUDIO_ZONE,
     });
     const start = new Date(c.startsAt);
-    return `${day.format(start)} \u00b7 ${time.format(start)}\u2013${time.format(new Date(+start + CLASS_MIN * 60_000))}`;
+    return `${day.format(start)} \u00b7 ${time.format(start)}`;
   }
 
   function say(sheet: HTMLElement, text: string) {
@@ -299,7 +299,11 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
       const id = openId;
       openId = null;
       if (id && (!document.activeElement || document.activeElement === document.body))
-        document.querySelector<HTMLElement>(`li[data-class-id="${CSS.escape(id)}"] a`)?.focus();
+        document
+          .querySelector<HTMLElement>(
+            `li[data-class-id="${CSS.escape(id)}"] a, li[data-next-class="${CSS.escape(id)}"] a`
+          )
+          ?.focus();
     });
   }
 

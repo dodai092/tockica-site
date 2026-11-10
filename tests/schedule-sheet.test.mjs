@@ -83,7 +83,8 @@ for (const width of [390, 1280]) {
     }
     const head = await sheet(page).locator('[data-sheet-head]').innerText();
     assert.ok(head.includes(klass.instructor), 'head names the instructor');
-    assert.ok(/\d{2}:\d{2}.\d{2}:\d{2}/.test(head), 'head shows the time range');
+    assert.ok(/\d{2}:\d{2}/.test(head), 'head shows the start time');
+    assert.ok(!/\d{2}:\d{2}\D+\d{2}:\d{2}/.test(head), 'head has no end time, the feed has no duration');
     assert.deepEqual(errors, []);
     await page.close();
   });
@@ -206,6 +207,59 @@ test('a class with another capacity than 20 disables the bikes above it and keep
   for (let n = 17; n <= 20; n++) assert.ok(await bike(page, n).isDisabled(), `bike ${n} is above capacity`);
   await page.close();
 });
+
+// Pauses every animation of the sheet and its backdrop, at `ms`, and returns the frame they show.
+const freezeAt = (page, ms) =>
+  sheet(page).evaluate((d, t) => {
+    window.__open = document.getAnimations().filter((a) => a.effect.target === d);
+    window.__open.forEach((a) => {
+      a.pause();
+      a.currentTime = t;
+    });
+    return window.__frame(d);
+  }, ms);
+
+// Reads the first frame of the close: the animations started after the freeze, paused at their start.
+const firstFrameOfClose = (page) =>
+  sheet(page).evaluate((d) => {
+    const closing = document.getAnimations().filter((a) => a.effect.target === d && !window.__open.includes(a));
+    closing.forEach((a) => {
+      a.pause();
+      a.currentTime = 0;
+    });
+    return { count: closing.length, ...window.__frame(d) };
+  });
+
+for (const width of [390, 1280]) {
+  test(`${width}px: Esc during the open animation closes from where the sheet is, not from fully open`, async () => {
+    const { page } = await open({ width });
+    await page.evaluate(() => {
+      window.__frame = (d) => {
+        const s = getComputedStyle(d);
+        const b = getComputedStyle(d, '::backdrop');
+        return { transform: s.transform, opacity: Number(s.opacity), backdrop: Number(b.opacity) };
+      };
+    });
+    await openRow(page).locator('a').click();
+    await sheet(page).waitFor({ state: 'visible' });
+    const half = await freezeAt(page, 170);
+    assert.ok(half.opacity < 0.99 || half.transform !== 'none', `paused mid-open, got ${JSON.stringify(half)}`);
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(
+      () =>
+        document.getAnimations().filter((a) => a.effect.target === document.querySelector('dialog[data-bike-sheet]'))
+          .length > window.__open.length
+    );
+    const first = await firstFrameOfClose(page);
+    assert.ok(first.count > 0, 'the close started');
+    // Computed transform is a matrix(a, b, c, d, e, f); f is the vertical offset in px.
+    const y = (t) => (t === 'none' ? 0 : Number(t.slice(7, -1).split(',')[5]));
+    assert.ok(Math.abs(y(first.transform) - y(half.transform)) < 2, `slide: ${half.transform} then ${first.transform}`);
+    assert.ok(Math.abs(first.opacity - half.opacity) < 0.02, `dialog opacity ${half.opacity} then ${first.opacity}`);
+    assert.ok(Math.abs(first.backdrop - half.backdrop) < 0.02, `backdrop ${half.backdrop} then ${first.backdrop}`);
+    await page.close();
+  });
+}
 
 test('pressing Book twice quickly, Esc while it opens, then reopening never leaves it stuck', async () => {
   const { page, errors } = await open();

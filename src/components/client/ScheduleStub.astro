@@ -22,7 +22,7 @@ const t = getCopy(lang).schedulePage;
     <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
     <p data-schedule-notice class="mt-4 text-xl text-default">{t.soon}</p>
     <p class="mt-4 text-default">
-      {t.demo.text}
+      {t.demo.text}{' '}
       <a class="font-semibold text-link underline" href={pathFor('demo', lang)} data-demo-link>{t.demo.link}</a>
     </p>
     <p class="mt-4"><Placeholder lang={lang} label="how to book until the booking app launches" /></p>

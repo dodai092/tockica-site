@@ -3,8 +3,6 @@
 import type { NextClass } from './schedule-feed.ts';
 
 export const STUDIO_ZONE = 'Europe/Zagreb';
-/** Slot length shown as the end of the time range. The feed has no duration yet (prototype: durationMin 60). */
-export const CLASS_MIN = 60;
 
 const dayFormat = new Intl.DateTimeFormat('en-CA', { timeZone: STUDIO_ZONE });
 

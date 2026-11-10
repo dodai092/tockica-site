@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mobile menu width: options</title>
+    <style>
+      :root {
+        --ink: #1d1d1f;
+        --muted: #5f6368;
+        --line: #dcdde0;
+        --bg: #f4f4f6;
+        --red: #b8252b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 16px 56px;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          15px/1.5 system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+      }
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 6px;
+      }
+      .lede {
+        color: var(--muted);
+        margin: 0 0 28px;
+        max-width: 70ch;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+        gap: 28px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px 18px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .card h2 {
+        font-size: 17px;
+        margin: 0;
+      }
+      .card p {
+        margin: 0;
+      }
+      .card .why {
+        color: var(--muted);
+      }
+      .card ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+      .card .score {
+        font-weight: 700;
+      }
+      .card.ref {
+        background: #fafafa;
+      }
+
+      /* Phone: 390 x 760 design size, same offsets as SiteHeader (bar 72px, panel top 76px, right 12px). */
+      .phone {
+        position: relative;
+        width: 390px;
+        height: 760px;
+        margin: 0 auto;
+        overflow: hidden;
+        border-radius: 30px;
+        border: 6px solid #111;
+        background: #2a0a0a;
+      }
+      @media (max-width: 520px) {
+        .phone {
+          zoom: 0.85;
+        }
+      }
+      .hero {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(170deg, #6b1a1a 0%, #2d0909 55%, #180505 100%);
+      }
+      .hero .title {
+        position: absolute;
+        top: 250px;
+        left: 24px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1.05;
+      }
+      .hero .sub {
+        position: absolute;
+        top: 330px;
+        left: 24px;
+        width: 220px;
+        height: 14px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.35);
+      }
+      .hero .btn {
+        position: absolute;
+        top: 368px;
+        left: 24px;
+        width: 150px;
+        height: 44px;
+        border-radius: 8px;
+        background: var(--red);
+      }
+      .card-row {
+        position: absolute;
+        top: 460px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        gap: 10px;
+      }
+      .card-row span {
+        flex: 1;
+        height: 150px;
+        border-radius: 12px;
+        background: #f2f2f2;
+        opacity: 0.9;
+      }
+      .dim {
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1;
+      }
+      .bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 72px;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px 0 18px;
+        color: #fff;
+      }
+      .logo {
+        width: 62px;
+        height: 52px;
+        border-radius: 50%;
+        border: 5px solid var(--red);
+        box-sizing: border-box;
+      }
+      .icons {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 22px;
+      }
+      .flag {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(#c8102e 0 33%, #fff 33% 66%, #1f4fa0 66%);
+      }
+      .x {
+        font-size: 30px;
+        line-height: 1;
+      }
+
+      .panel {
+        position: absolute;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--ink);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        padding: 8px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border-radius: 16px;
+      }
+      .nav a {
+        display: block;
+        font-size: 20px;
+        font-weight: 500;
+        padding: 6px 0;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .sep {
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+        margin: 2px 0;
+      }
+      .cta {
+        background: var(--red);
+        color: #fff;
+        border-radius: 8px;
+        text-align: center;
+        padding: 12px;
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+      }
+      .right .nav a {
+        text-align: right;
+      }
+      .left .nav a {
+        text-align: left;
+      }
+
+      /* Reference: the current panel as shipped (320px, right-aligned). */
+      .ref-panel {
+        top: 76px;
+        right: 12px;
+        width: 320px;
+      }
+      /* 1: hug the content */
+      .o1 {
+        top: 76px;
+        right: 12px;
+        width: max-content;
+        min-width: 200px;
+      }
+      /* 2: fixed narrow card */
+      .o2 {
+        top: 76px;
+        right: 12px;
+        width: 240px;
+      }
+      /* 3: side drawer, full height */
+      .o3 {
+        top: 72px;
+        bottom: 0;
+        right: 0;
+        width: 280px;
+        border-radius: 16px 0 0 0;
+        padding-top: 16px;
+        background: rgba(255, 255, 255, 0.94);
+      }
+      /* 4: full-width sheet */
+      .o4 {
+        top: 76px;
+        left: 0;
+        right: 0;
+        border-radius: 0 0 16px 16px;
+        padding: 10px 20px 16px;
+        background: rgba(255, 255, 255, 0.94);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Mobile menu: four ways to narrow the panel</h1>
+      <p class="lede">
+        The open menu on a phone is 320px wide with the labels pushed to the right edge, so the left side is an empty
+        strip. Each frame below is a 390px phone with the header offsets the site uses. The content is the real menu
+        items. Scores are 1 to 10.
+      </p>
+
+      <div class="grid">
+        <section class="card ref">
+          <h2>Reference: current panel (320px, right-aligned)</h2>
+          <p class="why">What the screenshot shows. Not scored.</p>
+          <div class="phone">
+            <div class="hero">
+              <div class="title">Točk</div>
+              <div class="sub"></div>
+              <div class="btn"></div>
+              <div class="card-row"><span></span><span></span></div>
+            </div>
+            <div class="dim"></div>
+            <div class="bar">
+              <span class="logo"></span
+              ><span class="icons"><span class="flag"></span><span>☾</span><span class="x">✕</span></span>
+            </div>
+            <div class="panel ref-panel right">
+              <nav class="nav">
+                <a href="#">Schedule</a><a href="#">Instructors</a><a href="#">Packs</a><a href="#">Sculpt Room</a>
+                <div class="sep"></div>
+                <a href="#">Log in</a>
+              </nav>
+              <a class="cta" href="#">Book a class</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>1. Hug the content <span class="score">Score: 8/10</span></h2>
+          <p class="why">
+            The panel is as wide as its longest label, with a 200px floor. The right-aligned list stays where it is now.
+          </p>
+          <ul>
+            <li>
+              Pro: one property changes (<code>width: max-content</code>). Keeps the dropdown, its fold and its motion
+              as they are.
+            </li>
+            <li>Pro: no leftover strip, the card sits close to the labels.</li>
+            <li>Con: the "Book a class" button gets narrower too, so it reads smaller than the list.</li>
+          </ul>
+          <div class="phone">
+            <div class="hero">
+              <div class="title">Točk</div>
+              <div class="sub"></div>
+              <div class="btn"></div>
+              <div class="card-row"><span></span><span></span></div>
+            </div>
+            <div class="dim"></div>
+            <div class="bar">
+              <span class="logo"></span
+              ><span class="icons"><span class="flag"></span><span>☾</span><span class="x">✕</span></span>
+            </div>
+            <div class="panel o1 right">
+              <nav class="nav">
+                <a href="#">Schedule</a><a href="#">Instructors</a><a href="#">Packs</a><a href="#">Sculpt Room</a>
+                <div class="sep"></div>
+                <a href="#">Log in</a>
+              </nav>
+              <a class="cta" href="#">Book a class</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>2. Fixed narrow card (240px) <span class="score">Score: 6/10</span></h2>
+          <p class="why">Same right-aligned card, width set to 240px.</p>
+          <ul>
+            <li>Pro: the simplest change, and the look stays the same.</li>
+            <li>
+              Con: a fixed number ignores the screen. At a larger text size "Sculpt Room" and the button crowd each
+              other.
+            </li>
+            <li>Con: the labels still sit at the right edge, so the card looks like a sliver of the screen.</li>
+          </ul>
+          <div class="phone">
+            <div class="hero">
+              <div class="title">Točk</div>
+              <div class="sub"></div>
+              <div class="btn"></div>
+              <div class="card-row"><span></span><span></span></div>
+            </div>
+            <div class="dim"></div>
+            <div class="bar">
+              <span class="logo"></span
+              ><span class="icons"><span class="flag"></span><span>☾</span><span class="x">✕</span></span>
+            </div>
+            <div class="panel o2 right">
+              <nav class="nav">
+                <a href="#">Schedule</a><a href="#">Instructors</a><a href="#">Packs</a><a href="#">Sculpt Room</a>
+                <div class="sep"></div>
+                <a href="#">Log in</a>
+              </nav>
+              <a class="cta" href="#">Book a class</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>3. Side drawer, 280px, full height <span class="score">Score: 5/10</span></h2>
+          <p class="why">The menu slides in from the right edge under the bar and fills the height of the screen.</p>
+          <ul>
+            <li>Pro: a clear surface that reads as a separate menu, and a common mobile pattern.</li>
+            <li>
+              Con: a new motion. Slide on the drawer curve is not in the animation rules yet, so it needs a rule and a
+              test.
+            </li>
+            <li>Con: needs its own dim, focus handling and close path. More code than the problem needs.</li>
+          </ul>
+          <div class="phone">
+            <div class="hero">
+              <div class="title">Točk</div>
+              <div class="sub"></div>
+              <div class="btn"></div>
+              <div class="card-row"><span></span><span></span></div>
+            </div>
+            <div class="dim"></div>
+            <div class="bar">
+              <span class="logo"></span
+              ><span class="icons"><span class="flag"></span><span>☾</span><span class="x">✕</span></span>
+            </div>
+            <div class="panel o3 left">
+              <nav class="nav">
+                <a href="#">Schedule</a><a href="#">Instructors</a><a href="#">Packs</a><a href="#">Sculpt Room</a>
+                <div class="sep"></div>
+                <a href="#">Log in</a>
+              </nav>
+              <a class="cta" href="#">Book a class</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>4. Full-width sheet, left-aligned <span class="score">Score: 4/10</span></h2>
+          <p class="why">
+            Drops the floating card. The sheet runs edge to edge under the bar, with labels on the left.
+          </p>
+          <ul>
+            <li>Pro: no width to get wrong, and left-aligned labels read well at phone size.</li>
+            <li>Con: it covers the full width, which is the thing the complaint is about.</li>
+            <li>Con: it drops the glass card the header is built on, so the menu no longer matches the bar.</li>
+          </ul>
+          <div class="phone">
+            <div class="hero">
+              <div class="title">Točk</div>
+              <div class="sub"></div>
+              <div class="btn"></div>
+              <div class="card-row"><span></span><span></span></div>
+            </div>
+            <div class="dim"></div>
+            <div class="bar">
+              <span class="logo"></span
+              ><span class="icons"><span class="flag"></span><span>☾</span><span class="x">✕</span></span>
+            </div>
+            <div class="panel o4 left">
+              <nav class="nav">
+                <a href="#">Schedule</a><a href="#">Instructors</a><a href="#">Packs</a><a href="#">Sculpt Room</a>
+                <div class="sep"></div>
+                <a href="#">Log in</a>
+              </nav>
+              <a class="cta" href="#">Book a class</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
