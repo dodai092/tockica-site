@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import routeTools from './quality-routes.cjs';
 import { checkAgainstBaselines } from './visual-regression.mjs';
 
-const { loadQualityRoutes, assertBuiltRoutes, slugForRoute } = routeTools;
+const { loadQualityRoutes, assertBuiltRoutes, slugForRoute, needsBaseline } = routeTools;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -200,7 +200,7 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 
 async function main() {
   const manifest = loadQualityRoutes(ROOT);
-  const routes = manifest.map((row) => row.path);
+  const routes = manifest.map((row) => row.path).filter(needsBaseline);
   if (!existsSync(path.join(ROOT, 'dist', 'index.html'))) {
     console.error('No ./dist build found. Run "npm run build" first.');
     process.exit(1);

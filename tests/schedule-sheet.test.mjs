@@ -75,7 +75,7 @@ for (const width of [390, 1280]) {
     const row = openRow(page);
     const id = await row.getAttribute('data-class-id');
     const klass = (await data(page)).find((c) => c.id === id);
-    await row.locator('a').click();
+    await row.locator('a.sched-action').click();
     await sheet(page).waitFor({ state: 'visible' });
     assert.equal(await sheet(page).locator('button[data-bike]').count(), 20);
     for (let n = 1; n <= 20; n++) {
@@ -91,7 +91,7 @@ for (const width of [390, 1280]) {
 
   test(`${width}px: two columns, bikes 1 to 10 on the right, aisle after the fifth row, no sideways scroll`, async () => {
     const { page } = await open({ width });
-    await openRow(page).locator('a').click();
+    await openRow(page).locator('a.sched-action').click();
     await sheet(page).waitFor({ state: 'visible' });
     await page.waitForTimeout(450);
     const box = async (n) => bike(page, n).boundingBox();
@@ -123,7 +123,7 @@ for (const width of [390, 1280]) {
     const id = await row.getAttribute('data-class-id');
     const klass = (await data(page)).find((c) => c.id === id);
     const [a, b] = Array.from({ length: 20 }, (_, i) => i + 1).filter((n) => !klass.takenBikes.includes(n));
-    await row.locator('a').click();
+    await row.locator('a.sched-action').click();
     await sheet(page).waitFor({ state: 'visible' });
     const go = sheet(page).locator('[data-continue]');
     assert.ok(await go.isDisabled(), 'Continue waits for a pick');
@@ -141,7 +141,7 @@ for (const width of [390, 1280]) {
 
   test(`${width}px: Esc and the close button close it and focus goes back to the Book button`, async () => {
     const { page } = await open({ width });
-    const link = openRow(page).locator('a');
+    const link = openRow(page).locator('a.sched-action');
     await link.click();
     await sheet(page).waitFor({ state: 'visible' });
     await page.keyboard.press('Escape');
@@ -163,7 +163,7 @@ test('a refresh that takes the picked bike unpicks it, says so, and keeps focus 
   const klass = (await data(page)).find((c) => c.id === id);
   const free = Array.from({ length: klass.capacity }, (_, i) => i + 1).filter((n) => !klass.takenBikes.includes(n));
   const mine = free[0];
-  await row.locator('a').click();
+  await row.locator('a.sched-action').click();
   await sheet(page).waitFor({ state: 'visible' });
   await bike(page, mine).click();
   setEdit((body) => {
@@ -201,7 +201,7 @@ test('a class with another capacity than 20 disables the bikes above it and keep
   await refresh(page);
   await page.waitForFunction((i) => document.querySelector(`[data-class-id="${i}"]`)?.textContent !== undefined, id);
   await page.waitForTimeout(100);
-  await openRow(page).locator('a').click();
+  await openRow(page).locator('a.sched-action').click();
   await sheet(page).waitFor({ state: 'visible' });
   assert.equal(await sheet(page).locator('button[data-bike]').count(), 20);
   for (let n = 17; n <= 20; n++) assert.ok(await bike(page, n).isDisabled(), `bike ${n} is above capacity`);
@@ -240,7 +240,7 @@ for (const width of [390, 1280]) {
         return { transform: s.transform, opacity: Number(s.opacity), backdrop: Number(b.opacity) };
       };
     });
-    await openRow(page).locator('a').click();
+    await openRow(page).locator('a.sched-action').click();
     await sheet(page).waitFor({ state: 'visible' });
     const half = await freezeAt(page, 170);
     assert.ok(half.opacity < 0.99 || half.transform !== 'none', `paused mid-open, got ${JSON.stringify(half)}`);
@@ -263,7 +263,7 @@ for (const width of [390, 1280]) {
 
 test('pressing Book twice quickly, Esc while it opens, then reopening never leaves it stuck', async () => {
   const { page, errors } = await open();
-  const link = openRow(page).locator('a');
+  const link = openRow(page).locator('a.sched-action');
   await link.dblclick();
   await sheet(page).waitFor({ state: 'visible' });
   assert.equal(await sheet(page).locator('button[data-bike]').count(), 20);
@@ -287,7 +287,7 @@ test('pressing Book twice quickly, Esc while it opens, then reopening never leav
 
 test('reopening starts with no bike picked', async () => {
   const { page } = await open();
-  const link = openRow(page).locator('a');
+  const link = openRow(page).locator('a.sched-action');
   await link.click();
   await sheet(page).waitFor({ state: 'visible' });
   await sheet(page).locator('button[data-bike]:not([disabled])').first().click();
@@ -302,7 +302,7 @@ test('reopening starts with no bike picked', async () => {
 
 test('English page: the sheet speaks English', async () => {
   const { page } = await open({ path: '/en/schedule' });
-  await openRow(page).locator('a').click();
+  await openRow(page).locator('a.sched-action').click();
   await sheet(page).waitFor({ state: 'visible' });
   assert.equal(await sheet(page).locator('button[data-bike="3"]').getAttribute('aria-label'), 'Bike 3');
   assert.ok((await sheet(page).locator('[data-continue]').innerText()).length > 0);
@@ -319,7 +319,7 @@ const pending = (page) => page.locator('[data-pending]');
 async function pickAndContinue(page) {
   const row = openRow(page);
   const id = await row.getAttribute('data-class-id');
-  await row.locator('a').click();
+  await row.locator('a.sched-action').click();
   await sheet(page).waitFor({ state: 'visible' });
   const free = sheet(page).locator('button[data-bike]:not([disabled])').first();
   const n = Number(await free.getAttribute('data-bike'));
@@ -448,7 +448,7 @@ test('the waiting list goes straight to login without a bike, and keeps the clas
   });
   await refresh(page);
   await page.waitForSelector(`[data-class-id="${id}"][data-full]`);
-  await page.locator(`[data-class-id="${id}"] a`).click();
+  await page.locator(`[data-class-id="${id}"] a.sched-action`).click();
   await step(page, 'login').waitFor({ state: 'visible' });
   assert.ok(await step(page, 'map').isHidden());
   assert.ok((await step(page, 'login').innerText()).includes('Lista čekanja'));
@@ -496,7 +496,7 @@ test('switching language keeps the choice, and the bar and sheet follow the page
 
 test('Tab order follows the map: row by row, left to right', async () => {
   const { page } = await open({ width: 1280 });
-  await openRow(page).locator('a').click();
+  await openRow(page).locator('a.sched-action').click();
   await sheet(page).waitFor({ state: 'visible' });
   await page.waitForTimeout(450);
   const boxes = await sheet(page)
@@ -519,7 +519,7 @@ test('Tab order follows the map: row by row, left to right', async () => {
 test('on a laptop-height window the whole map fits the card without scrolling', async () => {
   for (const width of [768, 1024, 1280]) {
     const { page } = await open({ width, height: 800 });
-    await openRow(page).locator('a').click();
+    await openRow(page).locator('a.sched-action').click();
     await sheet(page).waitFor({ state: 'visible' });
     await page.waitForTimeout(450);
     const scrolls = await sheet(page)

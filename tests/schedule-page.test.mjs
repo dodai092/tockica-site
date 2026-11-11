@@ -25,7 +25,7 @@ for (const { lang, file, book, wait, full, weekday } of pages) {
     assert.equal(weeks.length, 3);
     for (const monday of weeks) {
       const strip = html.match(new RegExp(`<div[^>]*data-week-strip="${monday}"[\\s\\S]*?</div>`))[0];
-      assert.equal([...strip.matchAll(/data-day="/g)].length, 6);
+      assert.equal([...strip.matchAll(/data-day="/g)].length, 7);
     }
     assert.match(html, /data-class-id="[^"]+"/);
     assert.doesNotMatch(html, /\d{2}:\d{2}–\d{2}:\d{2}/, 'a class shows its start time only');
@@ -34,10 +34,10 @@ for (const { lang, file, book, wait, full, weekday } of pages) {
   test(`${lang}: only the selected week is shown, and within it every day but the selected one is off below md`, async () => {
     const html = await read(file);
     const panels = [...html.matchAll(/<div\b[^>]*data-day-panel="[^"]+"[^>]*>/g)].map((m) => m[0]);
-    assert.equal(panels.length, 18);
+    assert.equal(panels.length, 21);
     const shown = panels.filter((p) => !/\shidden/.test(p));
-    assert.equal(shown.length, 6, 'the selected week is not hidden');
-    assert.equal(shown.filter((p) => /\sdata-off/.test(p)).length, 5, 'one selected day, five off');
+    assert.equal(shown.length, 7, 'the selected week is not hidden');
+    assert.equal(shown.filter((p) => /\sdata-off/.test(p)).length, 6, 'one selected day, six off');
     assert.ok(
       panels.every((p) => /\bmax-md:data-off:hidden\b/.test(p)),
       'panels need the below-md rule'
@@ -47,8 +47,8 @@ for (const { lang, file, book, wait, full, weekday } of pages) {
 
   test(`${lang}: desktop week grid: every day has a header and a rows list, the strip is hidden from md up`, async () => {
     const html = await read(file);
-    assert.equal([...html.matchAll(/<p\b[^>]*data-day-head/g)].length, 18);
-    assert.equal([...html.matchAll(/<ul\b[^>]*data-rows/g)].length, 18);
+    assert.equal([...html.matchAll(/<p\b[^>]*data-day-head/g)].length, 21);
+    assert.equal([...html.matchAll(/<ul\b[^>]*data-rows/g)].length, 21);
     const strips = [...html.matchAll(/<div\b[^>]*data-week-strip="[^"]+"[^>]*>/g)].map((m) => m[0]);
     assert.equal(strips.length, 3);
     assert.ok(
@@ -57,7 +57,8 @@ for (const { lang, file, book, wait, full, weekday } of pages) {
     );
     const panelsTag = html.match(/<div\b[^>]*data-panels[^>]*>/)?.[0] ?? '';
     assert.ok(/\bmd:grid-cols-3\b/.test(panelsTag), 'panels must be three columns from md');
-    assert.ok(/\blg:grid-cols-6\b/.test(panelsTag), 'panels must be six columns from lg');
+    assert.ok(/\blg:grid-cols-4\b/.test(panelsTag), 'panels must be four columns from lg');
+    assert.ok(/\bxl:grid-cols-7\b/.test(panelsTag), 'panels must be seven columns from xl');
   });
 
   test(`${lang}: offers Book and the waiting list, and shows no bike numbers of who booked`, async () => {
@@ -97,41 +98,40 @@ for (const { lang, file, book, wait, full, weekday } of pages) {
     assert.ok(/data-todo="[^"]*opens soon[^"]*"/.test(html), 'the notice needs a data-todo marker');
   });
 
-  test(`${lang}: a class row reads time, instructor, training name, with avatar, seats and meter`, async () => {
+  test(`${lang}: a class row reads time, instructor, training name, with avatar and seats`, async () => {
     const html = await read(file);
     const li = html.match(/<li\b[^>]*data-class-id="mock-[^"]+"[^>]*>[\s\S]*?<\/li>/)?.[0] ?? '';
     const at = (f) => li.indexOf(`data-f="${f}"`);
     assert.ok(at('time') > -1 && at('time') < at('instructor') && at('instructor') < at('name'), 'order of the lines');
     assert.match(li, /data-f="time"[^>]*>\d{2}:\d{2}</, 'start time only');
     assert.ok(at('initial') > -1, 'avatar initial');
-    assert.ok(at('seats') > -1 && li.includes('data-meter'), 'seats text and meter');
+    assert.ok(at('seats') > -1, 'seats text');
     assert.ok(!/Slobodan bicikl|Free bike/.test(html), 'the first-free-bike line is gone');
   });
 
-  test(`${lang}: a full class says so, with the meter full, and offers the waiting list`, async () => {
+  test(`${lang}: a full class says so and offers the waiting list`, async () => {
     const html = await read(file);
     const li = html.match(/<li\b(?=[^>]*data-class-id="mock-)(?=[^>]*\sdata-full)[^>]*>[\s\S]*?<\/li>/)?.[0] ?? '';
     assert.ok(li, 'the mock has a full class');
     assert.ok(li.includes(`>${full}<`) || li.includes(`>\n${full}`) || li.includes(full), 'full label');
-    assert.match(li, /data-meter[^>]*style="[^"]*width:\s*100%/, 'meter full');
     assert.ok(li.includes(wait));
   });
 
   test(`${lang}: training names come from the data, not the room`, async () => {
     const html = await read(file);
     assert.ok(!html.includes("50' Riders Room"), 'no room name on the cards');
-    assert.ok(html.includes('ABS Spin') && html.includes('Britney Spears'), 'training and theme names show');
+    assert.ok(html.includes('ABS Spin') && html.includes('Riders Room'), 'training names show');
   });
 
   test(`${lang}: each day has a sheet header with the weekday, and each strip button has a dot per class`, async () => {
     const html = await read(file);
     const heads = [...html.matchAll(/<p\b[^>]*data-sheet-head[^>]*>([\s\S]*?)<\/p>/g)].map((m) => m[1].toLowerCase());
-    assert.equal(heads.length, 18);
+    assert.equal(heads.length, 21);
     assert.ok(
       heads.some((h) => h.includes(weekday)),
       'a long weekday name'
     );
-    assert.equal([...html.matchAll(/data-dots/g)].length, 18);
+    assert.equal([...html.matchAll(/data-dots/g)].length, 21);
     assert.ok(/<i\b[^>]*data-full/.test(html), 'a full class shows as a pale dot');
   });
 

@@ -26,6 +26,9 @@ capture a baseline for the routes that exist right now", not "does it still matc
 part stays local-only, see below): on the Dodai Referrals build, no baseline was ever
 captured before the build was shown to the client, and nothing caught that before the
 client looked at the page (`docs/retrospectives/2026-09-12-referral-build-retro.md`).
+Routes matched by `needsBaseline` in `scripts/quality-routes.cjs` are exempt from this check and from
+`npm run screenshot`: the instructor profiles other than `ena` (one template) and the demo pages.
+They stay in the manifest, so every other gate still covers them.
 
 **`test:contrast`** (`tests/contrast.test.mjs`) walks every visible text element on
 every route, in both color schemes, and asserts WCAG contrast (4.5:1 normal text, 3:1

@@ -42,6 +42,9 @@ export const otherLang = (lang: Lang): Lang => (lang === 'hr' ? 'en' : 'hr');
 
 export const pathFor = (key: RouteKey, lang: Lang): string => withBase(paths[key][lang]);
 
+/** One instructor's profile page, the twin path in each language. */
+export const instructorPath = (slug: string, lang: Lang): string => `${pathFor('instructors', lang)}/${slug}`;
+
 // Root-relative. The layout turns these into absolute URLs.
 export const alternatesFor = (key: RouteKey): { hreflang: string; href: string }[] => [
   { hreflang: 'hr', href: withBase(paths[key].hr) },

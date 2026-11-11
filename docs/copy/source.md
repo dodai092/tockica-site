@@ -1,5 +1,7 @@
 # Copy source: Točkica na i
 
+Changed 2026-11-11: 45 became 50 minutes in the FAQ answer on levels and in the Riders Room line. Dunia: all Spin classes last 50 minutes.
+
 Verbatim from Dunia's homepage doc (https://docs.google.com/document/d/1UFBuWAPTzEDWSU2H4Zo-GIBb3MDcf6ytVOAv6A9wYV8/edit), read 2026-11-04. Item numbers are the doc's. Text here is client-supplied and ships exactly as written (spelling, apostrophes and all). Anything not in this file is a `TODO(client)` in the site, never a guess. English for Croatian-only items, and Croatian for English-only items, is translated by Antun and approved by Dunia before launch.
 
 ## Item 11, About line (EN, verbatim)
@@ -26,7 +28,7 @@ Domagoj has two alternative lines separated by " / ". Which one ships is `TODO(c
 ## Homepage section 8, FAQ (EN, verbatim)
 
 1. Which classes are beginner friendly?
-   All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 45 minutes.
+   All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 50 minutes.
    If you’d prefer to start with a slightly slower tempo, we recommend trying Mario, Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.
 2. What do i need to bring?
    Clean shoes, water and towel. You can always buy water at the studio.
@@ -39,7 +41,7 @@ Croatian FAQ: not written. `TODO(client)`, Dunia writes or approves a translatio
 
 ## Item 3, Rooms (facts, not copy)
 
-- Riders Room: the signature 45-minute rhythm spin class. Focal point of the studio. 20 bikes.
+- Riders Room: the signature 50-minute rhythm spin class. Focal point of the studio. 20 bikes.
 - Sculpt Room: rented by independent trainers for their own clients, subscription based, trainer picks slots a month ahead. Not visible to users without the subscription. Price 100 or 150 EUR a month (not final), minimum 6 months, visits a month `TODO(client)`.
 
 ## Item 5, Packs
@@ -52,7 +54,7 @@ Točkica na i j.d.o.o., OIB HR37892279693, authorised person Dunia Mando. New se
 
 ## Item 8, Contact (old site values, not confirmed)
 
-Rusanova 8, Zagreb. 095 865 1335. info@tockicanai.hr. Mon to Fri 15:30 to 22:00, Sat 9 to 13 and 16 to 19, Sun closed. Dunia has not confirmed these.
+Ferde Rusana 8, Zagreb (Antun settled this 2026-11-11, the old "Rusanova 8" is dropped). 095 865 1335. info@tockicanai.hr. Mon to Fri 15:30 to 22:00, Sat 9 to 13 and 16 to 19, Sun closed. Dunia has not confirmed these.
 
 ## Still unanswered (blocked, all `TODO(client)`)
 

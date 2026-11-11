@@ -7,9 +7,11 @@ import { Icon } from 'astro-icon/components';
 import Placeholder from '~/components/client/Placeholder.astro';
 import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
 import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
+import { instructors } from '~/data/instructors';
+import { profileHref } from '~/lib/instructor-link';
 import { buildMockSchedule } from '~/lib/mock-schedule';
 import { STUDIO_ZONE, addDays, groupByDay, mondayOf } from '~/lib/schedule-days';
-import { seatLabel, seatState } from '~/lib/seats';
+import { seatNote, seatState } from '~/lib/seats';
 import { firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
@@ -23,6 +25,8 @@ const t = getCopy(lang).schedulePage;
 const pick = getCopy(lang).bikeSheet;
 const labels = { book: getCopy(lang).home.nextClasses.book, waitlist: getCopy(lang).home.nextClasses.waitlist };
 const href = pathFor('schedule', lang);
+const profileBase = `${pathFor('instructors', lang)}/`;
+const profileSlugs = instructors.map((i) => i.slug);
 const locale = lang === 'hr' ? 'hr-HR' : 'en-GB';
 
 // MOCK until the booking app's feed answers. Upcoming classes only, no cap.
@@ -49,11 +53,11 @@ const longDay = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric
 // Free places from the booked bikes, the number the feed is checked against.
 const seats = (c: { capacity: number; takenBikes: number[] }) => {
   const free = c.capacity - c.takenBikes.length;
-  return { text: seatLabel(free, c.capacity, t.seats, locale), ...seatState(free, c.capacity) };
+  return { text: seatNote(free, c.capacity, t.seats, locale), ...seatState(free, c.capacity) };
 };
 const utc = (ymd: string) => new Date(`${ymd}T12:00:00Z`);
-const weekLabel = (monday: string) => dayNumber.formatRange(utc(monday), utc(addDays(monday, 5)));
-const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays(monday, i));
+const weekLabel = (monday: string) => dayNumber.formatRange(utc(monday), utc(addDays(monday, 6)));
+const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays(monday, i));
 ---
 
 <section
@@ -61,6 +65,8 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
   data-locale={locale}
   data-empty-text={t.noClasses}
   data-seat-labels={JSON.stringify(t.seats)}
+  data-profile-base={profileBase}
+  data-profile-slugs={JSON.stringify(profileSlugs)}
   class="mx-auto mt-8 max-w-7xl px-4 sm:px-6 md:mt-10"
 >
   {/* The visitor's kept pick after a reload. The bike sheet script fills it in and shows it (BikeSheet.astro). */}
@@ -110,7 +116,7 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
         hidden={monday !== selectedWeek}
         role="group"
         aria-label={t.days}
-        class="mt-4 grid grid-cols-6 gap-1.5 sm:gap-3 md:hidden"
+        class="mt-4 grid grid-cols-7 gap-1.5 sm:gap-3 md:hidden"
       >
         {weekDays(monday).map((day) => (
           <button
@@ -137,7 +143,7 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
     ))
   }
 
-  <div data-panels class="mt-5 md:grid md:grid-cols-3 md:items-start md:gap-3 lg:grid-cols-6">
+  <div data-panels class="mt-5 md:grid md:grid-cols-3 md:items-start md:gap-3 lg:grid-cols-4 xl:grid-cols-7">
     {
       mondays.flatMap((monday) =>
         weekDays(monday).map((day) => {
@@ -176,9 +182,9 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
                         id={c.id}
                         time={time.format(new Date(c.startsAt))}
                         instructor={c.instructor}
+                        instructorHref={profileHref(profileBase, profileSlugs, c.instructor)}
                         name={c.themeName ?? c.name}
                         seatsText={st.text}
-                        percent={st.percent}
                         scarce={st.scarce}
                         full={firstFreeBike(c) === null}
                         href={href}
@@ -208,7 +214,6 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
       instructor=""
       name=""
       seatsText=""
-      percent={0}
       scarce={false}
       full={false}
       href={href}
@@ -222,7 +227,6 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
       instructor=""
       name=""
       seatsText=""
-      percent={100}
       scarce={false}
       full={true}
       href={href}
@@ -243,6 +247,7 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
 
 <script>
   import { fillRow } from '~/lib/class-row';
+  import { profileHref } from '~/lib/instructor-link';
   import { STUDIO_ZONE, addDays, groupByDay, mondayOf, studioDay } from '~/lib/schedule-days';
   import type { SeatLabels } from '~/lib/seats';
   import { SCHEDULE_FEED_URL, firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
@@ -270,6 +275,7 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
       timeZone: STUDIO_ZONE,
     });
     const seatLabels = JSON.parse(root.dataset.seatLabels ?? '{}') as SeatLabels;
+    const profileSlugs = JSON.parse(root.dataset.profileSlugs ?? '[]') as string[];
     const open = root.querySelector<HTMLTemplateElement>('template[data-row="open"]')!;
     const full = root.querySelector<HTMLTemplateElement>('template[data-row="full"]')!;
     let selected = root.querySelector<HTMLElement>('[data-day][aria-pressed="true"]')?.dataset.day ?? '';
@@ -299,7 +305,7 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
     }
 
     root.addEventListener('click', (e) => {
-      const book = (e.target as Element).closest<HTMLAnchorElement>('li[data-class-id] a');
+      const book = (e.target as Element).closest<HTMLAnchorElement>('li[data-class-id] a.sched-action');
       if (book) {
         const li = book.closest<HTMLElement>('li[data-class-id]')!;
         e.preventDefault();
@@ -323,6 +329,7 @@ const weekDays = (monday: string) => Array.from({ length: 6 }, (_, i) => addDays
         time: timeFormat.format(new Date(c.startsAt)),
         locale: root.dataset.locale ?? 'hr',
         seatLabels,
+        profileHref: (first) => profileHref(root.dataset.profileBase ?? '', profileSlugs, first),
       });
       return li;
     };

@@ -7,6 +7,10 @@ export type Instructor = {
   first: string;
   full: string;
   line: { hr: string | null; en: string | null };
+  /** A few sentences for the profile page (Dunia's doc item 1). Null shows a Placeholder. */
+  bio?: { hr: string | null; en: string | null };
+  /** Spotify playlist id of their favourite songs, the part after /playlist/. Null shows a Placeholder. */
+  playlist?: string | null;
 };
 
 export const instructors: Instructor[] = [

@@ -1,34 +1,33 @@
-// MOCK schedule for the booking app's public endpoint (src/pages/api/schedule.json.ts). A weekly template, as the
-// booking prototype keeps it (prototype/src/model.js `template`, schedule.js `generateWeek`), repeated for three
-// weeks, Monday to Saturday, 60 minute classes, 20 bikes. Class names, times and instructors are placeholders,
-// not the real timetable. Delete with the endpoint when the app is proxied at that path.
+// MOCK schedule for the booking app's public endpoint (src/pages/api/schedule.json.ts). The studio's real weekly
+// timetable ("Finalni raspored", Dunia, 2026-11-11), Monday to Sunday, repeated for three weeks, 20 bikes. Only the
+// times and instructors are real. The sheet marks ABS classes and nothing else, so every other class is Riders Room.
+// The bikes taken are made up. Delete with the endpoint when the app is proxied at that path.
 import { addDays, dayOfWeek, studioDay, STUDIO_ZONE } from './schedule-days.ts';
 import type { NextClass } from './schedule-feed.ts';
 
 const CAPACITY = 20;
 const WEEKS = 3;
 
-type Slot = { dayOfWeek: number; time: string; name: string; instructor: string; themeName?: string };
+type Slot = { dayOfWeek: number; time: string; name: string; instructor: string };
 
-// Training names are placeholders until the studio sends the real list.
 const RIDE = 'Riders Room';
 const ABS = 'ABS Spin';
-const WEEKDAY_INSTRUCTORS = ['Mirna', 'Ena', 'Oliver', 'Emma'];
 const TEMPLATE: Slot[] = [
-  ...[1, 2, 3, 4, 5].flatMap((dayOfWeek): Slot[] =>
-    ['09:00', '17:30', '19:00'].map((time, i) => {
-      const instructor = WEEKDAY_INSTRUCTORS[(dayOfWeek + i) % WEEKDAY_INSTRUCTORS.length];
-      return {
-        dayOfWeek,
-        time,
-        name: instructor === 'Emma' ? ABS : RIDE,
-        instructor,
-        ...(dayOfWeek === 3 && time === '19:00' ? { themeName: 'Britney Spears' } : {}),
-      };
-    })
-  ),
-  { dayOfWeek: 6, time: '10:00', name: RIDE, instructor: 'Mirna' },
-  { dayOfWeek: 6, time: '11:15', name: RIDE, instructor: 'Oliver', themeName: '90s Party' },
+  { dayOfWeek: 1, time: '07:30', name: RIDE, instructor: 'Mirna' },
+  { dayOfWeek: 1, time: '17:30', name: RIDE, instructor: 'Ivana' },
+  { dayOfWeek: 1, time: '18:45', name: RIDE, instructor: 'Dunia' },
+  { dayOfWeek: 2, time: '17:30', name: RIDE, instructor: 'Oliver' },
+  { dayOfWeek: 2, time: '18:45', name: RIDE, instructor: 'Emma' },
+  { dayOfWeek: 3, time: '07:30', name: RIDE, instructor: 'Dunia' },
+  { dayOfWeek: 3, time: '17:30', name: RIDE, instructor: 'Ena' },
+  { dayOfWeek: 3, time: '18:45', name: ABS, instructor: 'Ivana' },
+  { dayOfWeek: 4, time: '17:30', name: RIDE, instructor: 'Oliver' },
+  { dayOfWeek: 4, time: '18:45', name: RIDE, instructor: 'Mirna' },
+  { dayOfWeek: 5, time: '07:30', name: ABS, instructor: 'Ivana' },
+  { dayOfWeek: 5, time: '17:30', name: RIDE, instructor: 'Domagoj' },
+  { dayOfWeek: 6, time: '10:30', name: RIDE, instructor: 'Mirna' },
+  { dayOfWeek: 6, time: '11:30', name: RIDE, instructor: 'Emma' },
+  { dayOfWeek: 7, time: '10:30', name: RIDE, instructor: 'Dunia' },
 ];
 
 // Booked bikes per slot position, cycled, so every week has full, nearly full and quiet classes.
@@ -82,24 +81,23 @@ function pickTaken(id: string, count: number): number[] {
   return pool.slice(0, count).sort((a, b) => a - b);
 }
 
-/** The current studio week (the next one on a Sunday) and the two after it. Past classes are included. */
+/** The current studio week (Monday to Sunday) and the two after it. Past classes are included. */
 export function buildMockSchedule(now: Date): NextClass[] {
   const today = studioDay(now);
   const dow = dayOfWeek(today);
-  const monday = addDays(today, dow === 7 ? 1 : 1 - dow);
+  const monday = addDays(today, 1 - dow);
   const out: NextClass[] = [];
   let position = 0;
   for (let w = 0; w < WEEKS; w += 1) {
     for (const slot of TEMPLATE) {
       const day = addDays(monday, w * 7 + slot.dayOfWeek - 1);
-      const id = `mock-${day}-${slot.time.replace(':', '')}${slot.themeName ? '-theme' : ''}`;
+      const id = `mock-${day}-${slot.time.replace(':', '')}`;
       const takenBikes = pickTaken(id, TAKEN_COUNTS[position % TAKEN_COUNTS.length]);
       position += 1;
       out.push({
         id,
         startsAt: atStudioTime(day, slot.time),
         name: slot.name,
-        ...(slot.themeName ? { themeName: slot.themeName } : {}),
         instructor: slot.instructor,
         freeBikes: CAPACITY - takenBikes.length,
         capacity: CAPACITY,

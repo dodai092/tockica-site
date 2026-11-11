@@ -29,3 +29,10 @@ export function seatLabel(free: number, capacity: number, labels: SeatLabels, lo
   const text = form === 'one' || form === 'few' ? labels.scarce[form] : labels.scarce.other;
   return text.replace('{n}', n);
 }
+
+// What the card shows next to the time (Dunia's mockup): nothing while there are plenty of places, the count when
+// few are left, "Full" when none are. The count is still in the booking sheet.
+export function seatNote(free: number, capacity: number, labels: SeatLabels, locale: string): string {
+  const s = seatState(free, capacity);
+  return s.full || s.scarce ? seatLabel(free, capacity, labels, locale) : '';
+}

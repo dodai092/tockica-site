@@ -95,7 +95,7 @@ test('week arrows switch the strip and label, keep the weekday, and disable at t
 test('a day button shows only that day', async () => {
   const { page } = await open();
   const buttons = page.locator('[data-week-strip]:not([hidden]) [data-day]');
-  assert.equal(await buttons.count(), 6);
+  assert.equal(await buttons.count(), 7);
   const first = buttons.first();
   await first.click();
   assert.equal(await first.getAttribute('aria-pressed'), 'true');
@@ -116,12 +116,12 @@ test('a refresh updates the row that changed and does not rebuild an unchanged d
   setEdit((body) => {
     const c = ids
       .map((id) => body.classes.find((x) => x.id === id))
-      .filter((x) => x.freeBikes > 0)
+      .filter((x) => x.freeBikes > 3)
       .at(-1);
     target = c.id;
-    const free = Array.from({ length: c.capacity }, (_, i) => i + 1).find((n) => !c.takenBikes.includes(n));
-    c.takenBikes = [...c.takenBikes, free].sort((a, b) => a - b);
-    c.freeBikes -= 1;
+    // Plenty of places shows no text on the card, so leave 2 to make the change visible.
+    c.takenBikes = Array.from({ length: c.capacity - 2 }, (_, i) => i + 1);
+    c.freeBikes = 2;
     return body;
   });
   const row = (id) => page.locator(`[data-class-id="${id}"]`);
@@ -152,8 +152,8 @@ test('a refresh keeps each day header and rows list in place', async () => {
   });
   await refresh(page);
   await page.waitForTimeout(200);
-  assert.equal(await page.locator('[data-day-panel] > [data-day-head]').count(), 18);
-  assert.equal(await page.locator('[data-day-panel] > [data-rows]').count(), 18);
+  assert.equal(await page.locator('[data-day-panel] > [data-day-head]').count(), 21);
+  assert.equal(await page.locator('[data-day-panel] > [data-rows]').count(), 21);
   assert.equal(await page.locator('[data-day-panel] > li').count(), 0, 'rows were put straight into the panel');
   await page.close();
 });
@@ -202,22 +202,22 @@ test('refreshes every 30 seconds while the tab is visible', async () => {
   await page.close();
 });
 
-test('desktop: the selected week shows as six day columns and the day strip is hidden', async () => {
+test('desktop: the selected week shows as seven day columns and the day strip is hidden', async () => {
   const { page } = await open((b) => b, { width: 1280 });
-  assert.equal((await shownDays(page)).length, 6);
+  assert.equal((await shownDays(page)).length, 7);
   assert.equal(await page.locator('[data-week-strip]:not([hidden])').first().isVisible(), false);
   const columns = await page.locator('[data-day-head]:visible').count();
-  assert.equal(columns, 6);
+  assert.equal(columns, 7);
   await page.close();
 });
 
-test('desktop: week arrows swap the six columns and keep the weekday', async () => {
+test('desktop: week arrows swap the seven columns and keep the weekday', async () => {
   const { page } = await open((b) => b, { width: 1280 });
   const first = await shownDays(page);
   const label = await page.locator('[data-week-label]').innerText();
   await page.locator('[data-week-next]').click();
   const second = await shownDays(page);
-  assert.equal(second.length, 6);
+  assert.equal(second.length, 7);
   assert.ok(second.every((d) => !first.includes(d)));
   assert.notEqual(await page.locator('[data-week-label]').innerText(), label);
   await page.locator('[data-week-prev]').click();
@@ -231,7 +231,7 @@ test('resizing across lg switches between one day and the whole week and keeps t
   await page.setViewportSize({ width: 390, height: 900 });
   assert.deepEqual(await shownDays(page), [day]);
   await page.setViewportSize({ width: 1280, height: 900 });
-  assert.equal((await shownDays(page)).length, 6);
+  assert.equal((await shownDays(page)).length, 7);
   assert.equal(await selectedDay(page), day);
   await page.close();
 });
@@ -260,11 +260,11 @@ test('desktop: a refresh updates a row in a column that is not the selected day,
   setEdit((body) => {
     const c = ids
       .map((id) => body.classes.find((x) => x.id === id))
-      .filter((x) => x.freeBikes > 0)
+      .filter((x) => x.freeBikes > 3)
       .at(-1);
-    const free = Array.from({ length: c.capacity }, (_, i) => i + 1).find((n) => !c.takenBikes.includes(n));
-    c.takenBikes = [...c.takenBikes, free].sort((a, b) => a - b);
-    c.freeBikes -= 1;
+    // Plenty of places shows no text on the card, so leave 2 to make the change visible.
+    c.takenBikes = Array.from({ length: c.capacity - 2 }, (_, i) => i + 1);
+    c.freeBikes = 2;
     return body;
   });
   await refresh(page);
@@ -291,7 +291,7 @@ test('desktop: an emptied selected day does not move the week while the week sti
   await page.waitForTimeout(250);
   assert.equal(await page.locator(`[data-day-panel="${day}"] [data-empty]`).count(), 1);
   assert.equal(await page.locator('[data-week-label]').innerText(), label);
-  assert.equal((await shownDays(page)).length, 6);
+  assert.equal((await shownDays(page)).length, 7);
   await page.close();
 });
 
@@ -319,10 +319,10 @@ const columnCount = (page) =>
         new Set(els.filter((e) => e.offsetParent !== null).map((e) => Math.round(e.getBoundingClientRect().left))).size
     );
 
-test('tablet: from 768 px the week shows as three columns by two rows, the strip is hidden', async () => {
+test('tablet: from 768 px the week shows as three columns by three rows, the strip is hidden', async () => {
   for (const width of [768, 1023]) {
     const { page } = await open((b) => b, { width });
-    assert.equal((await shownDays(page)).length, 6, `${width}: six days`);
+    assert.equal((await shownDays(page)).length, 7, `${width}: seven days`);
     assert.equal(await columnCount(page), 3, `${width}: three columns`);
     assert.equal(await page.locator('[data-week-strip]:not([hidden])').first().isVisible(), false, `${width}: strip`);
     assert.equal(
@@ -334,9 +334,12 @@ test('tablet: from 768 px the week shows as three columns by two rows, the strip
   }
 });
 
-test('desktop: six columns from 1024 px, and one day below 768 px', async () => {
-  const wide = await open((b) => b, { width: 1024 });
-  assert.equal(await columnCount(wide.page), 6);
+test('desktop: four columns from 1024 px, seven from 1280 px, and one day below 768 px', async () => {
+  const mid = await open((b) => b, { width: 1024 });
+  assert.equal(await columnCount(mid.page), 4);
+  await mid.page.close();
+  const wide = await open((b) => b, { width: 1280 });
+  assert.equal(await columnCount(wide.page), 7);
   await wide.page.close();
   const phone = await open((b) => b, { width: 767 });
   assert.equal((await shownDays(phone.page)).length, 1);
@@ -350,7 +353,7 @@ test('resizing across 768 px switches between one day and the week and keeps the
   await page.setViewportSize({ width: 700, height: 900 });
   assert.deepEqual(await shownDays(page), [day]);
   await page.setViewportSize({ width: 800, height: 900 });
-  assert.equal((await shownDays(page)).length, 6);
+  assert.equal((await shownDays(page)).length, 7);
   assert.equal(await selectedDay(page), day);
   await page.close();
 });
@@ -371,7 +374,7 @@ test('a click on Book dispatches schedule:book with the class id and does not na
   await record(page);
   const row = visibleDays(page).locator('[data-class-id]:not([data-full])').first();
   const id = await row.getAttribute('data-class-id');
-  await row.locator('a').click();
+  await row.locator('a.sched-action').click();
   const got = await events(page, 'schedule:book');
   assert.equal(got.length, 1);
   assert.deepEqual(got[0].detail, { classId: id, full: false });
@@ -393,7 +396,7 @@ test('a click on the waiting list dispatches schedule:book with full true', asyn
   await refresh(page);
   await page.waitForSelector(`[data-class-id="${id}"][data-full]`);
   await record(page);
-  await page.locator(`[data-class-id="${id}"] a`).click();
+  await page.locator(`[data-class-id="${id}"] a.sched-action`).click();
   const got = await events(page, 'schedule:book');
   assert.deepEqual(
     got.map((e) => e.detail),
@@ -435,7 +438,7 @@ test('the sheet of today carries data-today, and only that one', async () => {
   await page.close();
 });
 
-test('a refresh that fills a class turns its dot pale, says it is full, and fills the meter', async () => {
+test('a refresh that fills a class turns its dot pale and says it is full', async () => {
   const { page, setEdit } = await open();
   const row = visibleDays(page).locator('[data-class-id]:not([data-full])').first();
   const id = await row.getAttribute('data-class-id');
@@ -448,11 +451,10 @@ test('a refresh that fills a class turns its dot pale, says it is full, and fill
   assert.equal(await pale(), before + 1, 'one more pale dot on that day');
   const li = page.locator(`[data-class-id="${id}"]`);
   assert.match(await li.locator('[data-f="seats"]').innerText(), /^(Popunjeno|Full)$/);
-  assert.equal(await li.locator('[data-meter]').evaluate((el) => el.style.width), '100%');
   await page.close();
 });
 
-test('a refresh that leaves a few places marks the seats as scarce and sets the meter', async () => {
+test('a refresh that leaves a few places marks the seats as scarce', async () => {
   const { page, setEdit } = await open();
   // A class that is not scarce yet. One with 3 places or fewer already carries the marker, so the wait below would
   // return before the refresh arrived.
@@ -468,38 +470,34 @@ test('a refresh that leaves a few places marks the seats as scarce and sets the 
   await page.waitForFunction((i) => document.querySelector(`[data-class-id="${i}"]`)?.hasAttribute('data-scarce'), id);
   const li = page.locator(`[data-class-id="${id}"]`);
   assert.match(await li.locator('[data-f="seats"]').innerText(), /2/);
-  assert.equal(await li.locator('[data-meter]').evaluate((el) => el.style.width), '90%');
   await page.close();
 });
 
-test('phone: a row is a rail, time left, instructor and training next to it, action on the right', async () => {
+test('phone: a row is a rail, mark left, time, instructor and training in the middle, action on the right', async () => {
   const { page } = await open(undefined, { width: 390 });
   const li = visibleDays(page).locator('[data-class-id]:not([data-full])').first();
   const box = (sel) => li.locator(sel).boundingBox();
-  const [time, who, kind, seats, action] = await Promise.all(
-    ['[data-f="time"]', '[data-f="instructor"]', '[data-f="name"]', '[data-f="seats"]', 'a'].map(box)
+  const [mark, time, who, kind, action] = await Promise.all(
+    ['[data-f="initial"]', '[data-f="time"]', '[data-f="instructor"]', '[data-f="name"]', 'a.sched-action'].map(box)
   );
-  assert.ok(who.x > time.x + time.width - 1, 'instructor sits right of the time');
+  assert.ok(time.x > mark.x + mark.width - 1, 'the mark sits left of the time');
   assert.ok(action.x > who.x + 40, 'action is on the right');
-  assert.ok(who.y < kind.y && kind.y < seats.y, 'instructor, training, seats from top to bottom');
+  assert.ok(time.y < who.y && who.y < kind.y, 'time, instructor, training from top to bottom');
   assert.ok(Math.abs(kind.x - who.x) < 40, 'training name lines up under the instructor block');
   await page.close();
 });
 
-test('desktop: a row stacks inside its sheet, time with seats on top, then instructor, training, meter, action', async () => {
+test('desktop: a row stacks inside its sheet, time on top, then the mark with instructor and training, then the action', async () => {
   const { page } = await open(undefined, { width: 1280 });
   // From md up the whole week is on screen, so any bookable class will do. The selected day alone can be empty:
   // classes that have started are hidden.
   const li = page.locator('[data-day-panel]:not([hidden]) [data-class-id]:not([data-full])').first();
   const box = (sel) => li.locator(sel).boundingBox();
-  const [time, seats, who, kind, meter, action] = await Promise.all(
-    ['[data-f="time"]', '[data-f="seats"]', '[data-f="instructor"]', '[data-f="name"]', '[data-meter]', 'a'].map(box)
+  const [mark, time, who, kind, action] = await Promise.all(
+    ['[data-f="initial"]', '[data-f="time"]', '[data-f="instructor"]', '[data-f="name"]', 'a.sched-action'].map(box)
   );
-  assert.ok(
-    Math.abs(time.y - seats.y) < 12 && seats.x > time.x + 40,
-    `seats on the time line, to the right: ${JSON.stringify({ time, seats })}`
-  );
-  assert.ok(time.y < who.y && who.y < kind.y && kind.y < meter.y && meter.y < action.y, 'top to bottom');
+  assert.ok(who.x > mark.x + mark.width - 1, 'the names sit right of the mark');
+  assert.ok(time.y < who.y && who.y < kind.y && kind.y < action.y, 'top to bottom');
   await page.close();
 });
 

@@ -25,7 +25,7 @@ export type Copy = {
   home: {
     title: string;
     description: string;
-    nextClasses: { heading: string; waitlist: string; book: string; all: string };
+    nextClasses: { heading: string; waitlist: string; book: string };
     about: { heading: string; line: string };
     rooms: {
       heading: string;
@@ -38,19 +38,27 @@ export type Copy = {
       heading: string;
       steps: [{ title: string; text: string }, { title: string; text: string }, { title: string; text: string }];
     };
-    offer: { first: string; firstTime: string; packs: string };
+    offer: { label: string; colDiscount: string; firstTime: string; packs: string };
     sculptBand: { heading: string; text: string; cta: string };
     faq: { heading: string };
     contact: { heading: string; write: string };
     photo: { hero: string; space: string; riders: string; sculpt: string; instructor: string };
   };
   instructorsPage: { title: string; description: string };
+  instructorPage: {
+    back: string;
+    teaches: string;
+    playlist: string;
+    loadPlaylist: string;
+    spotifyNote: string;
+    nextClasses: string;
+  };
   firstTimePage: { title: string; description: string; lead: string };
   packsPage: {
     title: string;
     description: string;
-    introLabel: string;
-    oncePerAccount: string;
+    noteDuration: string;
+    noteAbs: string;
     perClass: string;
     classOne: string;
     classMany: string;

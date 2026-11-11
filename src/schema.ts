@@ -22,7 +22,7 @@ export const organization = {
 
   // --- LocalBusiness fields: fill any of these to upgrade the @type ---
   // TODO(client): telephone, email, address, geo, openingHours and sameAs stay empty until
-  // Dunia answers doc item 8 (old Rusanova 8 vs new Ulica Antuna Bauera 22) and item 18.
+  // Dunia answers doc item 8 (address is Ferde Rusana 8, settled; Antuna Bauera 22 is the unpublished company seat) and item 18.
   // The type upgrades from Organization to LocalBusiness once an address is set.
   telephone: '',
   email: '',

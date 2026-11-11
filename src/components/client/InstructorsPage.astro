@@ -3,7 +3,7 @@ import Page from '~/components/client/Page.astro';
 import Photo from '~/components/client/Photo.astro';
 import Placeholder from '~/components/client/Placeholder.astro';
 import { instructors } from '~/data/instructors';
-import { getCopy } from '~/i18n';
+import { getCopy, instructorPath } from '~/i18n';
 import type { Lang } from '~/i18n';
 
 interface Props {
@@ -24,7 +24,11 @@ const copy = getCopy(lang);
           return (
             <li data-instructor={i.slug} class="flex flex-col gap-3">
               <Photo role={copy.home.photo.instructor} ratio="3 / 4" />
-              <h2 class="text-xl font-bold text-heading">{i.first}</h2>
+              <h2 class="text-xl font-bold text-heading">
+                <a href={instructorPath(i.slug, lang)} class="hover:underline">
+                  {i.first}
+                </a>
+              </h2>
               <p class="text-default">
                 {line ?? (
                   <Placeholder

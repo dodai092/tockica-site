@@ -152,13 +152,13 @@ const studioDate = (iso) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe
 const studioDow = (iso) =>
   new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Zagreb', weekday: 'short' }).format(new Date(iso));
 
-test('mock schedule: three weeks, Monday to Saturday, never Sunday', () => {
+test('mock schedule: three weeks, Monday to Sunday', () => {
   const all = buildMockSchedule(new Date('2026-12-02T10:00:00+01:00'));
   const days = [...new Set(all.map((c) => studioDate(c.startsAt)))];
-  assert.equal(days.length, 18);
+  assert.equal(days.length, 21);
   assert.equal(days[0], '2026-11-30');
-  assert.equal(days.at(-1), '2026-12-19');
-  assert.ok(all.every((c) => studioDow(c.startsAt) !== 'Sun'));
+  assert.equal(days.at(-1), '2026-12-20');
+  assert.ok(all.some((c) => studioDow(c.startsAt) === 'Sun'));
 });
 
 test('mock schedule: deterministic, unique ids, every row passes the contract', () => {
@@ -170,9 +170,9 @@ test('mock schedule: deterministic, unique ids, every row passes the contract', 
   assert.equal(feed.classes.length, a.length);
 });
 
-test('mock schedule: a Sunday starts at the next Monday, summer time keeps the studio hour', () => {
+test("mock schedule: a Sunday still starts at that week's Monday, summer time keeps the studio hour", () => {
   const sunday = buildMockSchedule(new Date('2026-12-06T12:00:00+01:00'));
-  assert.equal(studioDate(sunday[0].startsAt), '2026-12-07');
+  assert.equal(studioDate(sunday[0].startsAt), '2026-11-30');
   const summer = buildMockSchedule(new Date('2026-07-01T10:00:00+02:00'));
   const hours = new Set(
     summer.map((c) =>
@@ -182,11 +182,10 @@ test('mock schedule: a Sunday starts at the next Monday, summer time keeps the s
   assert.ok(hours.has('17:30'));
 });
 
-test('mock schedule: has full classes and nearly full ones, and some theme names', () => {
+test('mock schedule: has full classes and nearly full ones', () => {
   const all = buildMockSchedule(new Date('2026-12-02T10:00:00+01:00'));
   assert.ok(all.some((c) => c.freeBikes === 0));
   assert.ok(all.some((c) => c.freeBikes > 0 && c.freeBikes <= 3));
-  assert.ok(all.some((c) => c.themeName));
 });
 
 test('the mock endpoint is built, marked as mock and matches the contract', async () => {

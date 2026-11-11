@@ -29,12 +29,11 @@ export const en: Copy = {
       heading: 'Next classes',
       waitlist: 'Waiting list',
       book: 'Book',
-      all: 'All classes',
     },
     about: { heading: 'About the studio', line: 'The first and only rhythm spin studio in the heart of Zagreb.' },
     rooms: {
       heading: 'Rooms',
-      riders: { name: 'Riders Room', text: 'Our signature 45-minute rhythm spin class. 20 bikes.' },
+      riders: { name: 'Riders Room', text: 'Our signature 50-minute rhythm spin class. 20 bikes.' },
       sculpt: { name: 'Sculpt Room', text: 'A room independent trainers rent for their own clients.' },
       more: 'About the Sculpt Room',
     },
@@ -50,7 +49,12 @@ export const en: Copy = {
         },
       ],
     },
-    offer: { first: 'First class', firstTime: 'First time here', packs: 'All packs' },
+    offer: {
+      label: 'Intro packs, once per account',
+      colDiscount: 'Discount',
+      firstTime: 'First time here',
+      packs: 'All packs',
+    },
     sculptBand: {
       heading: 'Sculpt Room Rent',
       text: 'For independent trainers.',
@@ -70,6 +74,14 @@ export const en: Copy = {
     title: 'Instructors',
     description: 'Meet the Točkica na i instructors.',
   },
+  instructorPage: {
+    back: 'All instructors',
+    teaches: 'Teaches',
+    playlist: 'Favourite songs',
+    loadPlaylist: 'Load playlist',
+    spotifyNote: 'Loading connects you to Spotify.',
+    nextClasses: 'Next classes',
+  },
   firstTimePage: {
     title: 'First time',
     description: 'What to expect at your first class at Točkica na i.',
@@ -78,8 +90,8 @@ export const en: Copy = {
   packsPage: {
     title: 'Packs',
     description: 'Intro packs and the price per class.',
-    introLabel: 'Intro pack',
-    oncePerAccount: 'Once per account.',
+    noteDuration: 'All Spin classes last 50 minutes.',
+    noteAbs: 'ABS Spin is 30% cardio and 70% strength training, with lower intensity on the cardio part.',
     perClass: 'per class',
     classOne: 'class',
     classMany: 'classes',

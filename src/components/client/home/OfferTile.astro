@@ -1,28 +1,282 @@
 ---
-import { packs } from '~/data/packs';
-import { formatEur } from '~/lib/packs';
+import { packs, regularPacks } from '~/data/packs';
+import { formatEur, pricePerClass } from '~/lib/packs';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
 interface Props {
   lang: Lang;
+  // The packs page: marks the best-value row harder and drops the link to itself.
+  full?: boolean;
 }
 
-const { lang } = Astro.props;
-const copy = getCopy(lang).home.offer;
-const first = packs.find((p) => p.id === 'intro-1')!;
+const { lang, full = false } = Astro.props;
+const copy = getCopy(lang);
+const offer = copy.home.offer;
+const t = copy.packsPage;
+
+const intro = packs.filter((p) => p.intro && p.priceEur !== null);
+// The pack with the biggest discount gets the filled pill. The discount is the client's number, not a claim of ours.
+const topId = regularPacks.reduce((a, b) => ((b.discountPct ?? 0) > (a.discountPct ?? 0) ? b : a)).id;
+const name = (n: number) => `${n} ${n === 1 ? t.classOne : t.classMany}`;
 ---
 
-<section data-section="offer" class="mx-auto max-w-7xl px-4 sm:px-6 py-10">
-  <div
-    class="flex flex-col gap-4 rounded-(--aw-radius-card) border border-gray-200 dark:border-slate-600 p-6 md:flex-row md:items-center md:justify-between"
-  >
-    <h2 class="text-2xl md:text-3xl font-extrabold text-heading">
-      {`${copy.first} ${formatEur(first.priceEur!, lang)}`}
-    </h2>
-    <p class="flex flex-wrap gap-x-6 gap-y-2">
-      <a class="font-semibold underline" href={pathFor('firstTime', lang)}>{copy.firstTime}</a>
-      <a class="font-semibold underline" href={pathFor('packs', lang)}>{copy.packs}</a>
-    </p>
+<section data-section="offer" aria-labelledby="offer-label" class="mx-auto max-w-7xl px-4 sm:px-6 py-10">
+  <div class:list={['offer-box', { 'offer-strong': full }]}>
+    <div class="offer-intro">
+      <p id="offer-label" class="offer-label">{offer.label}</p>
+      <ul class="offer-intro-list">
+        {
+          intro.map((p) => (
+            <li data-pack={p.id} class="offer-ip">
+              <span class="offer-name">
+                {name(p.classes)}
+                <span class="offer-per">
+                  <span data-per-class={pricePerClass(p.priceEur!, p.classes)}>
+                    {formatEur(pricePerClass(p.priceEur!, p.classes), lang)}
+                  </span>{' '}
+                  {t.perClass}
+                </span>
+              </span>
+              <span class="offer-price">{formatEur(p.priceEur!, lang)}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn offer-first" href={pathFor('firstTime', lang)}>{offer.firstTime}</a>
+    </div>
+    <div class="offer-regular">
+      <ul class="offer-list">
+        {
+          regularPacks.map((p) => (
+            <li data-pack={p.id} class:list={['offer-row', { 'offer-top': p.id === topId }]}>
+              <span class="offer-rname">
+                {name(p.classes)}
+                <span class="offer-per">
+                  <span data-per-class={pricePerClass(p.priceEur, p.classes)}>
+                    {formatEur(pricePerClass(p.priceEur, p.classes), lang)}
+                  </span>{' '}
+                  {t.perClass}
+                </span>
+              </span>
+              <span class="offer-price offer-price-sm text-heading">{formatEur(p.priceEur, lang)}</span>
+              <span class="offer-disc">
+                {p.discountPct !== null ? (
+                  <span class="offer-pct">
+                    <span class="sr-only">{offer.colDiscount} </span>
+                    {p.discountPct}%
+                  </span>
+                ) : (
+                  <span class="offer-none" aria-hidden="true">
+                    –
+                  </span>
+                )}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        !full && (
+          <a class="offer-link" href={pathFor('packs', lang)}>
+            {offer.packs}
+          </a>
+        )
+      }
+    </div>
   </div>
 </section>
+
+<style>
+  /* One brand-red block carries the intro offer and its button. The five packs sit on the page with spacing, no
+     card and no row borders. Red is also on the discount pills, the 12-pack band and the link, never on the list
+     prices. The dark theme uses the lighter red, as the header's active link does. */
+  [data-section='offer'] {
+    --offer-red: var(--aw-color-primary);
+    --offer-red-hover: color-mix(in srgb, var(--aw-color-primary) 78%, #000);
+    --offer-on-red: #fff;
+    --offer-wash: color-mix(in srgb, var(--offer-red) 8%, #fff);
+    --offer-rule: color-mix(in srgb, var(--offer-on-red) 30%, transparent);
+  }
+  :global(:root.dark) [data-section='offer'] {
+    --offer-red: #ff6b6b;
+    --offer-red-hover: #ffa3a3;
+    --offer-on-red: #1a0b0b;
+    --offer-wash: color-mix(in srgb, #ff6b6b 10%, oklch(0.208 0.042 265.755));
+  }
+  .offer-box {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 2.5rem;
+  }
+  .offer-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    padding: 1.7rem 1.75rem;
+    border-radius: 8px;
+    background: var(--offer-red);
+    color: var(--offer-on-red);
+    box-shadow: 0 26px 40px -20px color-mix(in srgb, var(--offer-red) 60%, transparent);
+  }
+  .offer-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .offer-ip {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.4rem 0;
+  }
+  .offer-ip + .offer-ip {
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--offer-rule);
+  }
+  .offer-name,
+  .offer-rname {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+  .offer-per {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+  .offer-regular .offer-per {
+    opacity: 0.75;
+  }
+  .offer-price {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .offer-price-sm {
+    font-size: 1.9rem;
+    text-align: right;
+  }
+  /* Inverse of the block: the on-red colour as fill, red as text. */
+  .btn.offer-first {
+    margin-top: auto;
+    width: 100%;
+    border-color: var(--offer-on-red);
+    background-color: var(--offer-on-red);
+    color: var(--offer-red);
+    font-weight: 800;
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+  }
+  .offer-regular {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+  .offer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .offer-row {
+    display: grid;
+    grid-template-columns: 1fr auto 3.6rem;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+  }
+  .offer-top {
+    background: var(--offer-wash);
+  }
+  .offer-disc {
+    text-align: center;
+  }
+  .offer-pct {
+    display: inline-block;
+    padding: 1px 9px;
+    border: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+  .offer-top .offer-pct {
+    border-color: var(--offer-red);
+    background: var(--offer-red);
+    color: var(--offer-on-red);
+  }
+  .offer-strong .offer-top {
+    box-shadow: inset 0 0 0 1.5px var(--offer-red);
+  }
+  .offer-strong .offer-top .offer-price-sm {
+    font-size: 2.2rem;
+  }
+  .offer-none {
+    opacity: 0.45;
+  }
+  .offer-link {
+    align-self: flex-end;
+    padding: 0.9rem 1rem 0;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--offer-red);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease-in-out;
+  }
+  /* Hover only for a fine pointer, so a tap on a phone does not leave it stuck. */
+  @media (hover: hover) and (pointer: fine) {
+    .offer-link:hover {
+      color: var(--offer-red-hover);
+      text-decoration-thickness: 3px;
+    }
+    .btn.offer-first:hover {
+      background-color: color-mix(in srgb, var(--offer-on-red) 88%, var(--offer-red));
+      border-color: transparent;
+      color: var(--offer-red-hover);
+    }
+  }
+  .offer-link:focus-visible {
+    outline: 2px solid var(--offer-red);
+    outline-offset: 3px;
+  }
+  /* On the red block the ring must be the on-red colour, red on red would vanish. */
+  .offer-first:focus-visible {
+    outline: 2px solid var(--offer-on-red);
+    outline-offset: 3px;
+    box-shadow: none;
+  }
+  @media (max-width: 800px) {
+    .offer-box {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .offer-intro {
+      padding: 1.25rem 1.125rem;
+    }
+    .offer-price {
+      font-size: 2.6rem;
+    }
+    .offer-price-sm {
+      font-size: 1.5rem;
+    }
+    .offer-row {
+      padding: 0.7rem 0.5rem;
+    }
+    .btn.offer-first {
+      margin-top: 0;
+    }
+    .offer-link {
+      align-self: flex-start;
+    }
+  }
+</style>

@@ -13,7 +13,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import routeTools from './quality-routes.cjs';
 
-const { loadQualityRoutes, slugForRoute } = routeTools;
+const { loadQualityRoutes, slugForRoute, needsBaseline } = routeTools;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -22,7 +22,7 @@ const BASELINES_DIR = path.join(ROOT, 'golden-baselines');
 const SCHEMES = ['light', 'dark'];
 const VIEWPORT_NAMES = ['mobile', 'tablet', 'desktop'];
 
-const routes = loadQualityRoutes(ROOT);
+const routes = loadQualityRoutes(ROOT).filter((row) => needsBaseline(row.path));
 const missing = [];
 
 for (const route of routes) {

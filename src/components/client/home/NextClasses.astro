@@ -2,8 +2,10 @@
 import Placeholder from '~/components/client/Placeholder.astro';
 import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
 import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
+import { instructors } from '~/data/instructors';
 import { nextClasses } from '~/data/next-classes';
-import { seatLabel, seatState } from '~/lib/seats';
+import { profileHref } from '~/lib/instructor-link';
+import { seatNote, seatState } from '~/lib/seats';
 import { firstFreeBike } from '~/lib/schedule-feed';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
@@ -21,8 +23,10 @@ const labels = { book: copy.book, waitlist: copy.waitlist };
 // Cards sit in a sideways scroll row on phones and a grid from sm.
 const size = 'w-[10.5rem] flex-none snap-start sm:w-auto';
 const schedule = pathFor('schedule', lang);
-const when = new Intl.DateTimeFormat(lang, {
-  weekday: 'short',
+const profileBase = `${pathFor('instructors', lang)}/`;
+const profileSlugs = instructors.map((i) => i.slug);
+const dayOf = new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'Europe/Zagreb' });
+const timeOf = new Intl.DateTimeFormat(lang, {
   hour: '2-digit',
   minute: '2-digit',
   hourCycle: 'h23',
@@ -35,6 +39,8 @@ const when = new Intl.DateTimeFormat(lang, {
   data-section="next-classes"
   data-lang={lang}
   data-seat-labels={JSON.stringify(seatCopy)}
+  data-profile-base={profileBase}
+  data-profile-slugs={JSON.stringify(profileSlugs)}
   class:list={['relative z-10 mx-auto max-w-7xl px-4 sm:px-6', overlapHero ? '-mt-20 md:-mt-28' : 'mt-10 md:mt-12']}
 >
   <h2 class="sr-only">{copy.heading}</h2>
@@ -50,11 +56,12 @@ const when = new Intl.DateTimeFormat(lang, {
             card
             id={c.id}
             freeBikes={c.freeBikes}
-            time={when.format(new Date(c.startsAt))}
+            day={dayOf.format(new Date(c.startsAt))}
+            time={timeOf.format(new Date(c.startsAt))}
             instructor={c.instructor}
+            instructorHref={profileHref(profileBase, profileSlugs, c.instructor)}
             name={c.themeName ?? c.name}
-            seatsText={seatLabel(free, c.capacity, seatCopy, lang)}
-            percent={st.percent}
+            seatsText={seatNote(free, c.capacity, seatCopy, lang)}
             scarce={st.scarce}
             full={firstFreeBike(c) === null}
             href={schedule}
@@ -75,7 +82,6 @@ const when = new Intl.DateTimeFormat(lang, {
       instructor=""
       name=""
       seatsText=""
-      percent={0}
       scarce={false}
       full={false}
       href={schedule}
@@ -92,7 +98,6 @@ const when = new Intl.DateTimeFormat(lang, {
       instructor=""
       name=""
       seatsText=""
-      percent={100}
       scarce={false}
       full={true}
       href={schedule}
@@ -100,8 +105,7 @@ const when = new Intl.DateTimeFormat(lang, {
       class={size}
     />
   </template>
-  <p class="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2">
-    <a class="font-semibold underline" href={schedule}>{copy.all}</a>
+  <p class="mt-2">
     <Placeholder lang={lang} label="next classes are mock data until the booking app endpoint exists" />
   </p>
 </section>
@@ -116,6 +120,7 @@ const when = new Intl.DateTimeFormat(lang, {
 
 <script>
   import { fillRow } from '~/lib/class-row';
+  import { profileHref } from '~/lib/instructor-link';
   import { SCHEDULE_FEED_URL, parseSchedule } from '~/lib/schedule-feed';
   import type { NextClass } from '~/lib/schedule-feed';
   import type { SeatLabels } from '~/lib/seats';
@@ -143,7 +148,7 @@ const when = new Intl.DateTimeFormat(lang, {
       const ev = e as MouseEvent;
       if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
       const li = (e.target as Element).closest<HTMLElement>('li[data-next-class]');
-      if (!li || !(e.target as Element).closest('a')) return;
+      if (!li || !(e.target as Element).closest('a.sched-action')) return;
       e.preventDefault();
       document.dispatchEvent(
         new CustomEvent('schedule:book', {
@@ -167,19 +172,26 @@ const when = new Intl.DateTimeFormat(lang, {
       // Nothing changed since the last answer: leave the cards alone, so focus and scroll position stay put.
       const signature = JSON.stringify(feed.classes);
       if (root.dataset.feedSig === signature) return;
-      const when = new Intl.DateTimeFormat(root.dataset.lang, {
-        weekday: 'short',
+      const dayOf = new Intl.DateTimeFormat(root.dataset.lang, { weekday: 'short', timeZone: 'Europe/Zagreb' });
+      const timeOf = new Intl.DateTimeFormat(root.dataset.lang, {
         hour: '2-digit',
         minute: '2-digit',
         hourCycle: 'h23',
         timeZone: 'Europe/Zagreb',
       });
       const seatLabels = JSON.parse(root.dataset.seatLabels ?? '{}') as SeatLabels;
+      const profileSlugs = JSON.parse(root.dataset.profileSlugs ?? '[]') as string[];
       const items = feed.classes.map((c) => {
         const li = (c.freeBikes > 0 ? open : full).content.firstElementChild!.cloneNode(true) as HTMLElement;
         li.setAttribute('data-next-class', c.id);
         li.setAttribute('data-free-bikes', String(c.freeBikes));
-        fillRow(li, c, { time: when.format(new Date(c.startsAt)), locale: root.dataset.lang ?? 'hr', seatLabels });
+        fillRow(li, c, {
+          day: dayOf.format(new Date(c.startsAt)),
+          time: timeOf.format(new Date(c.startsAt)),
+          locale: root.dataset.lang ?? 'hr',
+          seatLabels,
+          profileHref: (first) => profileHref(root.dataset.profileBase ?? '', profileSlugs, first),
+        });
         return li;
       });
       list.replaceChildren(...items);

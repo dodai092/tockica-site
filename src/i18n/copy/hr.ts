@@ -28,12 +28,11 @@ export const hr: Copy = {
       heading: 'Sljedeći treninzi',
       waitlist: 'Lista čekanja',
       book: 'Rezerviraj',
-      all: 'Svi termini',
     },
     about: { heading: 'O studiju', line: 'Prvi i jedini rhythm spin studio u srcu Zagreba.' },
     rooms: {
       heading: 'Prostori',
-      riders: { name: 'Riders Room', text: 'Naš signature 45-minutni rhythm spin. 20 bicikala.' },
+      riders: { name: 'Riders Room', text: 'Naš signature 50-minutni rhythm spin. 20 bicikala.' },
       sculpt: { name: 'Sculpt Room', text: 'Prostor koji samostalni treneri iznajmljuju za svoje klijente.' },
       more: 'O Sculpt Roomu',
     },
@@ -49,7 +48,12 @@ export const hr: Copy = {
         },
       ],
     },
-    offer: { first: 'Prvi trening', firstTime: 'Prvi put kod nas', packs: 'Svi paketi' },
+    offer: {
+      label: 'Intro paketi, jednom po računu',
+      colDiscount: 'Popust',
+      firstTime: 'Prvi put kod nas',
+      packs: 'Svi paketi',
+    },
     sculptBand: {
       heading: 'Sculpt Room Rent',
       text: 'Za samostalne trenere.',
@@ -69,6 +73,14 @@ export const hr: Copy = {
     title: 'Instruktori',
     description: 'Upoznaj instruktore Točkice na i.',
   },
+  instructorPage: {
+    back: 'Svi instruktori',
+    teaches: 'Vodi',
+    playlist: 'Najdraže pjesme',
+    loadPlaylist: 'Učitaj playlistu',
+    spotifyNote: 'Učitavanjem se povezuješ sa Spotifyjem.',
+    nextClasses: 'Sljedeći treninzi',
+  },
   // Croatian lead is Antun's translation of Dunia's FAQ answer, Dunia approves.
   firstTimePage: {
     title: 'Prvi put',
@@ -78,8 +90,8 @@ export const hr: Copy = {
   packsPage: {
     title: 'Paketi',
     description: 'Intro paketi i cijena po treningu.',
-    introLabel: 'Intro paket',
-    oncePerAccount: 'Jednom po računu.',
+    noteDuration: 'Svi Spin treninzi traju 50 minuta.',
+    noteAbs: 'ABS Spin uključuje 30% kardio i 70% strength treninga, s manjim intenzitetom na kardio dijelu.',
     perClass: 'po treningu',
     classOne: 'trening',
     classMany: 'treninga',

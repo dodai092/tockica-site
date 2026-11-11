@@ -14,9 +14,10 @@ import type { Lang, RouteKey } from '~/i18n';
 export interface Props {
   lang: Lang;
   route: RouteKey;
+  twin?: Record<Lang, string>;
 }
 
-const { lang, route } = Astro.props;
+const { lang, route, twin } = Astro.props;
 const copy = getCopy(lang);
 const other = otherLang(lang);
 const currentPath = Astro.url.pathname.replace(/(.)\/$/, '$1');
@@ -48,7 +49,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
           <div class="flex items-center gap-2 bar:order-3 bar:ml-6" data-bar-controls>
             <a
               class="text-muted hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm font-semibold px-2.5 py-2.5 inline-flex items-center"
-              href={pathFor(route, other)}
+              href={twin ? twin[other] : pathFor(route, other)}
               hreflang={other}
               lang={other}
               aria-label={copy.langSwitch.aria}

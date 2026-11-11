@@ -105,4 +105,17 @@ function assertSitemapExcludes(routes, distDir) {
   }
 }
 
-module.exports = { loadQualityRoutes, validateQualityRoutes, assertBuiltRoutes, assertSitemapExcludes, slugForRoute };
+// Routes that need no screenshot baseline (2026-11-11). The instructor profiles are one template with different text,
+// so ena stands for all of them in each language. The demo pages are not part of the launch site. They stay in the
+// manifest, so the contrast, link, Lighthouse and route checks still cover them.
+const BASELINE_EXEMPT = /^\/(?:en\/instructors|instruktori)\/(?!ena\/)[a-z-]+\/$|^\/(?:en\/)?demo(?:-app)?\/$/;
+const needsBaseline = (route) => !BASELINE_EXEMPT.test(route);
+
+module.exports = {
+  needsBaseline,
+  loadQualityRoutes,
+  validateQualityRoutes,
+  assertBuiltRoutes,
+  assertSitemapExcludes,
+  slugForRoute,
+};

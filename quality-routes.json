@@ -12,7 +12,71 @@
     "kind": "public"
   },
   {
+    "path": "/instruktori/dunia/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/oliver/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/ivana/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/mirna/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/ena/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/domagoj/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/emma/",
+    "kind": "public"
+  },
+  {
+    "path": "/instruktori/mario/",
+    "kind": "public"
+  },
+  {
     "path": "/en/instructors/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/dunia/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/oliver/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/ivana/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/mirna/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/ena/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/domagoj/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/emma/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/instructors/mario/",
     "kind": "public"
   },
   {

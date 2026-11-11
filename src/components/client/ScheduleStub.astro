@@ -15,6 +15,8 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = getCopy(lang).schedulePage;
+// Same two notes as /paketi, one source of truth.
+const notes = getCopy(lang).packsPage;
 ---
 
 <Page lang={lang} route="schedule" title={t.title} description={t.description}>
@@ -28,6 +30,12 @@ const t = getCopy(lang).schedulePage;
     <p class="mt-4"><Placeholder lang={lang} label="how to book until the booking app launches" /></p>
   </section>
   <ScheduleList lang={lang} />
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 pb-12 md:pb-16">
+    <p data-schedule-disclaimer class="text-sm opacity-75">
+      {notes.noteDuration}<br />
+      {notes.noteAbs}
+    </p>
+  </section>
 </Page>
 
 <style is:global>

@@ -67,7 +67,7 @@ for (const [path, width] of [
     const li = card(page, false);
     const id = await li.getAttribute('data-next-class');
     const instructor = (await li.locator('[data-f="instructor"]').textContent()).trim();
-    await li.locator('a').click();
+    await li.locator('a.sched-action').click();
     await sheet(page).waitFor({ state: 'visible' });
     assert.equal(page.url(), `${origin}${path}`, 'the page did not navigate');
     assert.equal(await sheet(page).locator('button[data-bike]').count(), 20);
@@ -91,7 +91,7 @@ for (const [path, width] of [
     const { page } = await open(path, width);
     const li = card(page, true);
     if (!(await li.count())) return; // the feed has no full class right now
-    await li.locator('a').click();
+    await li.locator('a.sched-action').click();
     await sheet(page).waitFor({ state: 'visible' });
     assert.equal(await sheet(page).locator('[data-step="login"]').isVisible(), true);
     assert.equal(await sheet(page).locator('[data-step="map"]').isHidden(), true);
@@ -102,7 +102,7 @@ for (const [path, width] of [
 test('a ctrl-click on a card does not open the dialog', async () => {
   const { page } = await open('/en', 1280);
   await card(page, false)
-    .locator('a')
+    .locator('a.sched-action')
     .click({ modifiers: ['Control'], noWaitAfter: true });
   await page.waitForTimeout(300);
   assert.equal(await sheet(page).evaluate((d) => d.open), false);

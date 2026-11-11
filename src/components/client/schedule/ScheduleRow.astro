@@ -1,21 +1,24 @@
 ---
-// One class on the schedule page, in the order the studio asked for: start time, instructor (initial mark, until
-// portraits exist), training name, then how full it is and the action. The data-f fields are what the browser
-// script fills when it clones this row from the feed (ScheduleList.astro). Below md the row is a rail (time left,
-// action right); from md it stacks inside the day's sheet. With `card` it is the homepage card: always stacked, in
-// its own box (NextClasses.astro).
+// One class on the schedule page, laid out like Dunia's mockup (2026-11-11): the instructor's round mark, start time,
+// bold first name with the training name below, a note when few places are left or none, and the action. The mark is
+// the instructor's initial until portraits exist. It links to the same profile as the name but stays out of the
+// tab order and the accessibility tree, so the name is the one link announced. The data-f fields are what the browser script fills when it clones
+// this row from the feed (ScheduleList.astro). Below md the row is a rail (mark left, action right); from md it stacks
+// inside the day's sheet. With `card` it is the homepage card: always stacked, in its own box (NextClasses.astro).
 import { TINTS, initialOf, tintIndex } from '~/lib/avatar';
 
 interface Props {
   id: string;
   /** Start time only. */
   time: string;
+  /** The weekday, shown as a small label above the time on a card (a card is not inside a day's sheet). */
+  day?: string;
   instructor: string;
+  /** The instructor's profile page. Without it the name is plain text. */
+  instructorHref?: string;
   name: string;
-  /** "2 left", "Full" and so on, already in the page language. */
+  /** "Still 2 free" or "Full", already in the page language. Empty while there are plenty of places. */
   seatsText: string;
-  /** How much of the room is taken, 0 to 100. */
-  percent: number;
   /** Few places left: the seats text is highlighted. */
   scarce: boolean;
   /** No places: the waiting list is offered instead of Book. */
@@ -32,10 +35,11 @@ interface Props {
 const {
   id,
   time,
+  day,
   instructor,
+  instructorHref,
   name,
   seatsText,
-  percent,
   scarce,
   full,
   href,
@@ -60,50 +64,48 @@ const flags = {
     Astro.props.class,
   ]}
 >
-  <p data-f="time" class="[grid-area:time] self-start font-heading text-lg font-bold tabular-nums">
+  <a
+    data-f="initial"
+    href={instructorHref}
+    aria-hidden="true"
+    tabindex="-1"
+    class:list={[
+      '[grid-area:photo] flex flex-none items-center justify-center self-center rounded-full font-heading font-bold',
+      card ? 'h-10 w-10 text-sm' : 'h-14 w-14 text-lg md:h-10 md:w-10 md:text-sm',
+      TINTS[tintIndex(instructor)],
+    ]}>{initialOf(instructor)}</a
+  >
+  {
+    card && (
+      <p
+        data-f="day"
+        class="[grid-area:day] text-[0.6875rem] font-bold uppercase leading-none tracking-wider text-muted"
+      >
+        {day}
+      </p>
+    )
+  }
+  <p data-f="time" class="[grid-area:time] self-end whitespace-nowrap font-heading text-lg font-bold tabular-nums">
     {time}
   </p>
   <p
-    class:list={[
-      '[grid-area:who] flex min-w-0 items-center gap-2 font-semibold',
-      card ? 'text-sm' : 'text-base md:text-sm',
-    ]}
-  >
-    <span
-      data-f="initial"
-      aria-hidden="true"
-      class:list={[
-        'flex h-6 w-6 flex-none items-center justify-center rounded-full font-heading text-[0.625rem] font-bold',
-        TINTS[tintIndex(instructor)],
-      ]}>{initialOf(instructor)}</span
-    >
-    <span data-f="instructor" class="truncate">{instructor}</span>
-  </p>
-  <p data-f="name" class="[grid-area:kind] text-sm text-default">{name}</p>
-  <div class="[grid-area:meter] mt-1 h-1 overflow-hidden rounded-full bg-gray-200 dark:bg-slate-700" aria-hidden="true">
-    <div data-meter class="h-full rounded-full bg-(--aw-color-text-heading)" style={`width:${percent}%`}></div>
-  </div>
-  <p
     data-f="seats"
-    class:list={[
-      '[grid-area:seats] text-xs text-muted group-data-scarce:font-semibold group-data-scarce:text-primary dark:group-data-scarce:text-red-300',
-      !card && 'md:justify-self-end',
-    ]}
+    class="[grid-area:seats] self-end justify-self-end whitespace-nowrap text-xs text-muted group-data-scarce:font-semibold group-data-scarce:text-primary dark:group-data-scarce:text-red-300"
   >
     {seatsText}
   </p>
+  <p class="[grid-area:who] min-w-0 self-end text-sm font-bold">
+    <a data-f="instructor" href={instructorHref} class="block truncate hover:underline">{instructor}</a>
+  </p>
+  <p data-f="name" class="[grid-area:kind] self-start text-sm text-default">{name}</p>
   <a
     href={href}
     class:list={[
-      'sched-action [grid-area:action] inline-flex items-center whitespace-nowrap',
-      card
-        ? 'gap-1.5 pt-1 text-sm font-bold after:content-["→"]'
-        : 'h-9 min-w-[6.5rem] justify-center rounded-full px-4 text-sm font-medium md:h-auto md:min-w-0 md:justify-start md:gap-1.5 md:rounded-none md:px-0 md:pt-1 md:font-bold md:after:content-["→"]',
+      'sched-action [grid-area:action] inline-flex h-10 items-center justify-center whitespace-nowrap rounded-lg px-4 text-sm font-semibold',
+      card ? 'w-full' : 'min-w-28 md:w-full',
       full
-        ? !card && 'border border-gray-400 dark:border-slate-500 md:border-0'
-        : card
-          ? 'text-primary dark:text-red-300'
-          : 'bg-primary text-white md:bg-transparent md:text-primary md:dark:text-red-300',
+        ? 'border-2 border-primary bg-white text-primary dark:border-red-300 dark:bg-transparent dark:text-red-300'
+        : 'bg-primary text-white',
     ]}
   >
     {full ? labels.waitlist : labels.book}
@@ -111,26 +113,37 @@ const flags = {
 </li>
 
 <style>
+  /* Rail (below md): mark left, time and name in the middle, note over the action on the right. */
   .sched-row {
     display: grid;
-    grid-template-columns: 3.25rem 1fr auto;
-    grid-template-areas: 'time who action' 'time kind action' 'time meter action' 'time seats action';
+    grid-template-columns: 3.5rem 1fr auto;
+    grid-template-areas: 'photo time seats' 'photo who action' 'photo kind action';
     column-gap: 0.75rem;
     row-gap: 0.125rem;
     align-items: center;
   }
+  /* Stacked (from md, and always on the homepage card): time with the note on one line, mark beside the names, action across. */
   @media (min-width: 768px) {
     .sched-row {
-      grid-template-columns: 1fr auto;
-      grid-template-areas: 'time seats' 'who who' 'kind kind' 'meter meter' 'action action';
+      grid-template-columns: 2.5rem 1fr auto;
+      grid-template-areas: 'time time seats' 'photo who who' 'photo kind kind' 'action action action';
       column-gap: 0.5rem;
-      row-gap: 0.375rem;
+      row-gap: 0.25rem;
     }
   }
   .sched-row.sched-row--card {
-    grid-template-columns: 1fr;
-    grid-template-areas: 'time' 'who' 'kind' 'meter' 'seats' 'action';
-    row-gap: 0.375rem;
+    grid-template-columns: 2.5rem 1fr auto;
+    grid-template-areas: 'day day day' 'time time seats' 'photo who who' 'photo kind kind' 'action action action';
+    column-gap: 0.5rem;
+    row-gap: 0.25rem;
+  }
+  .sched-row .sched-action {
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 767.98px) {
+    .sched-row:not(.sched-row--card) .sched-action {
+      margin-top: 0;
+    }
   }
   /* Press feedback like the site's buttons (animation-rules 4). Reduced motion keeps the colour change only. */
   .sched-action {

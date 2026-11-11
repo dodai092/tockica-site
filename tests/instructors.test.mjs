@@ -47,7 +47,8 @@ for (const { lang, file } of pages) {
     const found = [...html.matchAll(/data-instructor="([^"]+)"/g)].map((m) => m[1]);
     assert.deepEqual(found, order);
     const byCard = cards(html);
-    for (const slug of order) assert.match(byCard[slug], new RegExp(`<h2[^>]*>\\s*${firstNames[slug]}\\s*</h2>`));
+    for (const slug of order)
+      assert.match(byCard[slug], new RegExp(`<h2[^>]*>\\s*(?:<a[^>]*>\\s*)?${firstNames[slug]}\\s*(?:</a>\\s*)?</h2>`));
   });
 
   test(`${lang}: lines for Oliver, Mirna, Ena and Emma match the client copy exactly`, async () => {

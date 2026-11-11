@@ -61,12 +61,12 @@ for (const { lang, file } of pages) {
     assert.ok(block.includes(`href="${pathFor('schedule', lang)}"`));
   });
 
-  test(`${lang}: a next-class card reads time, instructor, training name, with avatar, seats and meter`, async () => {
+  test(`${lang}: a next-class card reads time, instructor, training name, with avatar and seats`, async () => {
     const block = section(await read(file), 'next-classes').replace(/<template[\s\S]*?<\/template>/g, '');
     const li = block.match(/<li\b[^>]*data-next-class[^>]*>[\s\S]*?<\/li>/)?.[0] ?? '';
     const at = (f) => li.indexOf(`data-f="${f}"`);
     assert.ok(at('time') > -1 && at('time') < at('instructor') && at('instructor') < at('name'), 'order of the lines');
-    assert.ok(at('initial') > -1 && at('seats') > -1 && li.includes('data-meter'), 'avatar, seats and meter');
+    assert.ok(at('initial') > -1 && at('seats') > -1 && 'avatar and seats');
     assert.ok(!/Slobodno bicikala|Free bikes/.test(block), 'the old free-bikes line is gone');
     assert.ok(!block.includes("50' Riders Room"), 'no room name on the cards');
   });
@@ -77,7 +77,6 @@ for (const { lang, file } of pages) {
     assert.ok(li, 'the mock has a full class');
     assert.ok(li.includes(lang === 'en' ? 'Full' : 'Popunjeno'));
     assert.ok(li.includes(lang === 'en' ? 'Waiting list' : 'Lista čekanja'));
-    assert.match(li, /data-meter[^>]*style="[^"]*width:\s*100%/);
   });
 
   test(`${lang}: class times use the 24-hour clock`, async () => {
@@ -174,22 +173,32 @@ test('en: FAQ ships the client English verbatim, apostrophes and typos included'
   const text = block.replace(/<[^>]+>/g, '\n').replace(/&#x27;|&#39;/g, "'");
   for (const line of [
     'Which classes are beginner friendly?',
-    'All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 45 minutes.',
+    'All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 50 minutes.',
     'If you’d prefer to start with a slightly slower tempo, we recommend trying Mario, Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.',
     'What do i need to bring?',
     'Clean shoes, water and towel. You can always buy water at the studio.',
     'How early should I arrive?',
     'If you are new, come 15 minutes before to allow your instructor to help you set up.',
     'What if I need to cancel?',
+    'Cancellation window is 6 hours prior to the lesson.',
   ]) {
     assert.ok(text.includes(line), `missing verbatim: ${line.slice(0, 40)}`);
   }
-  assert.ok(/data-todo="[^"]*cancel[^"]*"/.test(block), 'cancel answer is an open placeholder');
+  assert.ok(!/data-todo=/.test(block), 'no open placeholders left in the English FAQ');
 });
 
-test('hr: FAQ never shows English text, every question and answer is an open placeholder', async () => {
+test('hr: FAQ is written in Croatian, no English text and no open placeholders', async () => {
   const block = section(await read('index.html'), 'faq');
   assert.ok(!block.includes('beginner friendly'));
   assert.ok(!block.includes('Clean shoes'));
-  assert.equal([...block.matchAll(/data-todo="/g)].length, 8);
+  assert.ok(!/data-todo=/.test(block), 'no open placeholders left in the Croatian FAQ');
+  for (const line of [
+    'Koji su treninzi prikladni za početnike?',
+    'Što trebam ponijeti?',
+    'Koliko ranije trebam doći?',
+    'Što ako moram otkazati?',
+    'najkasnije 6 sati prije treninga',
+  ]) {
+    assert.ok(block.includes(line), `missing: ${line}`);
+  }
 });

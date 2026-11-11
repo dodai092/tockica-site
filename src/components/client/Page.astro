@@ -16,15 +16,23 @@ interface Props {
   title: string;
   description: string;
   noindex?: boolean;
+  /** For a page that is not in the route table, such as one instructor: its path in each language. */
+  twin?: Record<Lang, string>;
 }
 
-const { lang, route, title, description, noindex = false } = Astro.props;
+const { lang, route, title, description, noindex = false, twin } = Astro.props;
 
 const metadata = {
   title,
   description,
   lang,
-  alternates: alternatesFor(route),
+  alternates: twin
+    ? [
+        { hreflang: 'hr', href: twin.hr },
+        { hreflang: 'en', href: twin.en },
+        { hreflang: 'x-default', href: twin.hr },
+      ]
+    : alternatesFor(route),
   ...(noindex ? { robots: { index: false, follow: false } } : {}),
 };
 // The schedule page is the booking entry, so it has no extra book bar. The footer gets
@@ -35,7 +43,7 @@ const showBookBar = bookBarEnabled && route !== 'schedule';
 <PageLayout metadata={metadata}>
   <MotionStyles />
   <Fragment slot="announcement"></Fragment>
-  <SiteHeader slot="header" lang={lang} route={route} />
+  <SiteHeader slot="header" lang={lang} route={route} twin={twin} />
   <slot />
   <Fragment slot="footer">
     <SiteFooter lang={lang} bookBarSpace={showBookBar} />
