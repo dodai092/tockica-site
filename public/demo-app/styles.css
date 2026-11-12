@@ -74,7 +74,7 @@ main { max-width: 760px; margin: 0 auto; padding: 16px; }
 .day small { display: block; color: var(--muted); font-size: 0.75rem; }
 .day strong { font-family: Montserrat, sans-serif; }
 .day[aria-pressed="true"] { background: var(--dark); color: #fff; border-color: var(--dark); }
-.day[aria-pressed="true"] small { color: var(--brand); }
+.day[aria-pressed="true"] small { color: #ff8a8f; } /* on the dark chip in both themes: --brand red is 2.8:1 there */
 
 .nav-week {
   font-family: Montserrat, sans-serif;

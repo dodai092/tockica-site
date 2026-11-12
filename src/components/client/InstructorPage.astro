@@ -92,6 +92,7 @@ const twin = { hr: instructorPath(slug, 'hr'), en: instructorPath(slug, 'en') };
               day={dayOf.format(new Date(c.startsAt))}
               time={timeOf.format(new Date(c.startsAt))}
               instructor={c.instructor}
+              plainInstructor
               name={c.themeName ?? c.name}
               seatsText={seatNote(free, c.capacity, seatCopy, lang)}
               scarce={st.scarce}

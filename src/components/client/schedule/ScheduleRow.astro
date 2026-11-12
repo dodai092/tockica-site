@@ -16,6 +16,8 @@ interface Props {
   instructor: string;
   /** The instructor's profile page. Without it the name is plain text. */
   instructorHref?: string;
+  /** The row sits on that instructor's own page: the name and initial are plain text, not links to the same page. */
+  plainInstructor?: boolean;
   name: string;
   /** "Still 2 free" or "Full", already in the page language. Empty while there are plenty of places. */
   seatsText: string;
@@ -38,6 +40,7 @@ const {
   day,
   instructor,
   instructorHref,
+  plainInstructor = false,
   name,
   seatsText,
   scarce,
@@ -47,6 +50,9 @@ const {
   card = false,
   freeBikes = 0,
 } = Astro.props;
+// A row built in the browser is cloned from an anchor and gets its href later, so only a page that never links
+// (the instructor's own) switches the tag.
+const Who = plainInstructor ? 'span' : 'a';
 const flags = {
   ...(card ? { 'data-next-class': id, 'data-free-bikes': String(freeBikes) } : { 'data-class-id': id }),
   ...(full ? { 'data-full': '' } : {}),
@@ -64,16 +70,16 @@ const flags = {
     Astro.props.class,
   ]}
 >
-  <a
+  <Who
     data-f="initial"
-    href={instructorHref}
+    href={plainInstructor ? undefined : instructorHref}
     aria-hidden="true"
     tabindex="-1"
     class:list={[
       '[grid-area:photo] flex flex-none items-center justify-center self-center rounded-full font-heading font-bold',
       card ? 'h-10 w-10 text-sm' : 'h-14 w-14 text-lg md:h-10 md:w-10 md:text-sm',
       TINTS[tintIndex(instructor)],
-    ]}>{initialOf(instructor)}</a
+    ]}>{initialOf(instructor)}</Who
   >
   {
     card && (
@@ -95,7 +101,9 @@ const flags = {
     {seatsText}
   </p>
   <p class="[grid-area:who] min-w-0 self-end text-sm font-bold">
-    <a data-f="instructor" href={instructorHref} class="block truncate hover:underline">{instructor}</a>
+    <Who data-f="instructor" href={plainInstructor ? undefined : instructorHref} class="block truncate hover:underline"
+      >{instructor}</Who
+    >
   </p>
   <p data-f="name" class="[grid-area:kind] self-start text-sm text-default">{name}</p>
   <a
