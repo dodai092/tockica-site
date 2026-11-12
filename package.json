@@ -23,7 +23,7 @@
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "eslint --fix .",
     "fix:prettier": "prettier -w .",
-    "test:quality": "node --test tests/*.test.mjs",
+    "test:quality": "node --test --test-concurrency=1 tests/*.test.mjs",
     "test:routes": "node scripts/check-quality-routes.mjs",
     "test:analytics": "node --test tests/analytics-events.browser.mjs",
     "test:meta": "node scripts/check-canonical-host.mjs",
