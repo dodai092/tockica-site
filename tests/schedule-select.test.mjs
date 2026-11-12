@@ -5,6 +5,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test, { after, before } from 'node:test';
 import { chromium } from 'playwright';
+import { skipWhenThemeOnly } from './theme-only.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
@@ -501,25 +502,29 @@ test('desktop: a row stacks inside its sheet, time on top, then the mark with in
   await page.close();
 });
 
-test('each day is a sheet: a hairline outline on white, on a phone and on desktop, on a white page', async () => {
-  for (const width of [390, 1280]) {
-    const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: 'light' });
-    await page.goto(`${origin}/raspored`);
-    await page.waitForSelector('[data-schedule]');
-    const got = await page.evaluate(() => {
-      const panel = [...document.querySelectorAll('[data-day-panel]')].find((p) => p.offsetParent !== null);
-      const cs = getComputedStyle(panel);
-      return {
-        border: cs.borderTopWidth,
-        bg: cs.backgroundColor,
-        radius: parseFloat(cs.borderTopLeftRadius),
-        page: getComputedStyle(document.body).backgroundColor,
-      };
-    });
-    assert.equal(got.border, '1px', `${width}px border`);
-    assert.equal(got.bg, 'rgb(255, 255, 255)', `${width}px sheet`);
-    assert.ok(got.radius >= 16, `${width}px radius`);
-    assert.equal(got.page, 'rgb(255, 255, 255)', `${width}px page is white`);
-    await page.close();
+test(
+  'each day is a sheet: a hairline outline on white, on a phone and on desktop, on a white page',
+  { skip: skipWhenThemeOnly },
+  async () => {
+    for (const width of [390, 1280]) {
+      const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: 'light' });
+      await page.goto(`${origin}/raspored`);
+      await page.waitForSelector('[data-schedule]');
+      const got = await page.evaluate(() => {
+        const panel = [...document.querySelectorAll('[data-day-panel]')].find((p) => p.offsetParent !== null);
+        const cs = getComputedStyle(panel);
+        return {
+          border: cs.borderTopWidth,
+          bg: cs.backgroundColor,
+          radius: parseFloat(cs.borderTopLeftRadius),
+          page: getComputedStyle(document.body).backgroundColor,
+        };
+      });
+      assert.equal(got.border, '1px', `${width}px border`);
+      assert.equal(got.bg, 'rgb(255, 255, 255)', `${width}px sheet`);
+      assert.ok(got.radius >= 16, `${width}px radius`);
+      assert.equal(got.page, 'rgb(255, 255, 255)', `${width}px page is white`);
+      await page.close();
+    }
   }
-});
+);

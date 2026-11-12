@@ -1,0 +1,51 @@
+---
+// An instructor's Spotify playlist. Nothing is requested from Spotify until the visitor presses the button, so the
+// page sets no third-party cookies by itself. Without a playlist id it is a Placeholder.
+import Placeholder from '~/components/client/Placeholder.astro';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+  first: string;
+  playlist: string | null;
+}
+
+const { lang, first, playlist } = Astro.props;
+const t = getCopy(lang).instructorPage;
+---
+
+{
+  playlist ? (
+    <div data-playlist={playlist} data-title={`${t.playlist}: ${first}`}>
+      <button type="button" class="btn btn-secondary" data-playlist-load>
+        {t.loadPlaylist}
+      </button>
+      <p class="mt-2 text-sm text-muted">{t.spotifyNote}</p>
+      <noscript>
+        <a class="font-semibold text-link underline" href={`https://open.spotify.com/playlist/${playlist}`}>
+          Spotify
+        </a>
+      </noscript>
+    </div>
+  ) : (
+    <Placeholder lang={lang} label={`${first} Spotify playlist id (Dunia doc item 1)`} />
+  )
+}
+
+<script>
+  document.addEventListener('click', (e) => {
+    const button = (e.target as Element).closest('[data-playlist-load]');
+    const box = button?.closest<HTMLElement>('[data-playlist]');
+    if (!box?.dataset.playlist) return;
+    const frame = document.createElement('iframe');
+    frame.src = `https://open.spotify.com/embed/playlist/${encodeURIComponent(box.dataset.playlist)}`;
+    frame.title = box.dataset.title ?? 'Spotify';
+    frame.width = '100%';
+    frame.height = '352';
+    frame.loading = 'lazy';
+    frame.allow = 'encrypted-media';
+    frame.className = 'rounded-xl border-0';
+    box.replaceChildren(frame);
+  });
+</script>

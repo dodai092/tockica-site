@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test, { after, before } from 'node:test';
 import { chromium } from 'playwright';
+import { skipWhenThemeOnly as skip } from './theme-only.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
@@ -57,28 +58,32 @@ const pair = (page) =>
 
 for (const scheme of ['light', 'dark']) {
   for (const width of [390, 1280]) {
-    test(`${scheme} ${width}px: the theme toggle matches the menu bars over the hero, below it and on /raspored`, async () => {
-      const page = await browser.newPage({ viewport: { width, height: 800 }, colorScheme: scheme });
-      const seen = {};
-      await page.goto(`${origin}/`);
-      await page.waitForTimeout(400);
-      seen['home, over the hero'] = await pair(page);
-      await page.evaluate(() => window.scrollTo(0, 1400));
-      await page.waitForTimeout(700);
-      seen['home, below the hero'] = await pair(page);
-      await page.goto(`${origin}/raspored`);
-      await page.waitForTimeout(400);
-      seen['schedule'] = await pair(page);
-      await page.close();
-      assert.equal(seen['home, over the hero'].header, 'clear', JSON.stringify(seen));
-      assert.equal(seen['home, below the hero'].header, 'glass', JSON.stringify(seen));
-      for (const [where, p] of Object.entries(seen)) {
-        assert.equal(p.toggle, p.bar, `${where}: ${JSON.stringify(p)}`);
+    test(
+      `${scheme} ${width}px: the theme toggle matches the menu bars over the hero, below it and on /raspored`,
+      { skip },
+      async () => {
+        const page = await browser.newPage({ viewport: { width, height: 800 }, colorScheme: scheme });
+        const seen = {};
+        await page.goto(`${origin}/`);
+        await page.waitForTimeout(400);
+        seen['home, over the hero'] = await pair(page);
+        await page.evaluate(() => window.scrollTo(0, 1400));
+        await page.waitForTimeout(700);
+        seen['home, below the hero'] = await pair(page);
+        await page.goto(`${origin}/raspored`);
+        await page.waitForTimeout(400);
+        seen['schedule'] = await pair(page);
+        await page.close();
+        assert.equal(seen['home, over the hero'].header, 'clear', JSON.stringify(seen));
+        assert.equal(seen['home, below the hero'].header, 'glass', JSON.stringify(seen));
+        for (const [where, p] of Object.entries(seen)) {
+          assert.equal(p.toggle, p.bar, `${where}: ${JSON.stringify(p)}`);
+        }
       }
-    });
+    );
   }
 
-  test(`${scheme} 390px: the theme toggle matches the close bars with the menu open`, async () => {
+  test(`${scheme} 390px: the theme toggle matches the close bars with the menu open`, { skip }, async () => {
     const page = await browser.newPage({ viewport: { width: 390, height: 800 }, colorScheme: scheme });
     await page.goto(`${origin}/`);
     await page.waitForTimeout(400);

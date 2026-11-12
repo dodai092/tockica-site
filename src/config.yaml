@@ -70,4 +70,4 @@ analytics:
       requireConsent: true # EU/GDPR: gate GA behind opt-in consent (src/components/client/CookieConsent.astro)
 
 ui:
-  theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  theme: 'dark:only' # Values: "system" | "light" | "dark" | "light:only" | "dark:only". Dunia wants dark only (2026-11-12). Set back to "system" to restore light mode and the toggle.

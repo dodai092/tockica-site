@@ -1,0 +1,9 @@
+---
+import InstructorPage from '~/components/client/InstructorPage.astro';
+import { instructors } from '~/data/instructors';
+
+export const getStaticPaths = () => instructors.map((i) => ({ params: { slug: i.slug } }));
+const { slug } = Astro.params;
+---
+
+<InstructorPage lang="en" slug={slug!} />

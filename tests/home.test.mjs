@@ -42,10 +42,10 @@ for (const { lang, file } of pages) {
     assert.ok(links.some((l) => /btn-primary/.test(l)));
   });
 
-  test(`${lang}: hero photo is a flagged placeholder image until Dunia sends a real one`, async () => {
+  test(`${lang}: hero is the supplied words artwork, with no placeholder flag left`, async () => {
     const hero = section(await read(file), 'hero');
     assert.ok(/<picture\b[\s\S]*<img\b/.test(hero));
-    assert.ok(/data-todo="[^"]*hero photo[^"]*"/.test(hero));
+    assert.ok(!/data-todo="[^"]*hero photo[^"]*"/.test(hero));
   });
 
   test(`${lang}: hero slogan is an open placeholder, not a guess`, async () => {

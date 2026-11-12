@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test, { after, before } from 'node:test';
 import { chromium } from 'playwright';
+import { skipWhenThemeOnly } from './theme-only.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
@@ -80,7 +81,7 @@ test('the switch is a flag of the language it switches to, with no EN/HR text', 
   }
 });
 
-test('the theme toggle in the header draws its icon and flips dark mode', async () => {
+test('the theme toggle in the header draws its icon and flips dark mode', { skip: skipWhenThemeOnly }, async () => {
   const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
   await page.goto(origin + '/paketi');
   const btn = page.locator('header [data-aw-toggle-color-scheme]');
