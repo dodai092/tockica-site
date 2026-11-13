@@ -30,8 +30,10 @@ const TEMPLATE: Slot[] = [
   { dayOfWeek: 7, time: '10:30', name: RIDE, instructor: 'Dunia' },
 ];
 
-// Booked bikes per slot position, cycled, so every week has full, nearly full and quiet classes.
-const TAKEN_COUNTS = [8, 14, 19, 5, 20, 11, 17, 2, 20, 13];
+// Booked bikes per weekly slot, in TEMPLATE order (one per slot, so every week looks the same), so every week has
+// full, nearly full and quiet classes. The last class of each day always has places left, so whatever time of the
+// week it is, the first class that can still be booked has several free bikes.
+const TAKEN_COUNTS = [8, 18, 12, 20, 5, 11, 17, 2, 20, 13, 8, 14, 20, 5, 12];
 
 /** Studio wall time ("YYYY-MM-DD", "HH:mm") to an ISO instant with the right offset for that date. */
 function atStudioTime(ymd: string, time: string): string {
