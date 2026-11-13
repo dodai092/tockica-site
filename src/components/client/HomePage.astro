@@ -15,13 +15,16 @@ import type { Lang } from '~/i18n';
 
 interface Props {
   lang: Lang;
+  /** Keeps the page out of search. */
+  noindex?: boolean;
+  twin?: Record<Lang, string>;
 }
 
-const { lang } = Astro.props;
+const { lang, noindex = false, twin } = Astro.props;
 const copy = getCopy(lang).home;
 ---
 
-<Page lang={lang} route="home" title={copy.title} description={copy.description}>
+<Page lang={lang} route="home" title={copy.title} description={copy.description} noindex={noindex} twin={twin}>
   <HomeHero lang={lang} />
   <NextClasses lang={lang} />
   <OfferTile lang={lang} />

@@ -16,11 +16,15 @@ interface Props {
   title: string;
   description: string;
   noindex?: boolean;
+  /** The waitlist thank-you page: the same header with only the logo and language switch, a footer without the site menu. */
+  minimal?: boolean;
+  /** The bar overlays the first section like the homepage, but follows the inner-page scroll rule (waitlist). */
+  overlayBar?: boolean;
   /** For a page that is not in the route table, such as one instructor: its path in each language. */
   twin?: Record<Lang, string>;
 }
 
-const { lang, route, title, description, noindex = false, twin } = Astro.props;
+const { lang, route, title, description, noindex = false, minimal = false, overlayBar = false, twin } = Astro.props;
 
 const metadata = {
   title,
@@ -43,10 +47,10 @@ const showBookBar = bookBarEnabled && route !== 'schedule';
 <PageLayout metadata={metadata}>
   <MotionStyles />
   <Fragment slot="announcement"></Fragment>
-  <SiteHeader slot="header" lang={lang} route={route} twin={twin} />
+  <SiteHeader slot="header" lang={lang} route={route} twin={twin} minimal={minimal} pageScroll={overlayBar} />
   <slot />
   <Fragment slot="footer">
-    <SiteFooter lang={lang} bookBarSpace={showBookBar} />
+    <SiteFooter lang={lang} bookBarSpace={showBookBar} minimal={minimal} />
     {showBookBar && <BookBar lang={lang} />}
   </Fragment>
 </PageLayout>

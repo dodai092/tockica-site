@@ -1,0 +1,55 @@
+---
+import Page from '~/components/client/Page.astro';
+import Placeholder from '~/components/client/Placeholder.astro';
+import { getCopy, pathFor } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getCopy(lang).waitlistThanks;
+---
+
+<Page lang={lang} route="waitlistThanks" title={t.title} description={t.text} noindex minimal>
+  <section data-arrive class="mx-auto max-w-3xl px-4 sm:px-6 pt-32 pb-16 md:pt-40 md:pb-24">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
+    <p class="mt-4 text-xl text-default">{t.text}</p>
+    <p class="mt-4 text-sm"><Placeholder lang={lang} label={t.pendingMissing} /></p>
+    <p class="mt-6">
+      <a
+        class="font-semibold underline"
+        href="https://www.instagram.com/tockicanai"
+        target="_blank"
+        rel="noopener noreferrer">{t.instagram}</a
+      >
+    </p>
+    <p class="mt-8"><a class="font-semibold underline" href={pathFor('home', lang)}>{t.back}</a></p>
+  </section>
+</Page>
+
+<style>
+  /* The page cross-fades in; the content settles on top of that once, 8 px up, so arrival reads as a result of the
+     submit. Reduced motion: fade only. */
+  [data-arrive] {
+    animation: tk-arrive 0.24s var(--ease-out) 0.1s both;
+  }
+  @keyframes tk-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-arrive] {
+      animation-duration: 0.2s;
+      animation-name: tk-arrive-fade;
+    }
+    @keyframes tk-arrive-fade {
+      from {
+        opacity: 0;
+      }
+    }
+  }
+</style>

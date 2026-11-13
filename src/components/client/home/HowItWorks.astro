@@ -4,26 +4,99 @@ import type { Lang } from '~/i18n';
 
 interface Props {
   lang: Lang;
+  /** Own heading and steps, for a page that is not the homepage (the waitlist). Same markup, so both look alike. */
+  heading?: string;
+  steps?: { title: string; text: string }[];
+  /** Marks the last step as the goal (red border, red numeral). */
+  goalLast?: boolean;
+  /** A date strip under the steps. */
+  timeline?: { date: string; label: string }[];
 }
 
-const { lang } = Astro.props;
-const copy = getCopy(lang).home.how;
+const { lang, heading, steps, goalLast = false, timeline } = Astro.props;
+const home = getCopy(lang).home.how;
+const copy = { heading: heading ?? home.heading, steps: steps ?? home.steps };
+const lastIndex = copy.steps.length - 1;
 ---
 
 <section data-section="how-it-works" class="mx-auto max-w-7xl px-4 sm:px-6 py-12 md:py-16">
   <h2 class="text-3xl font-extrabold text-heading">{copy.heading}</h2>
-  <ol class="mt-8 grid gap-6 md:grid-cols-3">
+  <div class="mt-8">
+    <ol class="grid gap-6 md:grid-cols-3">
+      {
+        copy.steps.map((step, i) => {
+          const goal = goalLast && i === lastIndex;
+          return (
+            <li
+              data-step
+              class:list={[
+                'relative flex min-h-44 flex-col gap-2 overflow-hidden rounded-(--aw-radius-card) border p-6',
+                goal ? 'border-primary bg-primary/10' : 'border-gray-200 dark:border-slate-600',
+              ]}
+            >
+              {/* The step number is a big faint figure in the corner, like the words in the studio artwork. The
+                list is ordered, so the order is still announced. */}
+              <span
+                class:list={[
+                  'pointer-events-none absolute -bottom-3 right-2 select-none font-heading text-[7.5rem] font-extrabold leading-none tracking-[-0.03em]',
+                  goal ? 'text-primary/35' : 'text-white/[0.07]',
+                ]}
+                aria-hidden="true"
+              >
+                {i + 1}
+              </span>
+              <h3 class="relative text-xl font-bold text-heading">{step.title}</h3>
+              <p class:list={['relative', goal ? 'text-heading' : 'text-default']}>{step.text}</p>
+            </li>
+          );
+        })
+      }
+    </ol>
     {
-      copy.steps.map((step, i) => (
-        <li
-          data-step
-          class="flex flex-col gap-2 rounded-(--aw-radius-card) border border-gray-200 dark:border-slate-600 p-6"
-        >
-          <span class="text-sm font-bold tabular-nums text-muted">{i + 1}</span>
-          <h3 class="text-xl font-bold text-heading">{step.title}</h3>
-          <p class="text-default">{step.text}</p>
-        </li>
-      ))
+      timeline && (
+        <ul class="tl mt-10 hidden gap-4 md:grid md:grid-cols-3">
+          {timeline.map((t, i) => (
+            <li class:list={[{ 'tl-mid': i === 1 }]}>
+              <b class="block font-heading text-xl font-extrabold text-heading">{t.date}</b>
+              <span class="text-default">{t.label}</span>
+            </li>
+          ))}
+        </ul>
+      )
     }
-  </ol>
+  </div>
 </section>
+
+<style>
+  /* A horizontal rail with a dot per date. Hidden on a phone for now. */
+  .tl {
+    position: relative;
+    padding-top: 1.5rem;
+  }
+  .tl::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0.4375rem;
+    height: 2px;
+    background: rgb(67 80 104);
+  }
+  .tl li {
+    position: relative;
+  }
+  .tl li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -1.5rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 9999px;
+    border: 2px solid var(--aw-color-primary);
+    background: var(--aw-color-bg-page, #232a37);
+  }
+  .tl li.tl-mid::before {
+    background: var(--aw-color-primary);
+  }
+</style>

@@ -42,6 +42,26 @@ A per-client component living in `src/components/client/`. Created by ejecting a
 from the **parts bin** and modifying it freely, or built new. This is where all
 per-client design work lands, so **template core** never drifts.
 
+### Waitlist
+
+The people who sign up before the studio opens. They later create a login on the booking system and
+unlock the **Waitlist offer**. It is a list of future users, not a newsletter.
+
+_Avoid_: newsletter, mailing list, subscribers
+
+**Why:** Dunia's opening plan treats sign-ups as the first accounts of the booking system, so nothing is
+sent to them as marketing mail.
+
+### Waitlist offer
+
+€100 for unlimited training for 30 days from opening day (4 January, so until 4 February), bought by 31.12 and
+available to anyone who joins the **Waitlist**. "Unlimited" covers all spin classes. No pause, no refund. Stated openly on the waitlist page, because it is the reason to join.
+
+_Avoid_: early bird, launch promo
+
+**Why:** the January offers "Buy 1, we double it" and "Bring a +1" are separate and start only after opening,
+so they are not part of this term.
+
 ## Related docs
 
 - [SETUP.md](./SETUP.md), the build reference kept from the template

@@ -15,9 +15,13 @@ export interface Props {
   lang: Lang;
   route: RouteKey;
   twin?: Record<Lang, string>;
+  /** Waitlist pages: logo and language switch only (no menu, no Book). Scroll behaviour is the same. */
+  minimal?: boolean;
+  /** Waitlist pages: the bar overlays the first section as on the homepage, but follows the inner-page scroll rule (glass after a short scroll). */
+  pageScroll?: boolean;
 }
 
-const { lang, route, twin } = Astro.props;
+const { lang, route, twin, minimal = false, pageScroll = false } = Astro.props;
 const copy = getCopy(lang);
 const other = otherLang(lang);
 const currentPath = Astro.url.pathname.replace(/(.)\/$/, '$1');
@@ -31,7 +35,8 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     class="top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out sticky"
     data-aw-sticky-header
     data-hdr="clear"
-    data-hero={route === 'home' ? '' : undefined}
+    data-hero={route === 'home' || pageScroll ? '' : undefined}
+    data-page-scroll={pageScroll ? '' : undefined}
     id="header"
   >
     <div class="absolute inset-0"></div>
@@ -46,7 +51,10 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
           <Logo />
         </a>
         <div class="flex items-center gap-1 bar:contents">
-          <div class="flex items-center gap-2 bar:order-3 bar:ml-6" data-bar-controls>
+          <div
+            class:list={['flex items-center gap-2 bar:order-3', minimal ? 'bar:ml-auto' : 'bar:ml-6']}
+            data-bar-controls
+          >
             <a
               class="text-muted hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm font-semibold px-2.5 py-2.5 inline-flex items-center"
               href={twin ? twin[other] : pathFor(route, other)}
@@ -65,57 +73,68 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
             </a>
             <ToggleTheme />
           </div>
-          <div class="flex items-center bar:hidden">
-            <ToggleMenu label={lang === 'hr' ? 'Izbornik' : 'Menu'} />
-          </div>
+          {
+            !minimal && (
+              <div class="flex items-center bar:hidden">
+                <ToggleMenu label={lang === 'hr' ? 'Izbornik' : 'Menu'} />
+              </div>
+            )
+          }
         </div>
       </div>
-      {/* Phones: this wrapper is the dropdown panel while the menu is open (styles below). lg and up: no box. */}
-      <div class="contents" data-menu-panel id="menu-panel">
-        <nav
-          class="items-center w-full bar:w-auto hidden bar:flex bar:order-2 bar:mx-auto text-default overflow-y-auto overflow-x-hidden bar:overflow-visible"
-          aria-label={lang === 'hr' ? 'Glavni izbornik' : 'Main navigation'}
-        >
-          <ul
-            class="flex flex-col bar:flex-row bar:self-center w-full bar:w-auto text-xl bar:text-[0.9375rem] tracking-[0.01rem] font-medium bar:justify-center"
-          >
-            {
-              links.map(({ text, href }) => (
-                <li>
-                  <a class:list={[linkClass, { 'aw-link-active': href === currentPath }]} href={href}>
-                    {text}
-                  </a>
-                </li>
-              ))
-            }
-            <li
-              class="max-bar:mt-2 max-bar:border-t max-bar:border-gray-200 max-bar:pt-2 dark:max-bar:border-slate-700"
-            >
-              {/* TODO(client): the login target is the booking app, proxied under tockicanai.hr (ADR 0005). */}
-              <a class={linkClass} href="#" data-login data-todo="Prijava link (booking app proxy)">
-                {copy.nav.login}
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <div class="hidden bar:flex items-center bar:order-4 bar:ml-3" data-menu-extras>
-          <span>
-            <Button
-              variant="primary"
-              text={copy.cta.book}
-              href={pathFor('schedule', lang)}
-              class="py-2.5 px-5.5 bar:px-6 font-semibold shadow-none text-sm w-auto"
-              data-book
-            />
-          </span>
-        </div>
-      </div>
+      {
+        !minimal && (
+          <Fragment>
+            {/* Phones: this wrapper is the dropdown panel while the menu is open (styles below). lg and up: no box. */}
+            <div class="contents" data-menu-panel id="menu-panel">
+              <nav
+                class="items-center w-full bar:w-auto hidden bar:flex bar:order-2 bar:mx-auto text-default overflow-y-auto overflow-x-hidden bar:overflow-visible"
+                aria-label={lang === 'hr' ? 'Glavni izbornik' : 'Main navigation'}
+              >
+                <ul class="flex flex-col bar:flex-row bar:self-center w-full bar:w-auto text-xl bar:text-[0.9375rem] tracking-[0.01rem] font-medium bar:justify-center">
+                  {links.map(({ text, href }) => (
+                    <li>
+                      <a class:list={[linkClass, { 'aw-link-active': href === currentPath }]} href={href}>
+                        {text}
+                      </a>
+                    </li>
+                  ))}
+                  <li class="max-bar:mt-2 max-bar:border-t max-bar:border-gray-200 max-bar:pt-2 dark:max-bar:border-slate-700">
+                    {/* TODO(client): the login target is the booking app, proxied under tockicanai.hr (ADR 0005). */}
+                    <a class={linkClass} href="#" data-login data-todo="Prijava link (booking app proxy)">
+                      {copy.nav.login}
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              <div class="hidden bar:flex items-center bar:order-4 bar:ml-3" data-menu-extras>
+                <span>
+                  <Button
+                    variant="primary"
+                    text={copy.cta.book}
+                    href={pathFor('schedule', lang)}
+                    class="py-2.5 px-5.5 bar:px-6 font-semibold shadow-none text-sm w-auto"
+                    data-book
+                  />
+                </span>
+              </div>
+            </div>
+          </Fragment>
+        )
+      }
     </div>
     {
       /* Phones: dim layer under the open menu. Keep it AFTER the bar layer: the bar styles below target `#header > div:first-child`. */
     }
-    <div class="bar:hidden fixed inset-x-0 bottom-0 top-[4.5rem] bg-black/40" data-menu-backdrop aria-hidden="true">
-    </div>
+    {
+      !minimal && (
+        <div
+          class="bar:hidden fixed inset-x-0 bottom-0 top-[4.5rem] bg-black/40"
+          data-menu-backdrop
+          aria-hidden="true"
+        />
+      )
+    }
   </header>
 </aw-header>
 
@@ -732,11 +751,12 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       if (header?.hasAttribute('data-aw-sticky-header')) {
         let ticking = false;
         let hero: Element | null = null;
+        let overlay: Element | null = null;
         let last = window.scrollY;
         let down = 0;
         let up = 0;
         const measure = () => {
-          if (hero && !header.classList.contains('expanded')) {
+          if (overlay && !header.classList.contains('expanded')) {
             header.style.setProperty('--hdr-h', `${header.offsetHeight}px`);
           }
         };
@@ -785,8 +805,9 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         // then let the active link animate on its own.
         this.sync = () => {
           header.setAttribute('data-instant', '');
-          hero = document.querySelector('[data-section="hero"]');
-          header.toggleAttribute('data-hero', !!hero);
+          overlay = document.querySelector('[data-section="hero"]');
+          hero = header.hasAttribute('data-page-scroll') ? null : overlay;
+          header.toggleAttribute('data-hero', !!overlay);
           header.removeAttribute('data-hide');
           header.dataset.hdr = 'clear';
           down = 0;

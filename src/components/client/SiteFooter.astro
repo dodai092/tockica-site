@@ -8,9 +8,11 @@ import type { Lang } from '~/i18n';
 interface Props {
   lang: Lang;
   bookBarSpace?: boolean;
+  /** Without the site menu column, while the waitlist is the homepage. */
+  minimal?: boolean;
 }
 
-const { lang, bookBarSpace = false } = Astro.props;
+const { lang, bookBarSpace = false, minimal = false } = Astro.props;
 const copy = getCopy(lang);
 
 const nav = footerRoutes(sculpt.visible).map((key) => ({ text: copy.nav[key], href: pathFor(key, lang) }));
@@ -29,24 +31,26 @@ const linkClass = 'text-muted hover:text-default hover:underline transition dura
 
 <footer class="relative border-t border-gray-200 dark:border-slate-700 not-prose">
   <div class:list={['max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12', { 'pb-28 md:pb-12': bookBarSpace }]}>
-    <div class="grid grid-cols-12 gap-8">
+    <div class="grid grid-cols-12 gap-y-8 lg:gap-x-8">
       <div class="col-span-12 lg:col-span-4">
         <a class="inline-block" href={pathFor('home', lang)}><Logo /></a>
         <p class="mt-4 text-sm text-muted">Točkica na i j.d.o.o. · OIB HR37892279693</p>
       </div>
-      <nav class="col-span-6 lg:col-span-3" aria-label={lang === 'hr' ? 'Podnožje' : 'Footer'}>
-        <ul class="text-sm space-y-2">
-          {
-            nav.map(({ text, href }) => (
-              <li>
-                <a class={linkClass} href={href}>
-                  {text}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
+      {
+        !minimal && (
+          <nav class="col-span-6 lg:col-span-3" aria-label={lang === 'hr' ? 'Podnožje' : 'Footer'}>
+            <ul class="text-sm space-y-2">
+              {nav.map(({ text, href }) => (
+                <li>
+                  <a class={linkClass} href={href}>
+                    {text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
       <div class="col-span-6 lg:col-span-3">
         <ul class="text-sm space-y-2">
           {

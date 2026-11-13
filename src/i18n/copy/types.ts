@@ -6,6 +6,7 @@ export type Copy = {
     schedule: string;
     instructors: string;
     packs: string;
+    waitlist: string;
     sculpt: string;
     contact: string;
     login: string;
@@ -87,6 +88,37 @@ export type Copy = {
   legalPage: { description: string; official: string };
   notFound: { title: string; text: string; back: string };
   thanksPage: { title: string; text: string; back: string };
+  waitlist: {
+    title: string;
+    description: string;
+    heading: string;
+    /** One short lead-in under the heading. */
+    offer: string;
+    /** The offer as one display sentence, with the price set larger at its end. */
+    priceLine: string;
+    price: string;
+    room: string;
+    deadline: string;
+    formHeading: string;
+    submit: string;
+    /** Form errors in the page language, shown in place of the browser's own. */
+    errors: { required: string; email: string; date: string; dateReal: string; consent: string };
+    birthDate: string;
+    /** Labels of the three date-of-birth fields. */
+    birthParts: { day: string; month: string; year: string };
+    birthHints: { day: string; month: string; year: string };
+    /** Names the missing fact on the placeholder flag under the birth date: what we ask for it for. */
+    birthDateWhyMissing: string;
+    /** The offer terms Dunia has stated, shown under the form. */
+    terms: string;
+    /** Names what is still missing from the terms, on the placeholder flag under them. */
+    termsMissing: string;
+    stepsHeading: string;
+    steps: [{ title: string; text: string }, { title: string; text: string }, { title: string; text: string }];
+    /** Three dates under the steps: last day to buy, opening, end of the offer. */
+    timeline: [{ date: string; label: string }, { date: string; label: string }, { date: string; label: string }];
+  };
+  waitlistThanks: { title: string; text: string; instagram: string; pendingMissing: string; back: string };
   schedulePage: {
     title: string;
     description: string;

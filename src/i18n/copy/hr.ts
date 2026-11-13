@@ -5,6 +5,7 @@ export const hr: Copy = {
     schedule: 'Raspored',
     instructors: 'Instruktori',
     packs: 'Paketi',
+    waitlist: 'Lista čekanja',
     sculpt: 'Sculpt Room',
     contact: 'Kontakt',
     login: 'Prijava',
@@ -38,7 +39,7 @@ export const hr: Copy = {
     },
     instructors: { heading: 'Instruktori', all: 'Svi instruktori' },
     how: {
-      heading: 'Kako to ide',
+      heading: 'Korak po korak',
       steps: [
         { title: 'Odaberi trening', text: 'Raspored i instruktori su otvoreni svima.' },
         { title: 'Odaberi bicikl', text: 'Svoj bicikl biraš na karti.' },
@@ -136,6 +137,51 @@ export const hr: Copy = {
     back: 'Natrag na naslovnicu',
   },
   thanksPage: { title: 'Hvala', text: 'Poruka je poslana. Javit ćemo ti se.', back: 'Natrag na naslovnicu' },
+  waitlist: {
+    title: 'Lista čekanja',
+    description:
+      'Otvaramo 4. siječnja. Prijavi se na listu čekanja i otključaj neograničene treninge 30 dana za 100 €.',
+    heading: 'Otvaramo 4. siječnja',
+    offer: 'Prijavi se na listu čekanja i otključaj ponudu.',
+    priceLine: 'Neograničeni spin treninzi 30 dana za',
+    price: '100 €',
+    room: 'Spin treninzi u Riders Roomu. 50 minuta, 20 bicikala.',
+    deadline: 'Ponudu možeš kupiti do 31.12.',
+    formHeading: 'Prijavi se na listu',
+    submit: 'Prijavi me',
+    errors: {
+      required: 'Ispuni ovo polje.',
+      email: 'Upiši ispravan e-mail.',
+      date: 'Upiši dan, mjesec i godinu brojevima.',
+      dateReal: 'Taj datum ne postoji.',
+      consent: 'Za nastavak potvrdi privatnost.',
+    },
+    birthDate: 'Datum rođenja',
+    birthParts: { day: 'Dan', month: 'Mjesec', year: 'Godina' },
+    birthHints: { day: 'DD', month: 'MM', year: 'GGGG' },
+    birthDateWhyMissing: 'zašto tražimo datum rođenja (Dunia)',
+    terms:
+      'Vrijedi od otvaranja, 4. siječnja do 4. veljače. Prijaviti se može svatko. Jednokratna ponuda, bez pauze i bez povrata.',
+    termsMissing: 'ograničenje broja korisnika (možda 100) i prenosivost ponude (Dunia odlučuje)',
+    stepsHeading: 'Korak po korak',
+    steps: [
+      { title: 'Prijavi se', text: 'Upiši ime, e-mail i datum rođenja.' },
+      { title: 'Otključaj ponudu', text: 'Napravi račun i do 31.12. kupi 30 dana neograničenih treninga za 100 €.' },
+      { title: 'Dođi 4. siječnja', text: 'Neograničeni spin treninzi 30 dana.' },
+    ],
+    timeline: [
+      { date: '31.12.', label: 'zadnji dan za kupnju' },
+      { date: '4.1.', label: 'otvaramo' },
+      { date: '4.2.', label: 'ponuda završava' },
+    ],
+  },
+  waitlistThanks: {
+    title: 'Na listi si',
+    text: 'Hvala na prijavi. Otvaramo 4. siječnja, a ponudu od 100 € možeš kupiti do 31.12.',
+    instagram: 'Prati nas na Instagramu',
+    pendingMissing: 'kako i kada javljamo da je ponuda otvorena',
+    back: 'Natrag na naslovnicu',
+  },
   schedulePage: {
     title: 'Raspored',
     description: 'Raspored treninga u Točkici na i.',

@@ -60,6 +60,8 @@ test('route table lists the eleven agreed pages and the booking demo', () => {
     'sculpt',
     'terms',
     'thanks',
+    'waitlist',
+    'waitlistThanks',
   ]);
 });
 

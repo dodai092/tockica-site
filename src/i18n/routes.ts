@@ -19,6 +19,8 @@ export type RouteKey =
   | 'terms'
   | 'privacy'
   | 'thanks'
+  | 'waitlist'
+  | 'waitlistThanks'
   | 'demo';
 
 const paths: Record<RouteKey, Record<Lang, string>> = {
@@ -33,6 +35,8 @@ const paths: Record<RouteKey, Record<Lang, string>> = {
   terms: { hr: '/uvjeti', en: '/en/terms' },
   privacy: { hr: '/privatnost', en: '/en/privacy' },
   thanks: { hr: '/hvala', en: '/en/thanks' },
+  waitlist: { hr: '/waitlist', en: '/en/waitlist' },
+  waitlistThanks: { hr: '/hvala-lista', en: '/en/waitlist-thanks' },
   demo: { hr: '/demo', en: '/en/demo' },
 };
 

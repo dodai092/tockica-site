@@ -162,5 +162,21 @@
   {
     "path": "/demo-app/",
     "kind": "noindex"
+  },
+  {
+    "path": "/waitlist/",
+    "kind": "public"
+  },
+  {
+    "path": "/en/waitlist/",
+    "kind": "public"
+  },
+  {
+    "path": "/hvala-lista/",
+    "kind": "noindex"
+  },
+  {
+    "path": "/en/waitlist-thanks/",
+    "kind": "noindex"
   }
 ]
