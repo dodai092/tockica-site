@@ -8,7 +8,8 @@ import Placeholder from '~/components/client/Placeholder.astro';
 import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
 import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
 import { instructors } from '~/data/instructors';
-import { profileHref } from '~/lib/instructor-link';
+import { profileHref, slugOf } from '~/lib/instructor-link';
+import { thumbUrls } from '~/lib/instructor-photo';
 import { buildMockSchedule } from '~/lib/mock-schedule';
 import { STUDIO_ZONE, addDays, groupByDay, mondayOf } from '~/lib/schedule-days';
 import { seatNote, seatState } from '~/lib/seats';
@@ -27,6 +28,7 @@ const labels = { book: getCopy(lang).home.nextClasses.book, waitlist: getCopy(la
 const href = pathFor('schedule', lang);
 const profileBase = `${pathFor('instructors', lang)}/`;
 const profileSlugs = instructors.map((i) => i.slug);
+const thumbs = await thumbUrls();
 const locale = lang === 'hr' ? 'hr-HR' : 'en-GB';
 
 // MOCK until the booking app's feed answers. Upcoming classes only, no cap.
@@ -67,6 +69,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
   data-seat-labels={JSON.stringify(t.seats)}
   data-profile-base={profileBase}
   data-profile-slugs={JSON.stringify(profileSlugs)}
+  data-photos={JSON.stringify(thumbs)}
   class="mx-auto mt-8 max-w-7xl px-4 sm:px-6 md:mt-10"
 >
   {/* The visitor's kept pick after a reload. The bike sheet script fills it in and shows it (BikeSheet.astro). */}
@@ -182,6 +185,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
                         id={c.id}
                         time={time.format(new Date(c.startsAt))}
                         instructor={c.instructor}
+                        photo={thumbs[slugOf(c.instructor)]}
                         instructorHref={profileHref(profileBase, profileSlugs, c.instructor)}
                         name={c.themeName ?? c.name}
                         seatsText={st.text}
@@ -247,7 +251,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
 
 <script>
   import { fillRow } from '~/lib/class-row';
-  import { profileHref } from '~/lib/instructor-link';
+  import { profileHref, slugOf } from '~/lib/instructor-link';
   import { STUDIO_ZONE, addDays, groupByDay, mondayOf, studioDay } from '~/lib/schedule-days';
   import type { SeatLabels } from '~/lib/seats';
   import { SCHEDULE_FEED_URL, firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
@@ -276,6 +280,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
     });
     const seatLabels = JSON.parse(root.dataset.seatLabels ?? '{}') as SeatLabels;
     const profileSlugs = JSON.parse(root.dataset.profileSlugs ?? '[]') as string[];
+    const photos = JSON.parse(root.dataset.photos ?? '{}') as Record<string, { src: string; focus: [number, number] }>;
     const open = root.querySelector<HTMLTemplateElement>('template[data-row="open"]')!;
     const full = root.querySelector<HTMLTemplateElement>('template[data-row="full"]')!;
     let selected = root.querySelector<HTMLElement>('[data-day][aria-pressed="true"]')?.dataset.day ?? '';
@@ -330,6 +335,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
         locale: root.dataset.locale ?? 'hr',
         seatLabels,
         profileHref: (first) => profileHref(root.dataset.profileBase ?? '', profileSlugs, first),
+        photo: (first) => photos[slugOf(first)],
       });
       return li;
     };

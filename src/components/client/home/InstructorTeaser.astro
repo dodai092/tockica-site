@@ -1,7 +1,7 @@
 ---
-import Photo from '~/components/client/Photo.astro';
+import InstructorPhoto from '~/components/client/InstructorPhoto.astro';
 import { instructors, teaserSlugs } from '~/data/instructors';
-import { getCopy, pathFor } from '~/i18n';
+import { getCopy, instructorPath, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
 interface Props {
@@ -19,8 +19,15 @@ const teaser = teaserSlugs.map((slug) => instructors.find((i) => i.slug === slug
     {
       teaser.map((i) => (
         <li data-instructor={i.slug} class="flex flex-col gap-3">
-          <Photo role={copy.photo.instructor} ratio="3 / 4" />
-          <h3 class="text-xl font-bold text-heading">{i.first}</h3>
+          {/* The photo opens the same profile as the name, and stays out of the tab order and the accessibility tree, so the name is the one link announced. */}
+          <a href={instructorPath(i.slug, lang)} tabindex="-1" aria-hidden="true" class="block">
+            <InstructorPhoto slug={i.slug} first={i.first} role={copy.photo.instructor} />
+          </a>
+          <h3 class="text-xl font-bold text-heading">
+            <a href={instructorPath(i.slug, lang)} class="hover:underline">
+              {i.first}
+            </a>
+          </h3>
           <p class="text-default">{i.line[lang]}</p>
         </li>
       ))

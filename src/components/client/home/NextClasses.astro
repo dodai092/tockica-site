@@ -4,7 +4,8 @@ import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
 import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
 import { instructors } from '~/data/instructors';
 import { nextClasses } from '~/data/next-classes';
-import { profileHref } from '~/lib/instructor-link';
+import { profileHref, slugOf } from '~/lib/instructor-link';
+import { thumbUrls } from '~/lib/instructor-photo';
 import { seatNote, seatState } from '~/lib/seats';
 import { firstFreeBike } from '~/lib/schedule-feed';
 import { getCopy, pathFor } from '~/i18n';
@@ -25,6 +26,7 @@ const size = 'w-[10.5rem] flex-none snap-start sm:w-auto';
 const schedule = pathFor('schedule', lang);
 const profileBase = `${pathFor('instructors', lang)}/`;
 const profileSlugs = instructors.map((i) => i.slug);
+const thumbs = await thumbUrls();
 const dayOf = new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'Europe/Zagreb' });
 const timeOf = new Intl.DateTimeFormat(lang, {
   hour: '2-digit',
@@ -41,6 +43,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
   data-seat-labels={JSON.stringify(seatCopy)}
   data-profile-base={profileBase}
   data-profile-slugs={JSON.stringify(profileSlugs)}
+  data-photos={JSON.stringify(thumbs)}
   class:list={['relative z-10 mx-auto max-w-7xl px-4 sm:px-6', overlapHero ? '-mt-20 md:-mt-28' : 'mt-10 md:mt-12']}
 >
   <h2 class="sr-only">{copy.heading}</h2>
@@ -59,6 +62,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
             day={dayOf.format(new Date(c.startsAt))}
             time={timeOf.format(new Date(c.startsAt))}
             instructor={c.instructor}
+            photo={thumbs[slugOf(c.instructor)]}
             instructorHref={profileHref(profileBase, profileSlugs, c.instructor)}
             name={c.themeName ?? c.name}
             seatsText={seatNote(free, c.capacity, seatCopy, lang)}
@@ -120,7 +124,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
 
 <script>
   import { fillRow } from '~/lib/class-row';
-  import { profileHref } from '~/lib/instructor-link';
+  import { profileHref, slugOf } from '~/lib/instructor-link';
   import { SCHEDULE_FEED_URL, parseSchedule } from '~/lib/schedule-feed';
   import type { NextClass } from '~/lib/schedule-feed';
   import type { SeatLabels } from '~/lib/seats';
@@ -181,6 +185,10 @@ const timeOf = new Intl.DateTimeFormat(lang, {
       });
       const seatLabels = JSON.parse(root.dataset.seatLabels ?? '{}') as SeatLabels;
       const profileSlugs = JSON.parse(root.dataset.profileSlugs ?? '[]') as string[];
+      const photos = JSON.parse(root.dataset.photos ?? '{}') as Record<
+        string,
+        { src: string; focus: [number, number] }
+      >;
       const items = feed.classes.map((c) => {
         const li = (c.freeBikes > 0 ? open : full).content.firstElementChild!.cloneNode(true) as HTMLElement;
         li.setAttribute('data-next-class', c.id);
@@ -191,6 +199,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
           locale: root.dataset.lang ?? 'hr',
           seatLabels,
           profileHref: (first) => profileHref(root.dataset.profileBase ?? '', profileSlugs, first),
+          photo: (first) => photos[slugOf(first)],
         });
         return li;
       });

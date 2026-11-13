@@ -85,11 +85,15 @@ for (const { lang, file } of pages) {
     }
   });
 
-  test(`${lang}: portraits are placeholders, not images`, async () => {
+  test(`${lang}: a portrait is the photo with the first name as alt, a missing one is a placeholder`, async () => {
     const byCard = cards(await read(file));
     for (const slug of order) {
       assert.ok(/data-photo="/.test(byCard[slug]));
-      assert.ok(!/<img\b/.test(byCard[slug]));
+      if (slug === 'mario') {
+        assert.ok(!/<img\b/.test(byCard[slug]), 'Mario has no photo yet, so he shows the placeholder');
+      } else {
+        assert.ok(new RegExp(`<img\\b[^>]*alt="${firstNames[slug]}"`).test(byCard[slug]), `${slug} photo`);
+      }
     }
   });
 }

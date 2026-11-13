@@ -14,3 +14,9 @@ export const tintIndex = (name: string): number => {
   for (const ch of name.trim().toLocaleLowerCase()) sum += ch.codePointAt(0) ?? 0;
   return sum % TINTS.length;
 };
+
+/** Where the face sits in a photo, as percent of its width and height: `[x, y]`. */
+export type Focus = [number, number];
+
+/** CSS transform that moves the face to the centre of a round mark and zooms in on it (browser and server share it). */
+export const faceTransform = ([x, y]: Focus): string => `scale(1.5) translate(${50 - x}%, ${50 - y}%)`;

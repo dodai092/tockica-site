@@ -1,0 +1,50 @@
+---
+// An instructor's portrait on a lit slate panel (the cutouts are transparent), as an optimized avif/webp <Picture>. Alt is
+// the first name. The photo is placed by the face: moved to the same spot and zoomed so heads come out the same size across
+// the instructors list, and the torso fades into the page instead of ending in a hard edge. Without a photo file it is the
+// usual Photo placeholder, so a missing photo never breaks a card or page.
+import { Picture } from 'astro:assets';
+import Photo from '~/components/client/Photo.astro';
+import { faceOf, headScaleOf, photoOf } from '~/lib/instructor-photo';
+
+interface Props {
+  slug: string;
+  first: string;
+  /** The placeholder's label (copy.photo.instructor). */
+  role: string;
+  /** Width the panel takes, for the browser's choice of file. The photo is drawn about a third wider than the panel. */
+  sizes?: string;
+}
+
+const { slug, first, role, sizes = '(min-width: 1024px) 27rem, (min-width: 768px) 45vw, 67vw' } = Astro.props;
+const photo = photoOf(slug);
+const [fx, fy] = faceOf(slug);
+// Face at the horizontal centre and a third of the way down the panel, then zoomed about the face.
+const place = `left: 50%; transform-origin: ${fx}% ${fy}%; transform: translate(-${fx}%, ${34 - fy}%) scale(${headScaleOf(slug)})`;
+---
+
+{
+  photo ? (
+    <div
+      data-photo={`instructor-${slug}`}
+      class="relative isolate overflow-hidden rounded-(--aw-radius-card)"
+      style="aspect-ratio: 3 / 4; background: radial-gradient(ellipse 70% 55% at 50% 30%, color-mix(in srgb, var(--aw-color-accent) 70%, white), var(--aw-color-accent) 55%, color-mix(in srgb, var(--aw-color-accent) 70%, black))"
+    >
+      <Picture
+        src={photo}
+        alt={first}
+        formats={['avif', 'webp']}
+        widths={[400, 640, 800]}
+        sizes={sizes}
+        class="absolute top-0 h-full max-w-none"
+        style={`${place}; width: 133.334%`}
+      />
+      <div
+        class="absolute inset-x-0 bottom-0 h-[28%]"
+        style="background: linear-gradient(to top, var(--aw-color-bg-page), transparent)"
+      />
+    </div>
+  ) : (
+    <Photo role={role} ratio="3 / 4" />
+  )
+}
