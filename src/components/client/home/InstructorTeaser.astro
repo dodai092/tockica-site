@@ -28,7 +28,7 @@ const teaser = teaserSlugs.map((slug) => instructors.find((i) => i.slug === slug
               {i.first}
             </a>
           </h3>
-          <p class="text-default">{i.line[lang]}</p>
+          {i.line[lang] && <p class="text-default">{i.line[lang]}</p>}
         </li>
       ))
     }

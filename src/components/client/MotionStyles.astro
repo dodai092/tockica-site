@@ -29,10 +29,26 @@
     transform: scale(0.96);
     transition-duration: 0.08s;
   }
+  #header [data-lang-switch],
+  #header [data-aw-toggle-color-scheme],
+  #header [data-aw-toggle-menu] {
+    transition:
+      transform 0.35s var(--ease-spring),
+      background-color 0.2s,
+      color 0.2s;
+  }
   #header [data-lang-switch]:active,
   #header [data-aw-toggle-color-scheme]:active,
   #header [data-aw-toggle-menu]:active {
     transform: scale(0.92);
+    transition-duration: 0.08s;
+  }
+  /* The instructor's photo is a tappable card: squeezed a little on press, released on the spring. */
+  li[data-instructor] > a[aria-hidden='true'] {
+    transition: transform 0.35s var(--ease-spring);
+  }
+  li[data-instructor] > a[aria-hidden='true']:active {
+    transform: scale(0.98);
     transition-duration: 0.08s;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -47,10 +63,25 @@
     .btn-primary:active,
     .btn-secondary:active,
     .btn-tertiary:active,
+    #header [data-lang-switch],
+    #header [data-aw-toggle-color-scheme],
+    #header [data-aw-toggle-menu] {
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+    }
     #header [data-lang-switch]:active,
     #header [data-aw-toggle-color-scheme]:active,
-    #header [data-aw-toggle-menu]:active {
+    #header [data-aw-toggle-menu]:active,
+    li[data-instructor] > a[aria-hidden='true']:active {
       transform: none;
+    }
+    li[data-instructor] > a[aria-hidden='true'] {
+      transition: none;
+    }
+    /* The menu button's bars become an X: keep the change, drop the turning (the core component rotates them). */
+    #header [data-aw-toggle-menu] span {
+      transition-property: opacity, background-color;
     }
   }
 

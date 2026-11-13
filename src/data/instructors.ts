@@ -64,4 +64,4 @@ export const instructors: Instructor[] = [
 ];
 
 // The homepage teaser shows these four, all with lines in both languages.
-export const teaserSlugs = ['oliver', 'mirna', 'ena', 'emma'];
+export const teaserSlugs = ['dunia', 'ena', 'oliver', 'mirna', 'emma', 'ivana', 'domagoj'];

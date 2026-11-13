@@ -6,6 +6,7 @@ import Page from '~/components/client/Page.astro';
 import InstructorHero from '~/components/client/InstructorHero.astro';
 import Placeholder from '~/components/client/Placeholder.astro';
 import PlaylistEmbed from '~/components/client/PlaylistEmbed.astro';
+import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
 import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
 import { instructors } from '~/data/instructors';
 import { thumbUrls } from '~/lib/instructor-photo';
@@ -109,5 +110,47 @@ const twin = { hr: instructorPath(slug, 'hr'), en: instructorPath(slug, 'en') };
     <p class="mt-4">
       <Placeholder lang={lang} label="next classes are mock data until the booking app endpoint exists" />
     </p>
+    {/* Book on a card opens the same bike map as on the schedule page. The classes are handed to it by the script. */}
+    <script
+      is:inline
+      type="application/json"
+      data-instructor-classes
+      set:html={JSON.stringify(upcoming).replace(/</g, '\\u003c')}
+    />
   </section>
+  <BikeSheet lang={lang} />
 </Page>
+
+<script>
+  import type { NextClass } from '~/lib/schedule-feed';
+
+  // Same two events as NextClasses.astro: the classes on screen (`schedule:update`) and a press on Book
+  // (`schedule:book`), both heard by BikeSheet.astro. Without the script the buttons stay links to the schedule.
+  const setup = () => {
+    const root = document.querySelector<HTMLElement>('[data-instructor-page]');
+    if (!root || root.dataset.sheetBound) return;
+    root.dataset.sheetBound = '';
+    try {
+      document.dispatchEvent(
+        new CustomEvent('schedule:update', {
+          detail: JSON.parse(root.querySelector('[data-instructor-classes]')?.textContent ?? '[]') as NextClass[],
+        })
+      );
+    } catch {
+      // No classes for the sheet: the links still lead to the schedule.
+    }
+    root.addEventListener('click', (e) => {
+      const ev = e as MouseEvent;
+      if (ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+      const li = (e.target as Element).closest<HTMLElement>('li[data-next-class]');
+      if (!li || !(e.target as Element).closest('a.sched-action')) return;
+      e.preventDefault();
+      document.dispatchEvent(
+        new CustomEvent('schedule:book', {
+          detail: { classId: li.dataset.nextClass, full: li.hasAttribute('data-full') },
+        })
+      );
+    });
+  };
+  document.addEventListener('astro:page-load', setup);
+</script>

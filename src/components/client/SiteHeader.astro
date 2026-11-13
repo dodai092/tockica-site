@@ -371,12 +371,14 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       box-shadow:
         0 12px 40px rgb(0 0 0 / 0%),
         inset 0 1px 0 rgb(255 255 255 / 0%);
-      transform: translateY(-8px);
+      /* The panel grows out of the menu button (top right) and shrinks back into it, the same path both ways.
+         The tint fades out at once on close, so the box leaves with its links. */
+      transform: scale(0.96);
       transform-origin: top right;
       transition:
-        background-color 0.25s ease-in-out 0.08s,
-        border-color 0.25s ease-in-out 0.08s,
-        box-shadow 0.25s ease-in-out 0.08s,
+        background-color 0.2s ease-in-out,
+        border-color 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out,
         transform 0.3s var(--ease-drawer);
     }
     :root.dark #header.expanded [data-menu-panel] {
@@ -636,7 +638,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         nav?.classList.add('hidden');
       };
 
-      // The panel's final box (it slides 8px, so read its layout box, not its painted one), as a hole in the dim.
+      // The panel's final box (it scales while it opens, so read its layout box, not its painted one), as a hole in the dim.
       const positionDimHole = () => {
         if (!panel || !backdrop) return;
         const w = backdrop.clientWidth;

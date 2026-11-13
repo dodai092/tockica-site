@@ -127,8 +127,8 @@ The site uses `ClientRouter`. Pages cross-fade, chrome does not.
   link, then moves the class after two frames, so the old underline shrinks and the new one grows.
 - Active nav link: an underline grows from the centre (`scaleX`, 300 ms, `--ease-drawer`). Mobile menu:
   colour only.
-- Things that show and hide use the helpers: the mobile menu fades in with an 8 px rise and fades out
-  before it hides, the FAQ answer folds open and shut (`expand` and `collapse`), the cookie banner fades
+- Things that show and hide use the helpers: the mobile menu grows from the menu button (scale 0.96 to 1,
+  top right origin) while it fades in, and shrinks back into it while it fades out before it hides, the FAQ answer folds open and shut (`expand` and `collapse`), the cookie banner fades
   in and out.
 
 ## 7. Scroll-driven state

@@ -119,14 +119,20 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
         hidden={monday !== selectedWeek}
         role="group"
         aria-label={t.days}
-        class="mt-4 grid grid-cols-7 gap-1.5 sm:gap-3 md:hidden"
+        class="relative mt-4 grid grid-cols-7 gap-1.5 sm:gap-3 md:hidden"
       >
+        {/* The fill behind the selected day. The script moves it, so the selection slides. Without it the chip fills itself. */}
+        <span
+          data-day-ind
+          aria-hidden="true"
+          class="pointer-events-none absolute left-0 top-0 rounded-xl bg-(--aw-color-text-heading) opacity-0"
+        />
         {weekDays(monday).map((day) => (
           <button
             type="button"
             data-day={day}
             aria-pressed={day === firstDay ? 'true' : 'false'}
-            class="flex flex-col items-center gap-0.5 rounded-xl border border-gray-200 px-1 py-2 hover:bg-gray-100 aria-pressed:border-(--aw-color-text-heading) aria-pressed:bg-(--aw-color-text-heading) aria-pressed:text-(--aw-color-bg-page) aria-pressed:hover:bg-(--aw-color-text-heading) dark:border-slate-600 dark:hover:bg-slate-700"
+            class="relative flex flex-col items-center gap-0.5 rounded-xl border border-gray-200 px-1 py-2 hover:bg-gray-100 aria-pressed:border-(--aw-color-text-heading) aria-pressed:bg-(--aw-color-text-heading) aria-pressed:text-(--aw-color-bg-page) aria-pressed:hover:bg-(--aw-color-text-heading) dark:border-slate-600 dark:hover:bg-slate-700"
           >
             <span class="text-[0.6875rem] font-bold uppercase tracking-wide opacity-80">
               {weekday.format(utc(day))}
@@ -289,6 +295,40 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
     // The day panels on screen: the six of the selected week from md up, the selected day below it.
     const onScreen = () => panels.filter((p) => !p.hidden && (onDesktop() || !p.hasAttribute('data-off')));
 
+    // The selected day's fill slides to its chip. A strip shown for the first time, or a resize, places it without
+    // a slide. Transform and opacity only (animation-rules 3).
+    let indStrip: HTMLElement | undefined;
+    function placeIndicator(slide: boolean) {
+      const strip = strips.find((s) => !s.hidden);
+      const chip = strip?.querySelector<HTMLElement>('[data-day][aria-pressed="true"]');
+      const ind = strip?.querySelector<HTMLElement>('[data-day-ind]');
+      if (!strip || !chip || !ind || !chip.offsetWidth) return;
+      const box = [
+        `${chip.offsetWidth}px`,
+        `${chip.offsetHeight}px`,
+        `translate(${chip.offsetLeft}px, ${chip.offsetTop}px)`,
+      ];
+      // Already there (a resize event that changed nothing here, for example while it is sliding): leave it alone.
+      if (
+        strip === indStrip &&
+        ind.style.width === box[0] &&
+        ind.style.height === box[1] &&
+        ind.style.transform === box[2]
+      )
+        return;
+      const still = !slide || strip !== indStrip;
+      indStrip = strip;
+      if (still) ind.style.transition = 'none';
+      [ind.style.width, ind.style.height, ind.style.transform] = box;
+      ind.style.opacity = '1';
+      strip.setAttribute('data-ind', '');
+      if (still) {
+        void ind.offsetWidth;
+        ind.style.transition = '';
+      }
+    }
+    new ResizeObserver(() => placeIndicator(false)).observe(root);
+
     function select(day: string, animate = true) {
       const panel = panels.find((p) => p.dataset.dayPanel === day);
       if (!panel) return;
@@ -304,6 +344,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
       q('[data-week-label]').textContent = strips.find((s) => s.dataset.weekStrip === monday)?.dataset.label ?? '';
       q<HTMLButtonElement>('[data-week-prev]').disabled = monday === weeks[0];
       q<HTMLButtonElement>('[data-week-next]').disabled = monday === weeks.at(-1);
+      placeIndicator(animate && !!before);
       // From md up the whole week of columns slides, below it the one day.
       if (animate && before && before !== day)
         void slideIn(onDesktop() ? q('[data-panels]') : panel, day > before ? 1 : -1);
@@ -455,6 +496,17 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
     transform: scale(0.96);
     transition-duration: 0.08s;
   }
+  /* The selected day's fill slides on the drawer curve, 300 ms. Once the script has placed it (data-ind), the chip
+     itself drops its fill so only the sliding one shows. */
+  [data-day-ind] {
+    transition:
+      transform 0.3s var(--ease-drawer),
+      opacity 0.2s ease-in-out;
+  }
+  [data-week-strip][data-ind] [data-day][aria-pressed='true'] {
+    background-color: transparent;
+    border-color: transparent;
+  }
   [data-week-prev]:active:not(:disabled),
   [data-week-next]:active:not(:disabled) {
     transform: scale(0.92);
@@ -468,6 +520,9 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
         background-color 0.2s,
         color 0.2s,
         border-color 0.2s;
+    }
+    [data-day-ind] {
+      transition: opacity 0.2s ease-in-out;
     }
     [data-day]:active,
     [data-week-prev]:active:not(:disabled),

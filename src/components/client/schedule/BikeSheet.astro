@@ -53,7 +53,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
       type="button"
       data-sheet-close
       aria-label={t.close}
-      class="-mr-1 -mt-1 inline-flex h-11 w-11 flex-none items-center justify-center rounded-full text-heading hover:bg-gray-100 dark:hover:bg-slate-700"
+      class="-mr-1 -mt-1 inline-flex h-11 w-11 flex-none items-center justify-center rounded-full text-heading transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-slate-700"
     >
       <Icon name="tabler:x" class="h-5 w-5" />
     </button>
@@ -96,7 +96,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
                 aria-pressed="false"
                 aria-label={t.bike.replace('{n}', String(n))}
                 style={`grid-area: ${row} / ${column}`}
-                class="min-h-11 sm:min-h-9 rounded-lg border border-heading bg-white font-heading text-sm font-bold text-heading hover:bg-gray-100 disabled:cursor-default disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-600 disabled:hover:bg-gray-200 aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white aria-pressed:hover:bg-primary dark:border-slate-400 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-700 dark:disabled:border-slate-600 dark:disabled:bg-slate-600 dark:disabled:text-slate-300 dark:disabled:hover:bg-slate-600 dark:aria-pressed:border-primary dark:aria-pressed:bg-primary dark:aria-pressed:hover:bg-primary"
+                class="min-h-11 sm:min-h-9 rounded-lg border border-heading transition-colors duration-200 bg-white font-heading text-sm font-bold text-heading hover:bg-gray-100 disabled:cursor-default disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-600 disabled:hover:bg-gray-200 aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white aria-pressed:hover:bg-primary dark:border-slate-400 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-700 dark:disabled:border-slate-600 dark:disabled:bg-slate-600 dark:disabled:text-slate-300 dark:disabled:hover:bg-slate-600 dark:aria-pressed:border-primary dark:aria-pressed:bg-primary dark:aria-pressed:hover:bg-primary"
               >
                 {n}
               </button>
