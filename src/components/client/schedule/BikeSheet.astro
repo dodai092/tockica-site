@@ -60,10 +60,10 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
   </div>
 
   <div data-step="map" class="flex min-h-0 flex-1 flex-col">
-    <div class="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+    <div class="min-h-0 flex-1 overflow-hidden overscroll-contain px-4 py-2 sm:py-4">
       <div
         data-bike-grid
-        class="mx-auto grid max-w-[22.5rem] grid-cols-[1fr_1fr_5.25rem] grid-rows-[repeat(5,auto)_0.875rem_repeat(5,auto)] gap-x-2 gap-y-1.5"
+        class="mx-auto grid max-w-[22.5rem] grid-cols-[1fr_1fr_5.25rem] grid-rows-[repeat(5,var(--bike-h))_0.875rem_repeat(5,var(--bike-h))] gap-x-2 gap-y-1 [--bike-h:2.25rem] max-sm:[--bike-h:clamp(2.25rem,calc((100dvh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)_-_243px)/10),2.75rem)]"
       >
         <ul class="col-start-3 row-span-3 row-start-1 flex flex-col gap-2 self-start pl-1.5 text-xs text-muted">
           <li class="inline-flex items-center gap-1.5">
@@ -96,7 +96,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
                 aria-pressed="false"
                 aria-label={t.bike.replace('{n}', String(n))}
                 style={`grid-area: ${row} / ${column}`}
-                class="min-h-11 sm:min-h-9 rounded-lg border border-heading transition-colors duration-200 bg-white font-heading text-sm font-bold text-heading hover:bg-gray-100 disabled:cursor-default disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-600 disabled:hover:bg-gray-200 aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white aria-pressed:hover:bg-primary dark:border-slate-400 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-700 dark:disabled:border-slate-600 dark:disabled:bg-slate-600 dark:disabled:text-slate-300 dark:disabled:hover:bg-slate-600 dark:aria-pressed:border-primary dark:aria-pressed:bg-primary dark:aria-pressed:hover:bg-primary"
+                class="rounded-lg border border-heading transition-colors duration-200 bg-white font-heading text-sm font-bold text-heading hover:bg-gray-100 disabled:cursor-default disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-600 disabled:hover:bg-gray-200 aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white aria-pressed:hover:bg-primary dark:border-slate-400 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-700 dark:disabled:border-slate-600 dark:disabled:bg-slate-600 dark:disabled:text-slate-300 dark:disabled:hover:bg-slate-600 dark:aria-pressed:border-primary dark:aria-pressed:bg-primary dark:aria-pressed:hover:bg-primary"
               >
                 {n}
               </button>
@@ -107,9 +107,15 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
     </div>
 
     <div
-      class="flex flex-none flex-col gap-2 border-t border-gray-200 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 dark:border-slate-600"
+      class="relative flex flex-none flex-col border-t border-gray-200 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 dark:border-slate-600"
     >
-      <p data-sheet-message role="status" aria-live="polite" class="min-h-5 text-sm text-default"></p>
+      <p
+        data-sheet-message
+        role="status"
+        aria-live="polite"
+        class="absolute inset-x-4 bottom-full mx-auto mb-2 w-fit max-w-full rounded-full bg-gray-100 px-3 py-1 text-center text-sm text-default shadow-lg empty:hidden dark:bg-slate-700"
+      >
+      </p>
       <button
         type="button"
         data-continue
@@ -124,7 +130,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
   <div
     data-step="login"
     hidden
-    class="min-h-0 flex-1 overflow-y-auto px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4"
+    class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4"
   >
     <p data-summary class="font-semibold text-heading"></p>
     <p class="mt-1 text-sm text-default">{t.loginIntro}</p>
@@ -148,7 +154,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
   <div
     data-step="soon"
     hidden
-    class="min-h-0 flex-1 overflow-y-auto px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4"
+    class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4"
   >
     <p data-summary class="font-semibold text-heading"></p>
     <p class="mt-1 text-default">{t.soonText}</p>
@@ -163,6 +169,14 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
     </p>
   </div>
 </dialog>
+
+<style is:global>
+  /* Page behind a modal sheet must not scroll (iOS chains scroll to it). The gutter stays so desktop does not shift. */
+  html:has(dialog[data-bike-sheet][open]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+</style>
 
 <script>
   import { clearChoice, loadChoice, saveChoice } from '~/lib/booking-choice';
