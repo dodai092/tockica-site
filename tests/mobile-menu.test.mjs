@@ -64,7 +64,7 @@ test('390px: the open menu is narrow and has no booking button', async () => {
   await page.close();
   assert.equal(state.bookVisible, false, 'booking button is still visible in the open menu');
   assert.ok(state.width <= 260, `menu is ${state.width}px wide, expected 260px or less`);
-  assert.equal(state.labels.length, 5, JSON.stringify(state.labels));
+  assert.equal(state.labels.length, 6, JSON.stringify(state.labels));
 });
 
 test('1280px: the booking button in the bar is still there', async () => {
