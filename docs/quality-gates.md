@@ -57,7 +57,7 @@ release.
 
 ## 2. Lighthouse environment and thresholds
 
-CI runs Lighthouse once per covered route. The local and pre-go-live gates use the
+CI runs Lighthouse once on a representative set of eight routes (`quickPaths` in `lighthouserc.cjs`, switched on by `LHCI_QUICK=1` in the workflow), because all routes took about 10 minutes. Local runs and `npm run verify` cover every route in the manifest. The local and pre-go-live gates use the
 three-run matrix and assert the median score with `aggregationMethod: 'median'`.
 
 **Thresholds are hard minimums, not targets:**

@@ -92,6 +92,8 @@ jobs:
 
       - name: Lighthouse CI
         run: npm run test:lhci
+        env:
+          LHCI_QUICK: '1'
 
       - name: Retain Lighthouse diagnostics
         if: always()

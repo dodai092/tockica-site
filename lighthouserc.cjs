@@ -7,6 +7,19 @@ const path = require('node:path');
 const routes = loadQualityRoutes(__dirname);
 const dist = path.join(__dirname, 'dist');
 if (existsSync(dist)) assertBuiltRoutes(routes, dist);
+// CI sets LHCI_QUICK=1 so Lighthouse covers a representative set instead of every route (all 43 took about 10 minutes).
+// Without it, local and pre-go-live runs still cover every route in the manifest.
+const quickPaths = [
+  '/',
+  '/en/',
+  '/raspored/',
+  '/en/schedule/',
+  '/instruktori/',
+  '/instruktori/ena/',
+  '/en/instructors/ena/',
+  '/waitlist/',
+];
+const covered = process.env.LHCI_QUICK === '1' ? routes.filter((route) => quickPaths.includes(route.path)) : routes;
 const gate = (minScore) => ['error', { minScore, aggregationMethod: 'median' }];
 const escapeRegex = (value) => value.replace(/[.*+?^$()|[\]\\]/g, '\\$&');
 
@@ -16,7 +29,7 @@ module.exports = {
       staticDistDir: './dist',
       numberOfRuns: 1,
       chromePath: chromium.executablePath(),
-      url: routes.map((route) => route.path),
+      url: covered.map((route) => route.path),
       settings: {
         formFactor: 'mobile',
         throttlingMethod: 'simulate',
@@ -37,7 +50,7 @@ module.exports = {
       },
     },
     assert: {
-      assertMatrix: routes.map((route) => ({
+      assertMatrix: covered.map((route) => ({
         matchingUrlPattern:
           '^https?://[^/]+' +
           escapeRegex(route.path === '/' ? '/' : route.path.slice(0, -1)) +
