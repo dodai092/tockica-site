@@ -146,7 +146,7 @@ export const hr: Copy = {
     priceLine: 'Neograničeni spin treninzi 30 dana za',
     price: '100 €',
     room: 'Spin treninzi u Riders Roomu. 50 minuta, 20 bicikala.',
-    deadline: 'Ponudu možeš kupiti do 31.12.',
+    deadline: 'Ponudu možeš kupiti do 31. prosinca.',
     formHeading: 'Prijavi se na listu',
     submit: 'Prijavi me',
     errors: {
@@ -154,7 +154,7 @@ export const hr: Copy = {
       email: 'Upiši ispravan e-mail.',
       date: 'Upiši dan, mjesec i godinu brojevima.',
       dateReal: 'Taj datum ne postoji.',
-      consent: 'Za nastavak potvrdi privatnost.',
+      consent: 'Za nastavak prihvati politiku privatnosti.',
     },
     birthDate: 'Datum rođenja',
     birthParts: { day: 'Dan', month: 'Mjesec', year: 'Godina' },
@@ -166,7 +166,10 @@ export const hr: Copy = {
     stepsHeading: 'Korak po korak',
     steps: [
       { title: 'Prijavi se', text: 'Upiši ime, e-mail i datum rođenja.' },
-      { title: 'Otključaj ponudu', text: 'Napravi račun i do 31.12. kupi 30 dana neograničenih treninga za 100 €.' },
+      {
+        title: 'Otključaj ponudu',
+        text: 'Napravi račun i do 31. prosinca kupi 30 dana neograničenih treninga za 100 €.',
+      },
       { title: 'Dođi 4. siječnja', text: 'Neograničeni spin treninzi 30 dana.' },
     ],
     timeline: [
@@ -177,7 +180,7 @@ export const hr: Copy = {
   },
   waitlistThanks: {
     title: 'Na listi si',
-    text: 'Hvala na prijavi. Otvaramo 4. siječnja, a ponudu od 100 € možeš kupiti do 31.12.',
+    text: 'Hvala na prijavi. Otvaramo 4. siječnja, a ponudu od 100 € možeš kupiti do 31. prosinca.',
     instagram: 'Prati nas na Instagramu',
     pendingMissing: 'kako i kada javljamo da je ponuda otvorena',
     back: 'Natrag na naslovnicu',
