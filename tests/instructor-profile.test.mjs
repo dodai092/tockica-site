@@ -11,7 +11,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
 const origin = `http://127.0.0.1:${PORT}`;
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), 'utf8');
-const slugs = ['dunia', 'oliver', 'ivana', 'mirna', 'ena', 'domagoj', 'emma', 'mario'];
+const slugs = ['dunia', 'oliver', 'ivana', 'mirna', 'ena', 'domagoj', 'emma'];
 let browser;
 let server;
 

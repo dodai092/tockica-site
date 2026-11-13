@@ -61,7 +61,6 @@ export const instructors: Instructor[] = [
       en: 'Somewhere between Disney princess and Mr. Worldwide.',
     },
   },
-  { slug: 'mario', first: 'Mario', full: 'Mario Petrak', line: { hr: null, en: null } },
 ];
 
 // The homepage teaser shows these four, all with lines in both languages.

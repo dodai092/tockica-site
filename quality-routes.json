@@ -40,10 +40,6 @@
     "kind": "public"
   },
   {
-    "path": "/instruktori/mario/",
-    "kind": "public"
-  },
-  {
     "path": "/en/instructors/",
     "kind": "public"
   },
@@ -73,10 +69,6 @@
   },
   {
     "path": "/en/instructors/emma/",
-    "kind": "public"
-  },
-  {
-    "path": "/en/instructors/mario/",
     "kind": "public"
   },
   {

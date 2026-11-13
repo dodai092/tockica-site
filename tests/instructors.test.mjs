@@ -8,7 +8,7 @@ const pages = [
   { lang: 'hr', file: 'dist/instruktori/index.html' },
   { lang: 'en', file: 'dist/en/instructors/index.html' },
 ];
-const order = ['dunia', 'oliver', 'ivana', 'mirna', 'ena', 'domagoj', 'emma', 'mario'];
+const order = ['dunia', 'oliver', 'ivana', 'mirna', 'ena', 'domagoj', 'emma'];
 const firstNames = {
   dunia: 'Dunia',
   oliver: 'Oliver',
@@ -17,7 +17,6 @@ const firstNames = {
   ena: 'Ena',
   domagoj: 'Domagoj',
   emma: 'Emma',
-  mario: 'Mario',
 };
 
 // Lines come straight from the client copy source table, not from the page's own data file.
@@ -42,7 +41,7 @@ function cards(html) {
 }
 
 for (const { lang, file } of pages) {
-  test(`${lang}: eight instructor cards in roster order, first names only`, async () => {
+  test(`${lang}: seven instructor cards in roster order, first names only`, async () => {
     const html = await read(file);
     const found = [...html.matchAll(/data-instructor="([^"]+)"/g)].map((m) => m[1]);
     assert.deepEqual(found, order);
@@ -60,9 +59,9 @@ for (const { lang, file } of pages) {
     }
   });
 
-  test(`${lang}: Dunia, Mario and Domagoj are open placeholders`, async () => {
+  test(`${lang}: Dunia and Domagoj are open placeholders`, async () => {
     const byCard = cards(await read(file));
-    for (const slug of ['dunia', 'mario', 'domagoj'])
+    for (const slug of ['dunia', 'domagoj'])
       assert.ok(/data-todo="[^"]+"/.test(byCard[slug]), `${slug} should be data-todo`);
   });
 
@@ -85,15 +84,11 @@ for (const { lang, file } of pages) {
     }
   });
 
-  test(`${lang}: a portrait is the photo with the first name as alt, a missing one is a placeholder`, async () => {
+  test(`${lang}: a portrait is the photo with the first name as alt`, async () => {
     const byCard = cards(await read(file));
     for (const slug of order) {
       assert.ok(/data-photo="/.test(byCard[slug]));
-      if (slug === 'mario') {
-        assert.ok(!/<img\b/.test(byCard[slug]), 'Mario has no photo yet, so he shows the placeholder');
-      } else {
-        assert.ok(new RegExp(`<img\\b[^>]*alt="${firstNames[slug]}"`).test(byCard[slug]), `${slug} photo`);
-      }
+      assert.ok(new RegExp(`<img\\b[^>]*alt="${firstNames[slug]}"`).test(byCard[slug]), `${slug} photo`);
     }
   });
 }
