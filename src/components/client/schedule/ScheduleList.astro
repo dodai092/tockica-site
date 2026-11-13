@@ -430,7 +430,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
     };
 
     markToday();
-    return { render, embedded };
+    return { render, embedded, select, selected: () => selected };
   }
 
   function emptyItem(root: HTMLElement) {
@@ -442,6 +442,17 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
   }
 
   let current: ReturnType<typeof setup> | undefined;
+
+  // The language switch loads the other language's page. The day on screen is carried over to it, so the visitor
+  // is not sent back to the first week. Set on the press, used once by the next page, then dropped.
+  let carry: string | undefined;
+  document.addEventListener(
+    'click',
+    (e) => {
+      if ((e.target as Element).closest('[data-lang-switch]')) carry = current?.selected();
+    },
+    true
+  );
 
   const publish = (classes: NextClass[]) =>
     document.dispatchEvent(new CustomEvent('schedule:update', { detail: classes }));
@@ -467,6 +478,8 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
     window.clearInterval(timer);
     const root = document.querySelector<HTMLElement>('[data-schedule]');
     current = root ? setup(root) : undefined;
+    if (carry) current?.select(carry, false);
+    carry = undefined;
     if (!current) return;
     publish(current.embedded());
     void showFeed();

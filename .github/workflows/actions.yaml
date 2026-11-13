@@ -9,6 +9,9 @@ on:
     branches:
       - main
 
+  # The build and test job is run by hand (Actions tab, "Run workflow", or `gh workflow run CI`).
+  workflow_dispatch:
+
 permissions:
   contents: read
 
@@ -36,6 +39,7 @@ jobs:
   build:
     name: Build
     needs: check
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     env:
       TZ: UTC
