@@ -22,8 +22,8 @@ const firstNames = {
 // Lines come straight from the client copy source table, not from the page's own data file.
 async function sourceLines() {
   const md = await read('docs/copy/source.md');
-  const rows = md.split('\n').filter((l) => /^\| (Dunia|Oliver|Ivana|Mirna|Ena|Domagoj|Emma|Mario) /.test(l));
-  assert.equal(rows.length, 8, 'source table must list eight instructors');
+  const rows = md.split('\n').filter((l) => /^\| (Dunia|Oliver|Ivana|Mirna|Ena|Domagoj|Emma) /.test(l));
+  assert.equal(rows.length, 7, 'source table must list seven instructors');
   return Object.fromEntries(
     rows.map((row) => {
       const [full, en, hr] = row

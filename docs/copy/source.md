@@ -21,7 +21,6 @@ Public name is the first name only. Full names are for payroll reports.
 | Ena Vušić       | A true millennial: big hair, big energy and even bigger throwbacks.                                                     | Prava milenijalka: velika kosa, velika energija i još veći throwbackovi.                                       |
 | Domagoj Vončina | Came to teach spin. Accidentally started a concert. / Gets so into singing he forgets to cue the next move.             | Došao voditi spin. Slučajno održao koncert. / Toliko se uživi u pjevanje da zaboravi najaviti sljedeći pokret. |
 | Emma Stepinac   | Somewhere between Disney princess and Mr. Worldwide.                                                                    | Negdje između Disney princeze i Mr. Worldwidea.                                                                |
-| Mario Petrak    | TODO(client)                                                                                                            | TODO(client)                                                                                                   |
 
 Domagoj has two alternative lines separated by " / ". Which one ships is `TODO(client)`.
 
@@ -29,7 +28,7 @@ Domagoj has two alternative lines separated by " / ". Which one ships is `TODO(c
 
 1. Which classes are beginner friendly?
    All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 50 minutes.
-   If you’d prefer to start with a slightly slower tempo, we recommend trying Mario, Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.
+   If you’d prefer to start with a slightly slower tempo, we recommend trying Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.
 2. What do i need to bring?
    Clean shoes, water and towel. You can always buy water at the studio.
 3. How early should I arrive?

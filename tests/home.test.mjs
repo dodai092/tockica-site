@@ -174,7 +174,7 @@ test('en: FAQ ships the client English verbatim, apostrophes and typos included'
   for (const line of [
     'Which classes are beginner friendly?',
     'All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 50 minutes.',
-    'If you’d prefer to start with a slightly slower tempo, we recommend trying Mario, Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.',
+    'If you’d prefer to start with a slightly slower tempo, we recommend trying Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.',
     'What do i need to bring?',
     'Clean shoes, water and towel. You can always buy water at the studio.',
     'How early should I arrive?',
