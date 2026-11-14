@@ -583,6 +583,14 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     });
   });
 
+  // Back and forward: Astro scrolls to the top, then to the saved position. With smooth scrolling on the page that
+  // second step would animate down from the top, so the class is held back until the page has loaded.
+  const smoothScroll = 'motion-safe:scroll-smooth';
+  let restoring = false;
+  document.addEventListener('astro:before-swap', (e) => {
+    restoring = (e as Event & { navigationType?: string }).navigationType === 'traverse';
+  });
+
   // Href of the active nav link on the previous page. The header is rebuilt on every navigation, so the new
   // one starts from it and then moves the active class, which lets the underline animate between links.
   let previousActive: string | null = null;
@@ -594,6 +602,8 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     private onResize?: () => void;
     private sync?: () => void;
     private onPageLoad = () => {
+      restoring = false;
+      document.documentElement.classList.add(smoothScroll);
       this.closeOpenDropdown();
       this.sync?.();
     };
@@ -839,7 +849,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
         document.addEventListener('scroll', this.onScroll, { passive: true });
       }
 
-      document.documentElement.classList.add('motion-safe:scroll-smooth');
+      if (!restoring) document.documentElement.classList.add(smoothScroll);
     }
 
     disconnectedCallback() {
