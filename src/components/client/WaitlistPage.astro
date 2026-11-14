@@ -17,9 +17,11 @@ interface Props {
 const { lang } = Astro.props;
 const copy = getCopy(lang);
 const t = copy.waitlist;
-// The form card is white on the dark page so it is the brightest thing in view. Focus rings use the brand colour.
+// The form card is the brand slate accent, lighter than the page and the black hero. Fields sit in the page
+// slate. Focus is the heading white, errors the soft coral from brand.ts, so red stays the logo's.
 const field =
-  'block w-full rounded-(--aw-radius-card) border border-gray-300 bg-white px-4 py-3 text-md text-slate-900 caret-primary transition-[border-color,box-shadow] duration-200 ease-in-out focus:border-primary aria-invalid:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1';
+  'block w-full rounded-(--aw-radius-card) border border-default/55 bg-page px-4 py-3 text-md text-heading placeholder:text-default/70 caret-heading transition-[border-color,box-shadow] duration-200 ease-in-out focus:border-heading aria-invalid:border-(--aw-color-error) focus:outline-none focus-visible:ring-2 focus-visible:ring-heading focus-visible:ring-offset-1 focus-visible:ring-offset-accent';
+const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0';
 ---
 
 <Page lang={lang} route="waitlist" title={t.title} description={t.description} overlayBar>
@@ -59,9 +61,9 @@ const field =
       <div class="w-full max-w-xl">
         <div
           id="waitlist-form"
-          class="scroll-mt-6 rounded-(--aw-radius-card) bg-white p-5 text-slate-900 shadow-xl sm:p-6 lg:p-8"
+          class="scroll-mt-6 rounded-(--aw-radius-card) border border-white/10 bg-accent p-5 text-heading shadow-2xl sm:p-6 lg:p-8"
         >
-          <h2 class="text-2xl font-bold text-slate-900">{t.formHeading}</h2>
+          <h2 class="text-2xl font-bold text-heading">{t.formHeading}</h2>
           <form
             class="mt-5"
             name="waitlist"
@@ -72,7 +74,7 @@ const field =
             data-errors={JSON.stringify(t.errors)}
           >
             <div class="mb-4">
-              <label for="waitlist-name" class="block text-sm font-medium text-slate-700">{copy.form.name}</label>
+              <label for="waitlist-name" class="block text-sm font-medium text-default">{copy.form.name}</label>
               <input
                 type="text"
                 name="name"
@@ -82,11 +84,10 @@ const field =
                 aria-describedby="waitlist-name-error"
                 class={field}
               />
-              <p class="mt-1 text-sm text-primary empty:mt-0" id="waitlist-name-error" data-error aria-live="polite">
-              </p>
+              <p class={errorText} id="waitlist-name-error" data-error aria-live="polite"></p>
             </div>
             <div class="mb-4">
-              <label for="waitlist-email" class="block text-sm font-medium text-slate-700">{copy.form.email}</label>
+              <label for="waitlist-email" class="block text-sm font-medium text-default">{copy.form.email}</label>
               <input
                 type="email"
                 name="email"
@@ -96,11 +97,10 @@ const field =
                 aria-describedby="waitlist-email-error"
                 class={field}
               />
-              <p class="mt-1 text-sm text-primary empty:mt-0" id="waitlist-email-error" data-error aria-live="polite">
-              </p>
+              <p class={errorText} id="waitlist-email-error" data-error aria-live="polite"></p>
             </div>
             <fieldset class="mb-4 min-w-0" data-birth aria-describedby="waitlist-birth-error">
-              <legend class="block text-sm font-medium text-slate-700">{t.birthDate}</legend>
+              <legend class="block text-sm font-medium text-default">{t.birthDate}</legend>
               <div class="mt-1 flex gap-3">
                 {
                   (
@@ -111,7 +111,7 @@ const field =
                     ] as const
                   ).map(([key, label, len, width, ac, hint]) => (
                     <div class={`min-w-0 ${width}`}>
-                      <label for={`waitlist-birth-${key}`} class="block text-xs text-slate-600">
+                      <label for={`waitlist-birth-${key}`} class="block text-xs text-default">
                         {label}
                       </label>
                       <input
@@ -130,8 +130,7 @@ const field =
                 }
               </div>
               <input type="hidden" name="birthdate" data-birth-value />
-              <p class="mt-1 text-sm text-primary empty:mt-0" id="waitlist-birth-error" data-error aria-live="polite">
-              </p>
+              <p class={errorText} id="waitlist-birth-error" data-error aria-live="polite"></p>
             </fieldset>
             <div class="mt-3 flex items-start gap-3">
               <input
@@ -140,16 +139,15 @@ const field =
                 type="checkbox"
                 required
                 aria-describedby="waitlist-consent-error"
-                class="mt-3.5 h-5 w-5 flex-none cursor-pointer accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                class="mt-3.5 h-5 w-5 flex-none cursor-pointer appearance-none rounded-md border-2 border-default/55 bg-page focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-heading"
               />
-              <label for="waitlist-consent" class="cursor-pointer select-none py-3 text-sm leading-6 text-slate-600">
-                {copy.form.consentBefore}<a href={pathFor('privacy', lang)} class="text-slate-900 underline">
+              <label for="waitlist-consent" class="cursor-pointer select-none py-3 text-sm leading-6 text-default">
+                {copy.form.consentBefore}<a href={pathFor('privacy', lang)} class="text-heading underline">
                   {copy.form.consentLink}
                 </a>{copy.form.consentAfter}
               </label>
             </div>
-            <p class="mt-2 text-sm text-primary empty:mt-0" id="waitlist-consent-error" data-error aria-live="polite">
-            </p>
+            <p class={errorText} id="waitlist-consent-error" data-error aria-live="polite"></p>
             <div class="mt-6 grid">
               <Button variant="primary" type="submit" text={t.submit} />
             </div>
@@ -196,6 +194,29 @@ const field =
     opacity: 0.7;
     pointer-events: none;
     transition: opacity 0.2s ease-in-out;
+  }
+  /* Consent checkbox: dark box, near-white fill with a slate tick when checked. */
+  #waitlist-consent:checked {
+    border-color: var(--aw-color-btn);
+    background-color: var(--aw-color-btn);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-6.5' fill='none' stroke='%23232a35' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80%;
+  }
+  /* Error line: a small ! icon so the message is not told by colour alone. */
+  [data-error]:not(:empty)::before {
+    content: '!';
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.125rem;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 0.8125rem;
+    text-align: center;
   }
 </style>
 

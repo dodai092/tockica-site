@@ -58,6 +58,10 @@ export const brand = {
     textDefault: 'rgb(42 42 42)',
     textMuted: 'rgb(99 107 118)',
     bgPage: 'rgb(247 247 247)',
+    error: 'rgb(185 28 28)',
+    button: 'rgb(215 25 32)',
+    buttonText: 'rgb(255 255 255)',
+    buttonHover: 'rgb(179 18 26)',
   },
 
   dark: {
@@ -68,5 +72,10 @@ export const brand = {
     textDefault: 'rgb(229 231 235)',
     textMuted: 'rgb(229 231 235 / 66%)',
     bgPage: 'rgb(35 42 53)',
+    // Calm primary action (near-white, slate label) and a soft coral for errors, so red stays the logo's.
+    error: 'rgb(255 179 173)',
+    button: 'rgb(247 247 247)',
+    buttonText: 'rgb(35 42 53)',
+    buttonHover: 'rgb(224 224 224)',
   },
 } as const;

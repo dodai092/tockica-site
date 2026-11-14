@@ -5,6 +5,7 @@ import PageLayout from '~/layouts/PageLayout.astro';
 import SiteHeader from '~/components/client/SiteHeader.astro';
 import SiteFooter from '~/components/client/SiteFooter.astro';
 import BookBar from '~/components/client/BookBar.astro';
+import BrandOverrides from '~/components/client/BrandOverrides.astro';
 import MotionStyles from '~/components/client/MotionStyles.astro';
 import { bookBarEnabled } from '~/lib/book-bar';
 import { alternatesFor } from '~/i18n';
@@ -45,6 +46,7 @@ const showBookBar = bookBarEnabled && route !== 'schedule';
 ---
 
 <PageLayout metadata={metadata}>
+  <BrandOverrides />
   <MotionStyles />
   <Fragment slot="announcement"></Fragment>
   <SiteHeader slot="header" lang={lang} route={route} twin={twin} minimal={minimal} pageScroll={overlayBar} />

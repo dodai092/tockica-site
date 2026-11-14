@@ -212,13 +212,13 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 22%) !important;
   }
   #header[data-hero][data-hdr='clear']:not(.expanded) {
-    color: #fff;
+    color: var(--color-white);
   }
   #header[data-hero][data-hdr='clear']:not(.expanded) :is(a, button, .text-default, .text-muted, .text-gray-900) {
-    color: #fff;
+    color: var(--color-white);
   }
   #header[data-hero][data-hdr='clear']:not(.expanded) [data-aw-toggle-menu] span {
-    background-color: #fff;
+    background-color: var(--color-white);
   }
   /* The flag and theme buttons have a light grey hover fill. Over the hero their icons are white, so on that fill
      the moon vanished. Here the fill is a faint white instead. */
@@ -228,13 +228,13 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
   /* Menu open over the clear hero bar: the bar keeps its look (white logo and button). Only the dropdown panel
      below switches to dark text, since it sits on its own glass. */
   #header[data-hero][data-hdr='clear'].expanded [data-bar-row] {
-    color: #fff;
+    color: var(--color-white);
   }
   #header[data-hero][data-hdr='clear'].expanded [data-bar-row] :is(a, button, .text-default, .text-gray-900) {
-    color: #fff;
+    color: var(--color-white);
   }
   #header[data-hero][data-hdr='clear'].expanded [data-bar-row] [data-aw-toggle-menu] span {
-    background-color: #fff;
+    background-color: var(--color-white);
   }
   #header[data-hero][data-hdr='clear'].expanded [data-bar-row] .tk-logo-dark-text {
     opacity: 0;
@@ -283,7 +283,7 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
     outline-color: #ff6b6b;
   }
   #header[data-hero][data-hdr='clear']:not(.expanded) :is(a, button):focus-visible {
-    outline-color: #fff;
+    outline-color: var(--color-white);
   }
   /* Navigation: the bar itself must not animate between pages. State changes are applied instantly for
      two frames, then the active link animates on its own (indicator below). */

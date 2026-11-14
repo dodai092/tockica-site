@@ -1,0 +1,38 @@
+---
+// Per-client colour overrides on top of the template's brand variables (CustomStyles.astro is template core).
+// Values come from src/brand.ts: the near-white primary button, the soft error colour, and one site white.
+import { brand } from '~/brand';
+
+const css = `
+  :root {
+    --aw-color-error: ${brand.light.error};
+    --aw-color-btn: ${brand.light.button};
+    --aw-color-btn-text: ${brand.light.buttonText};
+    --aw-color-btn-hover: ${brand.light.buttonHover};
+  }
+  .dark {
+    --aw-color-error: ${brand.dark.error};
+    --aw-color-btn: ${brand.dark.button};
+    --aw-color-btn-text: ${brand.dark.buttonText};
+    --aw-color-btn-hover: ${brand.dark.buttonHover};
+  }
+
+  /* One white on the site: Tailwind's white (text-white, bg-white, ring-white) is the heading off-white. */
+  html:root {
+    --color-white: ${brand.dark.textHeading};
+  }
+
+  /* Primary buttons follow the brand button colours: near-white with a slate label on dark, red on light. */
+  .btn-primary {
+    background-color: var(--aw-color-btn) !important;
+    border-color: var(--aw-color-btn) !important;
+    color: var(--aw-color-btn-text) !important;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--aw-color-btn-hover) !important;
+    border-color: var(--aw-color-btn-hover) !important;
+  }
+`;
+---
+
+<style is:inline set:html={css}></style>
