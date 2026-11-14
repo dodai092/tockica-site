@@ -51,6 +51,15 @@
     transform: scale(0.98);
     transition-duration: 0.08s;
   }
+  /* Hover (devices that can hover only): the portrait grows 4% inside its panel, which clips it. */
+  li[data-instructor] > a[aria-hidden='true'] [data-photo-zoom] {
+    transition: transform 0.3s var(--ease-out);
+  }
+  @media (hover: hover) {
+    li[data-instructor] > a[aria-hidden='true']:hover [data-photo-zoom] {
+      transform: scale(1.04);
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .btn-primary,
     .btn-secondary,
@@ -76,8 +85,12 @@
     li[data-instructor] > a[aria-hidden='true']:active {
       transform: none;
     }
-    li[data-instructor] > a[aria-hidden='true'] {
+    li[data-instructor] > a[aria-hidden='true'],
+    li[data-instructor] > a[aria-hidden='true'] [data-photo-zoom] {
       transition: none;
+    }
+    li[data-instructor] > a[aria-hidden='true']:hover [data-photo-zoom] {
+      transform: none;
     }
     /* The menu button's bars become an X: keep the change, drop the turning (the core component rotates them). */
     #header [data-aw-toggle-menu] span {

@@ -30,15 +30,17 @@ const place = `left: 50%; transform-origin: ${fx}% ${fy}%; transform: translate(
       class="relative isolate overflow-hidden rounded-(--aw-radius-card)"
       style="aspect-ratio: 3 / 4; background: radial-gradient(ellipse 70% 55% at 50% 30%, color-mix(in srgb, var(--aw-color-accent) 70%, white), var(--aw-color-accent) 55%, color-mix(in srgb, var(--aw-color-accent) 70%, black))"
     >
-      <Picture
-        src={photo}
-        alt={first}
-        formats={['avif', 'webp']}
-        widths={[400, 640, 800]}
-        sizes={sizes}
-        class="absolute top-0 h-full max-w-none"
-        style={`${place}; width: 133.334%`}
-      />
+      <div data-photo-zoom class="absolute inset-0">
+        <Picture
+          src={photo}
+          alt={first}
+          formats={['avif', 'webp']}
+          widths={[400, 640, 800]}
+          sizes={sizes}
+          class="absolute top-0 h-full max-w-none"
+          style={`${place}; width: 133.334%`}
+        />
+      </div>
       <div
         class="absolute inset-x-0 bottom-0 h-[28%]"
         style="background: linear-gradient(to top, var(--aw-color-bg-page), transparent)"
