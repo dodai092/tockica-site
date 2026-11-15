@@ -48,6 +48,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
 >
   <h2 class="sr-only">{copy.heading}</h2>
   <ul
+    data-next-rail
     class="-mx-4 flex scroll-pl-4 snap-x gap-3 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 lg:grid-cols-4"
   >
     {
@@ -121,6 +122,50 @@ const timeOf = new Intl.DateTimeFormat(lang, {
   set:html={JSON.stringify(nextClasses).replace(/</g, '\\u003c')}
 />
 <BikeSheet lang={lang} />
+
+<style>
+  /* Phones: the cards scroll sideways with no scrollbar, so each end that has more cards fades out. Enhancement only:
+     a mask driven by the row's own scroll position (no duration, no script), so browsers without scroll-driven
+     animations show the plain row. From sm the cards are a grid and nothing scrolls. */
+  @property --rail-fade-start {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+  }
+  @property --rail-fade-end {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+  }
+  @keyframes rail-fade-start {
+    to {
+      --rail-fade-start: var(--rail-fade);
+    }
+  }
+  @keyframes rail-fade-end {
+    from {
+      --rail-fade-end: var(--rail-fade);
+    }
+  }
+  @media (max-width: 639px) {
+    @supports (animation-timeline: scroll()) {
+      [data-next-rail] {
+        --rail-fade: 2.5rem;
+        mask:
+          linear-gradient(#000, #000) no-clip subtract,
+          linear-gradient(to right, #000, transparent) 0 0 / var(--rail-fade-start) 100% no-repeat no-clip,
+          linear-gradient(to right, transparent, #000) 100% 0 / var(--rail-fade-end) 100% no-repeat no-clip;
+        animation:
+          rail-fade-start linear both,
+          rail-fade-end linear both;
+        animation-timeline: scroll(self inline), scroll(self inline);
+        animation-range:
+          0 var(--rail-fade),
+          calc(100% - var(--rail-fade)) 100%;
+      }
+    }
+  }
+</style>
 
 <script>
   import { fillRow } from '~/lib/class-row';

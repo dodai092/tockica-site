@@ -229,14 +229,15 @@ const svgClass = variant === 'peek' ? 'absolute top-16 -right-[26vw] w-[66vw]' :
   // One shared loop for every bike on the page. It runs only while the page scrolls or the wheel coasts.
   // The wheel follows scroll speed, not position: it winds up to a 90 RPM crank, then decays on a 120 ms time
   // constant (about 400 ms to rest), so a flick spins it and a stop settles it. Under reduced motion nothing runs.
-  // A click on the wheel pushes it once. On the first page load of a session it also turns by itself for 2 s.
+  // A click on the wheel pushes it once. On the first page load of a session it also turns by itself for 1.6 s.
   const WMAX = 540; // crank degrees per second at the cap, 90 RPM
   const KW = 0.5; // crank degrees per second per px/s of scroll
   const TAU = 0.12; // seconds
   const TRAIL_MAX = 150; // degrees of red trail at full speed
   const PUSH = 220; // crank deg/s added by one click, so a few clicks reach the cap
-  const DRIVE = 0.6 * WMAX; // intro speed, about 54 RPM
-  const INTRO_MS = 2000;
+  const DRIVE = 0.3 * WMAX; // intro speed, about 27 RPM, about 1.1 wheel turns a second
+  const INTRO_MS = 1600;
+  const TAU_INTRO = 0.4; // the intro winds up and settles slowly, about 1 s each way
   const INTRO_KEY = 'spinbike-intro';
   const FLY = { x: 170, y: 246 };
   const CRANK = { x: 300, y: 286 };
@@ -258,6 +259,7 @@ const svgClass = variant === 'peek' ? 'absolute top-16 -right-[26vw] w-[66vw]' :
   let lastT = 0;
   let idle = 0;
   let driveUntil = 0; // time (ms) until which the intro drive holds the wheel
+  let calm = false; // true from the intro until the visitor scrolls or clicks: the bike turns but does not rock
   const IDLE_FRAMES = 8;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -291,7 +293,9 @@ const svgClass = variant === 'peek' ? 'absolute top-16 -right-[26vw] w-[66vw]' :
   const render = () => {
     const amp = clamp(Math.abs(w) / WMAX);
     const phase = (a * 2 * Math.PI) / 180; // two strokes per crank turn
-    const sway = `translateY(${(Math.abs(Math.cos(phase)) * -3 * amp).toFixed(2)}px) rotate(${(Math.sin(phase) * 1.5 * amp).toFixed(2)}deg)`;
+    const sway = calm
+      ? ''
+      : `translateY(${(Math.abs(Math.cos(phase)) * -1.5 * amp).toFixed(2)}px) rotate(${(Math.sin(phase) * 0.75 * amp).toFixed(2)}deg)`;
     const drift = reduce.matches ? 0 : window.scrollY * DRIFT;
     for (const r of rigs) {
       if (r.box && !cssDrift) r.box.style.transform = drift > 0 ? `translateY(${drift.toFixed(1)}px)` : '';
@@ -317,14 +321,16 @@ const svgClass = variant === 'peek' ? 'absolute top-16 -right-[26vw] w-[66vw]' :
     const vy = Math.abs(dy) > 800 ? 0 : dy / dt;
     const scrollTarget = clamp(vy * KW, -WMAX, WMAX);
     const driveTarget = now < driveUntil ? DRIVE : 0;
+    if (Math.abs(scrollTarget) > 0) calm = false;
     const target = Math.abs(scrollTarget) >= driveTarget ? scrollTarget : driveTarget;
-    w += (target - w) * (1 - Math.exp(-dt / TAU));
+    w += (target - w) * (1 - Math.exp(-dt / (calm ? TAU_INTRO : TAU)));
     if (Math.abs(w) < 0.5) w = 0;
     a += w * dt;
     render();
     // Scroll events arrive just before the frame, so the loop waits a few quiet frames before it stops.
     idle = w === 0 && target === 0 ? idle + 1 : 0;
     raf = idle < IDLE_FRAMES ? requestAnimationFrame(tick) : 0;
+    if (!raf) calm = false;
   };
 
   const start = () => {
@@ -369,11 +375,12 @@ const svgClass = variant === 'peek' ? 'absolute top-16 -right-[26vw] w-[66vw]' :
     const t = e.target as Element | null;
     if (reduce.matches || !t?.closest || !onWheel(e.clientX, e.clientY)) return;
     if (!t.closest('[data-hit]') && !isEmptyPage(t)) return;
+    calm = false;
     w = clamp(w + PUSH, -WMAX, WMAX);
     start();
   });
 
-  // The intro: on the first page load of a session the wheel turns by itself for 2 s, then coasts to rest.
+  // The intro: on the first page load of a session the wheel turns by itself for 1.6 s, slowly winding up and settling, and the bike does not rock.
   // Not on later page changes, not when the page opens already scrolled, never under reduced motion.
   const intro = () => {
     if (reduce.matches || window.scrollY > 50 || !rigs.length) return;
@@ -384,6 +391,7 @@ const svgClass = variant === 'peek' ? 'absolute top-16 -right-[26vw] w-[66vw]' :
       return;
     }
     setTimeout(() => {
+      calm = true;
       driveUntil = performance.now() + INTRO_MS;
       start();
     }, 250);
