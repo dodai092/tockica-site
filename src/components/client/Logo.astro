@@ -13,8 +13,20 @@ import logoDarkText from '~/assets/images/logo-dark-text.svg';
   {
     brand.logo.image && (
       <span class="tk-logo grid">
-        <Image src={logoDarkText} alt={brand.logo.alt || SITE?.name} class="tk-logo-dark-text h-11 w-auto" />
-        <Image src={brand.logo.image} alt="" aria-hidden="true" class="tk-logo-white-text h-11 w-auto" />
+        {/* Eager: the logo is at the top of every page, lazy loading would hold it back until layout. */}
+        <Image
+          src={logoDarkText}
+          alt={brand.logo.alt || SITE?.name}
+          loading="eager"
+          class="tk-logo-dark-text h-11 w-auto"
+        />
+        <Image
+          src={brand.logo.image}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          class="tk-logo-white-text h-11 w-auto"
+        />
       </span>
     )
   }

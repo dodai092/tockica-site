@@ -3,6 +3,7 @@ import Page from '~/components/client/Page.astro';
 import Button from '~/components/ui/Button.astro';
 import HowItWorks from '~/components/client/home/HowItWorks.astro';
 import Faq from '~/components/client/home/Faq.astro';
+import SpinBike from '~/components/client/SpinBike.astro';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -16,11 +17,17 @@ const t = copy.firstTimePage;
 ---
 
 <Page lang={lang} route="firstTime" title={t.title} description={t.description}>
+  <SpinBike />
   <section class="mx-auto max-w-7xl px-4 sm:px-6 pt-12 md:pt-16">
     <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
-    <p class="mt-4 text-xl text-default">{t.lead}</p>
+    {/* Phone: capped so the text wraps left of the spin bike's wheel. */}
+    <p class="mt-4 max-md:max-w-[62%] text-xl text-default">{t.lead}</p>
     <div class="mt-8"><Button variant="primary" text={copy.cta.book} href={pathFor('schedule', lang)} /></div>
   </section>
   <HowItWorks lang={lang} />
-  <Faq lang={lang} />
+  {/* Desktop: the bike stands in the strip to the right of the FAQ, on the footer line. */}
+  <div class="relative isolate">
+    <Faq lang={lang} />
+    <SpinBike variant="slot" class="bottom-0 right-[max(1.5rem,calc(50%_-_38.5rem))] w-[230px]" />
+  </div>
 </Page>

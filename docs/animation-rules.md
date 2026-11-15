@@ -184,6 +184,7 @@ tick();
 | Mobile menu fades, language switch flag                       | `src/components/client/SiteHeader.astro`                     |
 | Theme change crossfade, icon turn                             | `src/components/client/ThemeToggle.astro`                    |
 | FAQ fold                                                      | `src/components/client/home/Faq.astro`                       |
+| Spin bike: wheel, red trail, sway (section 12)                | `src/components/client/SpinBike.astro`                       |
 | Cookie banner fade                                            | `src/components/client/CookieConsent.astro`                  |
 | Sheet, tab bar, gesture references                            | `../prototype/styles.css`, `../prototype/src/pages/sheet.js` |
 
@@ -197,3 +198,32 @@ tick();
   fades differ from the prototype numbers. It skips itself when `../prototype` is not present.
 - The site and the app share no code at runtime and deploy separately, so this test and this document are
   the only link between them.
+
+## 12. Scroll-speed motion: the spin bike
+
+The spin bike (`src/components/client/SpinBike.astro`, decorative, behind the page content) is the one element
+that moves with scroll speed instead of scroll position. A flywheel has weight, so it is allowed to coast.
+
+- The flywheel and crank follow scroll speed: the crank winds up to 90 RPM and the flywheel turns three times
+  per crank turn. Scrolling back reverses it.
+- After a flick it decays on a 120 ms time constant, about 400 ms to rest. That is the site's ceiling and the
+  single exception to "state follows scroll position", justified by principle 6: the momentum comes from the
+  user's own gesture. The next scroll interrupts it and it continues from its current angle.
+- The red tracer dot stretches into an arc (up to 150 degrees) and the bike rocks (up to 1.5 degrees and 3 px)
+  in time with the pedals. Both read the same speed value, so they build and settle together.
+- Transform and one path attribute only. One shared animation frame loop, running only while the page scrolls or
+  the wheel coasts, and stopped after a few quiet frames.
+- Under `prefers-reduced-motion` the bike holds one still pose and the loop never starts.
+- A click on the flywheel pushes it once (220 deg/s of crank speed, repeated clicks add up to the 90 RPM cap). It
+  then coasts like after a flick, so it stays inside the 400 ms ceiling. The click area is a transparent circle over
+  the wheel only, it is out of the tab order, and the rest of the bike takes no pointer events.
+- One exception to "no motion on load": on the first page load of a session (`sessionStorage`) the wheel turns by
+  itself for 2 s, ramping up over about 300 ms and coasting to rest after. It does not replay on later page
+  changes, it is skipped when the page opens already scrolled, and under reduced motion. It stays under the 5 s
+  after which WCAG 2.2.2 asks for a pause control.
+- Phone peek only (not the waitlist hero, not desktop, not Instruktori, where the photo grid sits right under the heading and would cover it): the peek box drifts down at 0.5x scroll position, so the bike lingers on screen. It is a direct follow of `scrollY` (transform on the box, no timing), and
+  it is 0 under reduced motion. Browsers with scroll-driven animations run it in CSS (`animation-timeline: scroll()`,
+  behind `@supports`), so it stays on the compositor. The script sets the same transform everywhere else. This is the
+  one `@keyframes` on the site that is tied to scroll position: it has no duration and nothing can trigger it twice,
+  so principle 2 does not apply to it.
+- Otherwise nothing runs on load and nothing loops, and the bike is `aria-hidden`.

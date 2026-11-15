@@ -6,6 +6,7 @@ import Button from '~/components/ui/Button.astro';
 import Page from '~/components/client/Page.astro';
 import Placeholder from '~/components/client/Placeholder.astro';
 import HowItWorks from '~/components/client/home/HowItWorks.astro';
+import SpinBike from '~/components/client/SpinBike.astro';
 import wordsArt from '~/assets/images/hero-words.png';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
@@ -39,6 +40,13 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
     <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black/70 via-black/15 to-black/0" aria-hidden="true"></div>
     <div class="absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-gradient-to-b from-transparent to-black" aria-hidden="true">
     </div>
+    {/* Phone only: the bike peeks in beside the price. On desktop it stands in the closing band below. */}
+    <SpinBike
+      variant="hero"
+      fill="rgb(0 0 0)"
+      dim={0.3}
+      class="absolute -z-10 md:hidden top-[150px] -right-[40vw] w-[80vw]"
+    />
     <div
       class="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 px-4 pb-12 pt-20 sm:px-6 md:grid-cols-2 md:items-start md:gap-10 md:pb-28 md:pt-36"
     >
@@ -67,7 +75,6 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
           <form
             class="mt-5"
             name="waitlist"
-            novalidate
             method="POST"
             data-waitlist-form
             data-thanks={pathFor('waitlistThanks', lang)}
@@ -81,10 +88,12 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
                 id="waitlist-name"
                 required
                 autocomplete="given-name"
+                enterkeyhint="next"
+                aria-invalid="false"
                 aria-describedby="waitlist-name-error"
                 class={field}
               />
-              <p class={errorText} id="waitlist-name-error" data-error aria-live="polite"></p>
+              <p class={errorText} id="waitlist-name-error" data-error></p>
             </div>
             <div class="mb-4">
               <label for="waitlist-email" class="block text-sm font-medium text-default">{copy.form.email}</label>
@@ -94,10 +103,13 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
                 id="waitlist-email"
                 required
                 autocomplete="email"
+                spellcheck="false"
+                enterkeyhint="next"
+                aria-invalid="false"
                 aria-describedby="waitlist-email-error"
                 class={field}
               />
-              <p class={errorText} id="waitlist-email-error" data-error aria-live="polite"></p>
+              <p class={errorText} id="waitlist-email-error" data-error></p>
             </div>
             <fieldset class="mb-4 min-w-0" data-birth aria-describedby="waitlist-birth-error">
               <legend class="block text-sm font-medium text-default">{t.birthDate}</legend>
@@ -121,6 +133,8 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
                         data-birth-part={key}
                         maxlength={len}
                         autocomplete={ac}
+                        enterkeyhint={key === 'year' ? 'done' : 'next'}
+                        aria-invalid="false"
                         placeholder={hint}
                         aria-describedby="waitlist-birth-error"
                         class={[field, 'px-3 text-center'].join(' ')}
@@ -130,7 +144,7 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
                 }
               </div>
               <input type="hidden" name="birthdate" data-birth-value />
-              <p class={errorText} id="waitlist-birth-error" data-error aria-live="polite"></p>
+              <p class={errorText} id="waitlist-birth-error" data-error></p>
             </fieldset>
             <div class="mt-3 flex items-start gap-3">
               <input
@@ -138,6 +152,7 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
                 name="consent"
                 type="checkbox"
                 required
+                aria-invalid="false"
                 aria-describedby="waitlist-consent-error"
                 class="mt-3.5 h-5 w-5 flex-none cursor-pointer appearance-none rounded-md border-2 border-default/55 bg-page focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-heading"
               />
@@ -147,7 +162,7 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
                 </a>{copy.form.consentAfter}
               </label>
             </div>
-            <p class={errorText} id="waitlist-consent-error" data-error aria-live="polite"></p>
+            <p class={errorText} id="waitlist-consent-error" data-error></p>
             <div class="mt-6 grid">
               <Button variant="primary" type="submit" text={t.submit} />
             </div>
@@ -176,6 +191,13 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
       class="absolute inset-0 -z-20 h-full w-full origin-[88%_55%] scale-[1.6] md:scale-[1.9] object-cover object-[88%_55%]"
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black/70 via-black/20 to-black/0" aria-hidden="true"></div>
+    {/* Desktop: the bike stands in the right half of the closing band, beside the claim. */}
+    <SpinBike
+      variant="slot"
+      fill="rgb(0 0 0)"
+      dim={0.7}
+      class="bottom-0 right-[max(1.5rem,calc(50%_-_38.5rem))] w-[470px]"
+    />
     <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-36">
       <p class="max-w-3xl font-heading text-3xl font-extrabold leading-tight tracking-tight text-balance md:text-6xl">
         {copy.home.about.line}
@@ -254,27 +276,60 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
     { check: checkBirth, inputs: parts, slot: 'waitlist-birth-error' },
     { check: checkConsent, inputs: [field('waitlist-consent')], slot: 'waitlist-consent-error' },
   ];
-  const show = (row: (typeof rows)[number]) => {
+  type Row = (typeof rows)[number];
+
+  // One polite live region for the whole form. It reads out an error that appears when the user leaves or changes
+  // a field, a moment later so it does not talk over the field that takes focus next. The messages themselves are
+  // not live regions. After a failed submit nothing is announced here: focus moves to the first bad field, and
+  // its message is read with it (aria-describedby).
+  const announcer = document.createElement('div');
+  announcer.setAttribute('aria-live', 'polite');
+  announcer.className = 'sr-only';
+  form?.append(announcer);
+  let announceTimer = 0;
+  let announcedRow: Row | undefined;
+  const nameOf = (row: Row) =>
+    (row.inputs.length > 1
+      ? form?.querySelector('[data-birth] legend')
+      : row.inputs[0].type === 'checkbox'
+        ? null
+        : row.inputs[0].labels?.[0]
+    )?.textContent?.trim();
+  const announce = (row: Row, text: string) => {
+    clearTimeout(announceTimer);
+    announcer.textContent = '';
+    announcedRow = row;
+    const name = nameOf(row);
+    announceTimer = window.setTimeout(() => (announcer.textContent = name ? `${name}: ${text}` : text), 500);
+  };
+
+  // aria-invalid is "false" until a field really fails: Safari and Firefox otherwise report an empty required
+  // field as invalid from page load.
+  const isBad = (row: Row) => row.inputs.some((i) => i.getAttribute('aria-invalid') === 'true');
+  const show = (row: Row, say = false) => {
     const text = row.check();
-    row.inputs.forEach((i) => (text ? i.setAttribute('aria-invalid', 'true') : i.removeAttribute('aria-invalid')));
     const slot = document.getElementById(row.slot);
+    const isNew = !!text && slot?.textContent !== text;
+    row.inputs.forEach((i) => i.setAttribute('aria-invalid', text ? 'true' : 'false'));
     if (slot) slot.textContent = text;
+    if (say && isNew) announce(row, text);
+    if (!text && announcedRow === row) {
+      clearTimeout(announceTimer);
+      announcer.textContent = '';
+    }
     return text;
   };
   const rowOf = (t: EventTarget | null) => rows.find((r) => r.inputs.includes(t as HTMLInputElement));
 
   if (form) {
-    // Digits only in the date parts, so a stray letter never reaches the check.
-    // Typing the last digit of the day or month moves on to the next box.
-    parts.forEach((p, i) =>
-      p.addEventListener('input', (e) => {
-        p.value = p.value.replace(/\D/g, '');
-        const typed = (e as InputEvent).inputType?.startsWith('insert');
-        if (typed && i < parts.length - 1 && p.value.length === p.maxLength) parts[i + 1].focus();
-      })
-    );
+    // The browser's own validation is the fallback when this script does not run.
+    form.noValidate = true;
 
-    // Validate a field when the user leaves it (the date as a group), and re-check live once it shows an error.
+    // Digits only in the date parts, so a stray letter never reaches the check.
+    parts.forEach((p) => p.addEventListener('input', () => (p.value = p.value.replace(/\D/g, ''))));
+
+    // Validate a field when the user leaves it (the date as a group). While typing, an error is only cleared once
+    // the field is right, never changed or added.
     form.addEventListener('focusout', (e) => {
       const row = rowOf(e.target);
       if (!row) return;
@@ -287,15 +342,15 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
         !row.inputs.some((i) => i.value)
       )
         return;
-      show(row);
+      show(row, true);
     });
     form.addEventListener('input', (e) => {
       const row = rowOf(e.target);
-      if (row && row.inputs.some((i) => i.getAttribute('aria-invalid'))) show(row);
+      if (row && isBad(row) && !row.check()) show(row);
     });
     form.addEventListener('change', (e) => {
       const row = rowOf(e.target);
-      if (row && (e.target as HTMLInputElement).type === 'checkbox') show(row);
+      if (row && (e.target as HTMLInputElement).type === 'checkbox') show(row, true);
     });
 
     // TODO(client): replace with a real POST into the booking database. Until then a valid form only opens the
@@ -305,7 +360,9 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
       if (form.dataset.sent !== undefined) return;
       const firstBad = rows.filter((r) => show(r))[0]; // show every error, focus the first
       if (firstBad) {
-        firstBad.inputs.find((i) => !i.value || i.getAttribute('aria-invalid'))?.focus();
+        clearTimeout(announceTimer);
+        announcer.textContent = '';
+        firstBad.inputs.find((i) => !i.value || i.getAttribute('aria-invalid') === 'true')?.focus();
         return;
       }
       form.dataset.sent = '';

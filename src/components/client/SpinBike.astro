@@ -1,0 +1,392 @@
+---
+// The spin bike drawing that says "spin studio" at a glance. Decorative, behind the page content.
+// 'peek' (phone) sits by the page heading, cropped by the edge. 'slot' (desktop) stands in the empty lower right
+// of the page's last container. 'hero' is placed by the caller.
+// The flywheel and crank turn with scroll speed (a flywheel has weight: it coasts about 400 ms after a flick),
+// the red tracer dot smears into an arc when fast, and the bike rocks in time with the pedals.
+// Still under reduced motion. Colours come from src/brand.ts. Motion rules: docs/animation-rules.md section 12.
+import { brand } from '~/brand';
+
+interface Props {
+  variant?: 'peek' | 'slot' | 'hero';
+  /** Positioning and size classes for the 'slot' and 'hero' variants. */
+  class?: string;
+  /** Colour of the hollow tubes' inside. It must match what sits behind the bike. */
+  fill?: string;
+  /** Opacity of the line drawing. The red parts are never dimmed. */
+  dim?: number;
+  /** Peek only: false keeps it static (for pages with a card grid right under the heading). Default true. */
+  drift?: boolean;
+}
+
+const { variant = 'peek', class: cls = '', fill, dim, drift = true } = Astro.props;
+const line = brand.dark.textHeading;
+const red = brand.dark.primary;
+const inside = fill ?? brand.dark.bgPage;
+// In free space (slot) the line is brighter than behind content (peek), so it reads at a glance.
+const lineOpacity = dim ?? (variant === 'slot' ? 0.6 : 0.32);
+
+// Geometry, viewBox 0 0 560 380, bike faces left. Flywheel hub F, bottom bracket C.
+const F = { x: 170, y: 246 };
+const C = { x: 300, y: 286 };
+const tubes: [string, number][] = [
+  ['M110 362 H252', 10],
+  ['M330 362 H506', 10],
+  ['M168 362 L170 262', 14],
+  ['M170 246 L300 286', 22],
+  ['M300 286 L420 358', 13],
+  ['M300 286 L372 152', 15],
+  ['M372 152 L386 118', 9],
+  ['M200 208 L262 108', 14],
+];
+const slotAngles = [0, 60, 120, 180, 240, 300];
+const boltAngles = [0, 72, 144, 216, 288];
+const teeth = Array.from({ length: 24 }, (_, i) => i * 15);
+const pedals = [C.y + 46, C.y - 46];
+
+// 'peek' is the phone version: the front half of the bike by the page heading, cropped by the edge.
+// 'slot' is the desktop version: the whole bike in the empty lower right of the page's last container,
+// behind the content (the container is `relative isolate`, so a card that fills the corner covers it).
+const wrapperClass =
+  variant === 'peek'
+    ? `pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px] overflow-hidden md:hidden ${cls}`
+    : variant === 'slot'
+      ? `pointer-events-none absolute -z-10 hidden md:block ${cls}`
+      : `pointer-events-none ${cls}`;
+const svgClass = variant === 'peek' ? 'absolute top-16 -right-[26vw] w-[66vw]' : 'w-full';
+---
+
+<div
+  data-spin-bike
+  data-drift={variant === 'peek' && drift ? '' : undefined}
+  aria-hidden="true"
+  class={wrapperClass}
+  style={`--bike-line:${line};--bike-fill:${inside};--bike-red:${red};`}
+>
+  <svg viewBox="0 0 560 380" class:list={['bike', svgClass]} focusable="false">
+    <g opacity={lineOpacity}>
+      {tubes.map(([d, t]) => <path d={d} class="o" stroke-width={t + 3} />)}
+      {tubes.map(([d, t]) => <path d={d} class="i" stroke-width={t - 0.5} />)}
+      <rect x="108" y="357" width="26" height="10" rx="3" class="fl" stroke-width="2"></rect>
+      <rect x="232" y="357" width="26" height="10" rx="3" class="fl" stroke-width="2"></rect>
+      <rect x="326" y="357" width="26" height="10" rx="3" class="fl" stroke-width="2"></rect>
+      <circle cx="496" cy="354" r="9" class="fl" stroke-width="2"></circle>
+      <circle cx="496" cy="354" r="2.5" class="dot"></circle>
+      <g data-fly transform={`rotate(0 ${F.x} ${F.y})`}>
+        <circle cx={F.x} cy={F.y} r="86" class="fl" stroke-width="4"></circle>
+        <circle cx={F.x} cy={F.y} r="77" class="ln" stroke-width="1.6"></circle>
+        <circle cx={F.x} cy={F.y} r="31" class="ln" stroke-width="1.6"></circle>
+        {
+          slotAngles.map((a) => (
+            <ellipse
+              cx={F.x}
+              cy={F.y - 50}
+              rx="9"
+              ry="19"
+              transform={`rotate(${a} ${F.x} ${F.y})`}
+              class="ln"
+              stroke-width="2"
+            />
+          ))
+        }
+        <circle cx={F.x} cy={F.y} r="17" class="fl" stroke-width="3"></circle>
+        {
+          boltAngles.map((a) => (
+            <circle cx={F.x} cy={F.y - 10} r="2.2" transform={`rotate(${a} ${F.x} ${F.y})`} class="dot" />
+          ))
+        }
+        <circle cx={F.x} cy={F.y} r="4" class="dot"></circle>
+      </g>
+      <path class="ln" stroke-width="2" d={`M${F.x - 70} ${F.y - 52} A88 88 0 0 1 ${F.x + 30} ${F.y - 84}`} opacity=".5"
+      ></path>
+      <g data-crank transform={`rotate(0 ${C.x} ${C.y})`}>
+        <circle cx={C.x} cy={C.y} r="28" class="fl" stroke-width="2.4"></circle>
+        {
+          teeth.map((a) => (
+            <line
+              x1={C.x}
+              y1={C.y - 28}
+              x2={C.x}
+              y2={C.y - 33}
+              transform={`rotate(${a} ${C.x} ${C.y})`}
+              class="ln"
+              stroke-width="2"
+            />
+          ))
+        }
+        <path class="o" stroke-width="12" d={`M${C.x} ${C.y} V${C.y + 46}`}></path>
+        <path class="i" stroke-width="9" d={`M${C.x} ${C.y} V${C.y + 46}`}></path>
+        <path class="o" stroke-width="12" d={`M${C.x} ${C.y} V${C.y - 46}`}></path>
+        <path class="i" stroke-width="9" d={`M${C.x} ${C.y} V${C.y - 46}`}></path>
+        <circle cx={C.x} cy={C.y} r="6" class="dot"></circle>
+        {
+          pedals.map((y) => (
+            <g data-pedal data-y={y} transform={`rotate(0 ${C.x} ${y})`}>
+              <rect x={C.x - 17} y={y - 4} width="34" height="8" rx="3" class="fl" stroke-width="2" />
+              <path
+                class="ln"
+                stroke-width="2"
+                d={`M${C.x - 14} ${y - 4} v-9 M${C.x + 14} ${y - 4} v-9 M${C.x - 14} ${y - 13} Q${C.x} ${y - 18} ${C.x + 14} ${y - 13}`}
+              />
+            </g>
+          ))
+        }
+      </g>
+      <path
+        class="fl"
+        stroke-width="2.4"
+        d="M340 116 Q362 106 396 108 Q420 109 424 119 Q424 128 408 128 Q372 126 344 124 Z"></path>
+      <path class="ln" stroke-width="7" d="M262 108 L240 112 Q214 112 196 98 Q184 88 194 80"></path>
+      <path class="ln" stroke-width="7" d="M262 108 L302 98 Q316 94 320 102"></path>
+      <path class="ln" stroke-width="12" d="M190 84 L196 78 M316 100 L322 106"></path>
+      <g transform="rotate(-16 276 90)">
+        <rect x="254" y="80" width="46" height="20" rx="5" class="fl" stroke-width="2.2"></rect>
+        <path class="ln" stroke-width="1.6" d="M260 86 h20 M260 92 h12"></path>
+        <circle cx="291" cy="90" r="4" class="ln" stroke-width="1.6"></circle>
+      </g>
+      <path class="ln" stroke-width="3" d="M233 144 L222 150"></path>
+      <path class="ln" stroke-width="3" d="M352 190 L362 196"></path>
+      <circle cx="367" cy="199" r="7" class="fl" stroke-width="2"></circle>
+    </g>
+    <!-- The red: a tracer dot on the flywheel (it turns with it and leaves a trail at speed) and the resistance knob. -->
+    <g data-fly transform={`rotate(0 ${F.x} ${F.y})`}>
+      <path data-trail class="trail" fill="none" opacity="0"></path>
+      <circle cx={F.x} cy={F.y - 66} r="6" class="red"></circle>
+    </g>
+    <circle cx="217" cy="153" r="9" class="red"></circle>
+    <!-- A click on the wheel pushes it. Decorative, so it is out of the tab order and the accessibility tree. -->
+    <circle data-hit class="hit" cx={F.x} cy={F.y} r="90"></circle>
+  </svg>
+</div>
+
+<style>
+  .bike {
+    display: block;
+    overflow: visible;
+    height: auto;
+    transform-origin: 50% 95%;
+  }
+  .o {
+    fill: none;
+    stroke: var(--bike-line);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .i {
+    fill: none;
+    stroke: var(--bike-fill);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ln {
+    fill: none;
+    stroke: var(--bike-line);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .fl {
+    fill: var(--bike-fill);
+    stroke: var(--bike-line);
+    stroke-linejoin: round;
+  }
+  .dot {
+    fill: var(--bike-line);
+  }
+  .red {
+    fill: var(--bike-red);
+  }
+  .hit {
+    fill: transparent;
+    pointer-events: all;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .trail {
+    stroke: var(--bike-red);
+    stroke-width: 6;
+    stroke-linecap: round;
+  }
+  /* Phone peek drift: 0.5x scroll position (600 px over 1200 px of scroll, the bike is off screen long before).
+     Where the browser has scroll-driven animations the compositor does it, so it cannot lag the finger.
+     Elsewhere the script sets the same transform. Off under reduced motion in both. */
+  @keyframes bike-drift {
+    to {
+      transform: translateY(600px);
+    }
+  }
+  @supports ((animation-timeline: scroll()) and (animation-range: 0px 1px)) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-drift] {
+        animation: bike-drift linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0px 1200px;
+      }
+    }
+  }
+</style>
+
+<script>
+  // One shared loop for every bike on the page. It runs only while the page scrolls or the wheel coasts.
+  // The wheel follows scroll speed, not position: it winds up to a 90 RPM crank, then decays on a 120 ms time
+  // constant (about 400 ms to rest), so a flick spins it and a stop settles it. Under reduced motion nothing runs.
+  // A click on the wheel pushes it once. On the first page load of a session it also turns by itself for 2 s.
+  const WMAX = 540; // crank degrees per second at the cap, 90 RPM
+  const KW = 0.5; // crank degrees per second per px/s of scroll
+  const TAU = 0.12; // seconds
+  const TRAIL_MAX = 150; // degrees of red trail at full speed
+  const PUSH = 220; // crank deg/s added by one click, so a few clicks reach the cap
+  const DRIVE = 0.6 * WMAX; // intro speed, about 54 RPM
+  const INTRO_MS = 2000;
+  const INTRO_KEY = 'spinbike-intro';
+  const FLY = { x: 170, y: 246 };
+  const CRANK = { x: 300, y: 286 };
+
+  type Rig = {
+    box: HTMLElement | null;
+    svg: SVGSVGElement;
+    fly: SVGGElement[];
+    crank: SVGGElement | null;
+    pedals: SVGGElement[];
+    trail: SVGPathElement | null;
+  };
+
+  let rigs: Rig[] = [];
+  let raf = 0;
+  let w = 0; // crank angular velocity, deg/s
+  let a = 0; // crank angle, deg
+  let lastY = 0;
+  let lastT = 0;
+  let idle = 0;
+  let driveUntil = 0; // time (ms) until which the intro drive holds the wheel
+  const IDLE_FRAMES = 8;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Phone peek only: the whole box follows scroll position at DRIFT x the page, so it lingers on screen.
+  // Browsers with scroll-driven animations do it in CSS (see the style block), the script is the fallback.
+  const DRIFT = 0.5;
+  const cssDrift = CSS.supports('(animation-timeline: scroll()) and (animation-range: 0px 1px)');
+  const clamp = (x: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, x));
+  const rotate = (el: Element | null, deg: number, cx: number, cy: number) =>
+    el?.setAttribute('transform', `rotate(${deg.toFixed(2)} ${cx} ${cy})`);
+
+  const arc = (len: number) => {
+    const r = 66;
+    const a0 = -Math.PI / 2;
+    const a1 = a0 + (len * Math.PI) / 180;
+    const p = (t: number) => `${FLY.x + r * Math.cos(t)} ${FLY.y + r * Math.sin(t)}`;
+    return `M${p(a0)} A${r} ${r} 0 ${len > 180 ? 1 : 0} 1 ${p(a1)}`;
+  };
+
+  const collect = () => {
+    rigs = [...document.querySelectorAll<SVGSVGElement>('[data-spin-bike] svg')].map((svg) => ({
+      svg,
+      box: svg.closest<HTMLElement>('[data-drift]'),
+      fly: [...svg.querySelectorAll<SVGGElement>('[data-fly]')],
+      crank: svg.querySelector<SVGGElement>('[data-crank]'),
+      pedals: [...svg.querySelectorAll<SVGGElement>('[data-pedal]')],
+      trail: svg.querySelector<SVGPathElement>('[data-trail]'),
+    }));
+  };
+
+  const render = () => {
+    const amp = clamp(Math.abs(w) / WMAX);
+    const phase = (a * 2 * Math.PI) / 180; // two strokes per crank turn
+    const sway = `translateY(${(Math.abs(Math.cos(phase)) * -3 * amp).toFixed(2)}px) rotate(${(Math.sin(phase) * 1.5 * amp).toFixed(2)}deg)`;
+    const drift = reduce.matches ? 0 : window.scrollY * DRIFT;
+    for (const r of rigs) {
+      if (r.box && !cssDrift) r.box.style.transform = drift > 0 ? `translateY(${drift.toFixed(1)}px)` : '';
+      r.fly.forEach((g) => rotate(g, -a * 3, FLY.x, FLY.y));
+      rotate(r.crank, -a, CRANK.x, CRANK.y);
+      r.pedals.forEach((p) => rotate(p, a, CRANK.x, Number(p.dataset.y)));
+      if (r.trail) {
+        const len = amp * TRAIL_MAX;
+        r.trail.setAttribute('d', len > 2 ? arc(len) : 'M0 0');
+        r.trail.setAttribute('opacity', amp > 0.04 ? '0.9' : '0');
+      }
+      r.svg.style.transform = amp > 0.001 ? sway : '';
+    }
+  };
+
+  const tick = (now: number) => {
+    const dt = Math.min(0.05, (now - lastT) / 1000) || 0.016;
+    lastT = now;
+    const y = window.scrollY;
+    const dy = y - lastY;
+    lastY = y;
+    // A jump (an anchor, back to top) is not a pedalling speed.
+    const vy = Math.abs(dy) > 800 ? 0 : dy / dt;
+    const scrollTarget = clamp(vy * KW, -WMAX, WMAX);
+    const driveTarget = now < driveUntil ? DRIVE : 0;
+    const target = Math.abs(scrollTarget) >= driveTarget ? scrollTarget : driveTarget;
+    w += (target - w) * (1 - Math.exp(-dt / TAU));
+    if (Math.abs(w) < 0.5) w = 0;
+    a += w * dt;
+    render();
+    // Scroll events arrive just before the frame, so the loop waits a few quiet frames before it stops.
+    idle = w === 0 && target === 0 ? idle + 1 : 0;
+    raf = idle < IDLE_FRAMES ? requestAnimationFrame(tick) : 0;
+  };
+
+  const start = () => {
+    if (raf || reduce.matches || !rigs.length) return;
+    lastT = performance.now();
+    lastY = window.scrollY;
+    idle = 0;
+    raf = requestAnimationFrame(tick);
+  };
+
+  // The site uses ClientRouter, so the bikes are collected again after every navigation. Module scripts run
+  // deferred, so on a first load `astro:page-load` may already have fired: collect once right away as well.
+  const refresh = () => {
+    cancelAnimationFrame(raf);
+    raf = 0;
+    collect();
+    render();
+  };
+  refresh();
+  document.addEventListener('astro:page-load', refresh);
+  window.addEventListener('scroll', start, { passive: true });
+
+  // One push per click. The bike sits behind the page content, so the wheel itself never receives the click:
+  // the grid or section above it does. So the handler asks two things: is the pointer inside a visible wheel,
+  // and is what was clicked empty page (transparent, no text of its own, not a link, button, image or field).
+  // A click on a card, a button or text never pushes the wheel. Clicks add speed up to the cap, and the wheel
+  // coasts like after a flick.
+  const INTERACTIVE =
+    'a,button,input,select,textarea,label,summary,img,picture,video,audio,canvas,iframe,svg,[role="button"],[role="link"],[tabindex]';
+  const isEmptyPage = (el: Element) => {
+    if (el.closest(INTERACTIVE)) return false;
+    const cs = getComputedStyle(el);
+    if (cs.backgroundImage !== 'none' || !/^(rgba\(0, 0, 0, 0\)|transparent)$/.test(cs.backgroundColor)) return false;
+    return ![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent?.trim());
+  };
+  const onWheel = (x: number, y: number) =>
+    [...document.querySelectorAll<SVGElement>('[data-spin-bike] [data-hit]')].some((h) => {
+      const r = h.getBoundingClientRect();
+      return r.width > 0 && Math.hypot(x - (r.x + r.width / 2), y - (r.y + r.height / 2)) <= (r.width / 2) * 0.95;
+    });
+  document.addEventListener('click', (e) => {
+    const t = e.target as Element | null;
+    if (reduce.matches || !t?.closest || !onWheel(e.clientX, e.clientY)) return;
+    if (!t.closest('[data-hit]') && !isEmptyPage(t)) return;
+    w = clamp(w + PUSH, -WMAX, WMAX);
+    start();
+  });
+
+  // The intro: on the first page load of a session the wheel turns by itself for 2 s, then coasts to rest.
+  // Not on later page changes, not when the page opens already scrolled, never under reduced motion.
+  const intro = () => {
+    if (reduce.matches || window.scrollY > 50 || !rigs.length) return;
+    try {
+      if (sessionStorage.getItem(INTRO_KEY)) return;
+      sessionStorage.setItem(INTRO_KEY, '1');
+    } catch {
+      return;
+    }
+    setTimeout(() => {
+      driveUntil = performance.now() + INTRO_MS;
+      start();
+    }, 250);
+  };
+  intro();
+</script>

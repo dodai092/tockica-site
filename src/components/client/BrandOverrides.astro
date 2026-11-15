@@ -11,6 +11,8 @@ const css = `
     --aw-color-btn-hover: ${brand.light.buttonHover};
   }
   .dark {
+    /* Tells the browser the page is dark, so its own parts (scrollbars, autofill, native controls) follow. */
+    color-scheme: dark;
     --aw-color-error: ${brand.dark.error};
     --aw-color-btn: ${brand.dark.button};
     --aw-color-btn-text: ${brand.dark.buttonText};

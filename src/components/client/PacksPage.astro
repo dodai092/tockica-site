@@ -1,6 +1,7 @@
 ---
 import Page from '~/components/client/Page.astro';
 import OfferTile from '~/components/client/home/OfferTile.astro';
+import SpinBike from '~/components/client/SpinBike.astro';
 import { getCopy } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -13,14 +14,19 @@ const t = getCopy(lang).packsPage;
 ---
 
 <Page lang={lang} route="packs" title={t.title} description={t.description}>
+  <SpinBike />
   <section class="mx-auto max-w-7xl px-4 sm:px-6 pt-12 md:pt-16">
     <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-heading">{t.title}</h1>
   </section>
   <OfferTile lang={lang} full />
-  <section class="mx-auto max-w-7xl px-4 sm:px-6 pb-12 md:pb-16">
+  <section class="relative isolate mx-auto max-w-7xl px-4 sm:px-6 pb-12 md:pb-16">
     <p class="text-sm opacity-75">
       {t.noteDuration}<br />
       {t.noteAbs}
     </p>
+    {
+      /* Desktop: the bike stands on the footer line under the price list. Only about 50 px is free there, so it is small. */
+    }
+    <SpinBike variant="slot" class="bottom-0 right-6 w-[220px]" />
   </section>
 </Page>

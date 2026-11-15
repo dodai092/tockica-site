@@ -7,6 +7,7 @@ import { Icon } from 'astro-icon/components';
 import Placeholder from '~/components/client/Placeholder.astro';
 import BikeSheet from '~/components/client/schedule/BikeSheet.astro';
 import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
+import SpinBike from '~/components/client/SpinBike.astro';
 import { instructors } from '~/data/instructors';
 import { profileHref, slugOf } from '~/lib/instructor-link';
 import { thumbUrls } from '~/lib/instructor-photo';
@@ -70,7 +71,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
   data-profile-base={profileBase}
   data-profile-slugs={JSON.stringify(profileSlugs)}
   data-photos={JSON.stringify(thumbs)}
-  class="mx-auto mt-8 max-w-7xl px-4 sm:px-6 md:mt-10"
+  class="relative isolate mx-auto mt-8 max-w-7xl px-4 sm:px-6 md:mt-10"
 >
   {/* The visitor's kept pick after a reload. The bike sheet script fills it in and shows it (BikeSheet.astro). */}
   <div
@@ -253,6 +254,8 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
   <p class="mt-2">
     <Placeholder lang={lang} label="the schedule is mock data until the booking app endpoint exists" />
   </p>
+  {/* The bike stands in the empty lower right, under the short last days, behind the cards. */}
+  <SpinBike variant="slot" class="bottom-6 right-6 w-[300px]" />
 </section>
 
 <script>
