@@ -46,15 +46,21 @@ const language = metadata.lang ?? I18N.language;
   <head>
     <CommonMeta />
     <Favicons />
-    {(preloadFonts as FontCssVariable[]).map((cssVariable) => <Font cssVariable={cssVariable} preload />)}
+    {
+      preloadFonts.map((font) =>
+        typeof font === 'string' ? (
+          <Font cssVariable={font as FontCssVariable} preload />
+        ) : (
+          <Font cssVariable={font.cssVariable as FontCssVariable} preload={font.preload} />
+        )
+      )
+    }
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} />
     <SchemaOrg />
     <SiteVerification />
     <Analytics />
-
-    <link rel="preconnect" href="https://images.unsplash.com" />
 
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
