@@ -99,15 +99,29 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
                       </a>
                     </li>
                   ))}
-                  <li class="max-bar:mt-2 max-bar:border-t max-bar:border-gray-200 max-bar:pt-2 dark:max-bar:border-slate-700">
+                  {/* Phones: Prijava is the last menu item. From the full bar it is the button next to Book (below). */}
+                  <li class="bar:hidden mt-2 border-t border-gray-200 pt-3 dark:border-slate-700">
                     {/* TODO(client): the login target is the booking app, proxied under tockicanai.hr (ADR 0005). */}
-                    <a class={linkClass} href="#" data-login data-todo="Prijava link (booking app proxy)">
+                    <a
+                      class="btn-secondary flex w-full justify-center"
+                      href="#"
+                      data-login
+                      data-todo="Prijava link (booking app proxy)"
+                    >
                       {copy.nav.login}
                     </a>
                   </li>
                 </ul>
               </nav>
-              <div class="hidden bar:flex items-center bar:order-4 bar:ml-3" data-menu-extras>
+              <div class="hidden bar:flex items-center gap-3 bar:order-4 bar:ml-3" data-menu-extras>
+                <a
+                  class="btn-secondary py-2.5 px-5 text-sm font-semibold shadow-none w-auto"
+                  href="#"
+                  data-login
+                  data-todo="Prijava link (booking app proxy)"
+                >
+                  {copy.nav.login}
+                </a>
                 <span>
                   <Button
                     variant="primary"
@@ -447,6 +461,11 @@ const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-ce
       justify-content: flex-end;
       min-height: 2.75rem;
       padding-right: 0;
+    }
+    /* Prijava is a button at the end of the menu, not a right-aligned link. */
+    #header.expanded [data-menu-panel] nav a[data-login] {
+      justify-content: center;
+      padding-right: 1rem;
     }
   }
   /* The fixed book bar sits under the dim layer; hide it while the menu is open so nothing shows through. */

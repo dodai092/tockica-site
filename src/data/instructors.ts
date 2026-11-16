@@ -1,7 +1,6 @@
-// Source: docs/copy/source.md item 4. `first` is the only name shown on the site.
+// Source: Dunia's homepage doc, item 4 (lines as of 2026-11-16). `first` is the only name shown on the site.
 // `full` is for payroll reports and must never be rendered. A null line is a
-// TODO(client): the page shows a Placeholder, never a guess. Domagoj has two
-// alternative lines in the source, so both stay null until Dunia picks one.
+// TODO(client): the page shows a Placeholder, never a guess.
 export type Instructor = {
   slug: string;
   first: string;
@@ -14,14 +13,22 @@ export type Instructor = {
 };
 
 export const instructors: Instructor[] = [
-  { slug: 'dunia', first: 'Dunia', full: 'Dunia Mando', line: { hr: null, en: null } },
+  {
+    slug: 'dunia',
+    first: 'Dunia',
+    full: 'Dunia Mando',
+    line: {
+      hr: 'Tu je da zaboraviš je li ovo trening ili izlazak. Dobra energija zagarantirana.',
+      en: 'Here to make you question whether you came to work out or party. Guaranteed mood boost.',
+    },
+  },
   {
     slug: 'oliver',
     first: 'Oliver',
     full: 'Oliver Mando',
     line: {
-      hr: 'Prigušena svjetla, glasni beatovi i malo main character energije.',
-      en: 'Low lights, loud beats and a little main-character energy.',
+      hr: 'Tvoj omiljeni hip-hop party, samo s više pulsa.',
+      en: 'Your favorite hip hop club, on a spin bike.',
     },
   },
   {
@@ -29,8 +36,8 @@ export const instructors: Instructor[] = [
     first: 'Ivana',
     full: 'Ivana Mauer',
     line: {
-      hr: null,
-      en: 'For riders who want choreography, strength and a satisfying beat drop. Every chorus, drop and finish hits right on cue.',
+      hr: 'Koreografija, snaga i moćan beat drop koji podiže energiju. Svaki refren i kraj pjesme kod nje su tempirani točno u sekundu.',
+      en: 'The perfect mix of choreography, strength and a satisfying beat drop. Every chorus, drop and finish hits right on cue.',
     },
   },
   {
@@ -47,18 +54,26 @@ export const instructors: Instructor[] = [
     first: 'Ena',
     full: 'Ena Vušić',
     line: {
-      hr: 'Prava milenijalka: velika kosa, velika energija i još veći throwbackovi.',
+      hr: 'Prava milenijalka: velika kosa, velika energija i još veći hitovi.',
       en: 'A true millennial: big hair, big energy and even bigger throwbacks.',
     },
   },
-  { slug: 'domagoj', first: 'Domagoj', full: 'Domagoj Vončina', line: { hr: null, en: null } },
+  {
+    slug: 'domagoj',
+    first: 'Domagoj',
+    full: 'Domagoj Vončina',
+    line: {
+      hr: 'Došao voditi spin. Slučajno održao koncert.',
+      en: 'Came to teach spin. Accidentally started a concert.',
+    },
+  },
   {
     slug: 'emma',
     first: 'Emma',
     full: 'Emma Stepinac',
     line: {
-      hr: 'Negdje između Disney princeze i Mr. Worldwidea.',
-      en: 'Somewhere between Disney princess and Mr. Worldwide.',
+      hr: 'Negdje između Disney princeze i Mr. Worldwidea, uz obaveznu dozu Taylor Swift.',
+      en: 'Somewhere between a Disney princess and Mr. Worldwide, with Taylor Swift always on standby.',
     },
   },
 ];

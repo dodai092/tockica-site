@@ -21,6 +21,10 @@ export const addDays = (ymd: string, n: number): string => {
 
 export const mondayOf = (ymd: string): string => addDays(ymd, 1 - dayOfWeek(ymd));
 
+/** A class can be booked in the current studio week and the next. Later weeks can be seen but are not open yet. */
+export const isBookable = (startsAt: string | Date, now: Date = new Date()): boolean =>
+  studioDay(startsAt) < addDays(mondayOf(studioDay(now)), 14);
+
 /** Classes by studio day, in start order. A day with no class has no entry. */
 export function groupByDay<T extends Pick<NextClass, 'startsAt'>>(classes: T[]): Map<string, T[]> {
   const out = new Map<string, T[]>();

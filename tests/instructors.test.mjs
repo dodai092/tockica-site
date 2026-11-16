@@ -50,30 +50,12 @@ for (const { lang, file } of pages) {
       assert.match(byCard[slug], new RegExp(`<h2[^>]*>\\s*(?:<a[^>]*>\\s*)?${firstNames[slug]}\\s*(?:</a>\\s*)?</h2>`));
   });
 
-  test(`${lang}: lines for Oliver, Mirna, Ena and Emma match the client copy exactly`, async () => {
+  test(`${lang}: every instructor's line matches the client copy exactly`, async () => {
     const src = await sourceLines();
     const byCard = cards(await read(file));
-    for (const slug of ['oliver', 'mirna', 'ena', 'emma']) {
+    for (const slug of order) {
       assert.ok(byCard[slug].includes(src[slug][lang]), `${slug} ${lang} line differs from source.md`);
       assert.ok(!/data-todo=/.test(byCard[slug]), `${slug} must not be a placeholder`);
-    }
-  });
-
-  test(`${lang}: Dunia and Domagoj are open placeholders`, async () => {
-    const byCard = cards(await read(file));
-    for (const slug of ['dunia', 'domagoj'])
-      assert.ok(/data-todo="[^"]+"/.test(byCard[slug]), `${slug} should be data-todo`);
-  });
-
-  test(`${lang}: Domagoj ships neither alternative until Dunia picks one`, async () => {
-    const html = await read(file);
-    for (const text of [
-      'Accidentally started a concert',
-      'forgets to cue',
-      'Slučajno održao koncert',
-      'zaboravi najaviti',
-    ]) {
-      assert.ok(!html.includes(text), text);
     }
   });
 
@@ -92,12 +74,6 @@ for (const { lang, file } of pages) {
     }
   });
 }
-
-test('hr: Ivana has no Croatian line yet, en shows hers', async () => {
-  const src = await sourceLines();
-  assert.ok(/data-todo=/.test(cards(await read(pages[0].file)).ivana));
-  assert.ok(cards(await read(pages[1].file)).ivana.includes(src.ivana.en));
-});
 
 test('instructors route points at the built pages', () => {
   assert.equal(pathFor('instructors', 'hr'), '/instruktori');

@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { pathFor } from '../src/i18n/index.ts';
+import { getCopy, pathFor } from '../src/i18n/index.ts';
+import { waitlistOnHome } from '../src/data/waitlist.ts';
 
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), 'utf8');
 const pages = [
@@ -34,13 +35,26 @@ for (const { lang, file } of pages) {
     );
   });
 
-  test(`${lang}: hero has exactly two buttons, both to the schedule`, async () => {
-    const hero = section(await read(file), 'hero');
-    const links = [...hero.matchAll(/<a\b[^>]*>/g)].map((m) => m[0]);
-    assert.equal(links.length, 2);
-    for (const link of links) assert.ok(link.includes(`href="${pathFor('schedule', lang)}"`), link);
-    assert.ok(links.some((l) => /btn-primary/.test(l)));
-  });
+  // The hero is the waitlist while `waitlistOnHome` is on (src/data/waitlist.ts), the normal hero after opening.
+  if (waitlistOnHome) {
+    test(`${lang}: hero is the waitlist, with the offer and a form that asks for first and last name`, async () => {
+      const hero = section(await read(file), 'hero');
+      const t = getCopy(lang).waitlist;
+      assert.ok(hero.includes(t.heading), 'waitlist heading');
+      assert.ok(hero.includes(t.price), 'price');
+      assert.match(hero, /<form\b[^>]*data-waitlist-form/);
+      for (const field of ['firstName', 'lastName', 'email'])
+        assert.match(hero, new RegExp(`<input\\b[^>]*name="${field}"`), field);
+    });
+  } else {
+    test(`${lang}: hero has exactly two buttons, log in and the schedule`, async () => {
+      const hero = section(await read(file), 'hero');
+      const links = [...hero.matchAll(/<a\b[^>]*>/g)].map((m) => m[0]);
+      assert.equal(links.length, 2);
+      assert.ok(/\sdata-login/.test(links[0]) && /btn-primary/.test(links[0]), links[0]);
+      assert.ok(links[1].includes(`href="${pathFor('schedule', lang)}"`), links[1]);
+    });
+  }
 
   test(`${lang}: hero is the supplied words artwork, with no placeholder flag left`, async () => {
     const hero = section(await read(file), 'hero');
@@ -48,10 +62,12 @@ for (const { lang, file } of pages) {
     assert.ok(!/data-todo="[^"]*hero photo[^"]*"/.test(hero));
   });
 
-  test(`${lang}: hero slogan is an open placeholder, not a guess`, async () => {
-    const hero = section(await read(file), 'hero');
-    assert.ok(/data-todo="[^"]*slogan[^"]*"/.test(hero));
-  });
+  if (!waitlistOnHome) {
+    test(`${lang}: hero slogan is an open placeholder, not a guess`, async () => {
+      const hero = section(await read(file), 'hero');
+      assert.ok(/data-todo="[^"]*slogan[^"]*"/.test(hero));
+    });
+  }
 
   test(`${lang}: next classes lists four items with a free-bike count`, async () => {
     const block = section(await read(file), 'next-classes').replace(/<template[\s\S]*?<\/template>/g, '');
@@ -174,11 +190,11 @@ test('en: FAQ ships the client English verbatim, apostrophes and typos included'
   for (const line of [
     'Which classes are beginner friendly?',
     'All of them. Our instructors will help you find the beat and ride at your own pace. We welcome all fitness levels, and you’re always free to sit, stand, slow down or take a break whenever you need to, regardless of the class or instructor. These are your 50 minutes.',
-    'If you’d prefer to start with a slightly slower tempo, we recommend trying Emma or Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.',
+    'If you’d prefer to start with a slightly slower tempo, we recommend Ivana’s ABS spin classes. ABS Spin class focuses a more on strength and controlled movement, rather than quick sprints and pace.',
     'What do i need to bring?',
-    'Clean shoes, water and towel. You can always buy water at the studio.',
+    'Clean shoes, water and towel. If needed, feel free to ask for a fresh towel at reception, and you can always buy water at the studio.',
     'How early should I arrive?',
-    'If you are new, come 15 minutes before to allow your instructor to help you set up.',
+    'If you are new, arrive 15 minutes early so you have enough time to set up your bike, get familiar with the workout concept, and settle into the studio before class starts.',
     'What if I need to cancel?',
     'Cancellation window is 6 hours prior to the lesson.',
   ]) {
@@ -197,7 +213,7 @@ test('hr: FAQ is written in Croatian, no English text and no open placeholders',
     'Što trebam ponijeti?',
     'Koliko ranije trebam doći?',
     'Što ako moram otkazati?',
-    'najkasnije 6 sati prije treninga',
+    'najkasnije 6 sati prije početka treninga',
   ]) {
     assert.ok(block.includes(line), `missing: ${line}`);
   }

@@ -12,15 +12,15 @@ The first and only rhythm spin studio in the heart of Zagreb.
 
 Public name is the first name only. Full names are for payroll reports.
 
-| Full name       | EN line                                                                                                                 | HR line                                                                                                        |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Dunia Mando     | TODO(client)                                                                                                            | TODO(client)                                                                                                   |
-| Oliver Mando    | Low lights, loud beats and a little main-character energy.                                                              | Prigušena svjetla, glasni beatovi i malo main character energije.                                              |
-| Ivana Mauer     | For riders who want choreography, strength and a satisfying beat drop. Every chorus, drop and finish hits right on cue. | TODO(client)                                                                                                   |
-| Mirna Zebec     | Plays dark techno or Anastacia. Depends on which personality shows up.                                                  | Ili pušta dark techno ili Anastaciu. Ovisi koja se osobnost taj dan pojavi.                                    |
-| Ena Vušić       | A true millennial: big hair, big energy and even bigger throwbacks.                                                     | Prava milenijalka: velika kosa, velika energija i još veći throwbackovi.                                       |
-| Domagoj Vončina | Came to teach spin. Accidentally started a concert. / Gets so into singing he forgets to cue the next move.             | Došao voditi spin. Slučajno održao koncert. / Toliko se uživi u pjevanje da zaboravi najaviti sljedeći pokret. |
-| Emma Stepinac   | Somewhere between Disney princess and Mr. Worldwide.                                                                    | Negdje između Disney princeze i Mr. Worldwidea.                                                                |
+| Full name       | EN line                                                                                                                | HR line                                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Dunia Mando     | Here to make you question whether you came to work out or party. Guaranteed mood boost.                                | Tu je da zaboraviš je li ovo trening ili izlazak. Dobra energija zagarantirana.                                              |
+| Oliver Mando    | Your favorite hip hop club, on a spin bike.                                                                            | Tvoj omiljeni hip-hop party, samo s više pulsa.                                                                              |
+| Ivana Mauer     | The perfect mix of choreography, strength and a satisfying beat drop. Every chorus, drop and finish hits right on cue. | Koreografija, snaga i moćan beat drop koji podiže energiju. Svaki refren i kraj pjesme kod nje su tempirani točno u sekundu. |
+| Mirna Zebec     | Plays dark techno or Anastacia. Depends on which personality shows up.                                                 | Ili pušta dark techno ili Anastaciu. Ovisi koja se osobnost taj dan pojavi.                                                  |
+| Ena Vušić       | A true millennial: big hair, big energy and even bigger throwbacks.                                                    | Prava milenijalka: velika kosa, velika energija i još veći hitovi.                                                           |
+| Domagoj Vončina | Came to teach spin. Accidentally started a concert.                                                                    | Došao voditi spin. Slučajno održao koncert.                                                                                  |
+| Emma Stepinac   | Somewhere between a Disney princess and Mr. Worldwide, with Taylor Swift always on standby.                            | Negdje između Disney princeze i Mr. Worldwidea, uz obaveznu dozu Taylor Swift.                                               |
 
 Domagoj has two alternative lines separated by " / ". Which one ships is `TODO(client)`.
 

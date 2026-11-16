@@ -12,7 +12,7 @@ import { instructors } from '~/data/instructors';
 import { profileHref, slugOf } from '~/lib/instructor-link';
 import { thumbUrls } from '~/lib/instructor-photo';
 import { buildMockSchedule } from '~/lib/mock-schedule';
-import { STUDIO_ZONE, addDays, groupByDay, mondayOf } from '~/lib/schedule-days';
+import { STUDIO_ZONE, addDays, groupByDay, isBookable, mondayOf } from '~/lib/schedule-days';
 import { seatNote, seatState } from '~/lib/seats';
 import { firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
 import { getCopy, pathFor } from '~/i18n';
@@ -25,7 +25,12 @@ interface Props {
 const { lang } = Astro.props;
 const t = getCopy(lang).schedulePage;
 const pick = getCopy(lang).bikeSheet;
-const labels = { book: getCopy(lang).home.nextClasses.book, waitlist: getCopy(lang).home.nextClasses.waitlist };
+const labels = {
+  book: getCopy(lang).home.nextClasses.book,
+  waitlist: getCopy(lang).home.nextClasses.waitlist,
+  notOpen: t.notOpen,
+};
+const now = new Date();
 const href = pathFor('schedule', lang);
 const profileBase = `${pathFor('instructors', lang)}/`;
 const profileSlugs = instructors.map((i) => i.slug);
@@ -142,7 +147,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
             <span data-dots aria-hidden="true" class="flex min-h-[5px] gap-[3px]">
               {(groups.get(day) ?? []).map((c) => (
                 <i
-                  {...(firstFreeBike(c) === null ? { 'data-full': '' } : {})}
+                  {...(firstFreeBike(c) === null || !isBookable(c.startsAt, now) ? { 'data-full': '' } : {})}
                   class="h-[5px] w-[5px] rounded-full bg-current data-full:opacity-30"
                 />
               ))}
@@ -195,9 +200,10 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
                         photo={thumbs[slugOf(c.instructor)]}
                         instructorHref={profileHref(profileBase, profileSlugs, c.instructor)}
                         name={c.themeName ?? c.name}
-                        seatsText={st.text}
-                        scarce={st.scarce}
+                        seatsText={isBookable(c.startsAt, now) ? st.text : ''}
+                        scarce={st.scarce && isBookable(c.startsAt, now)}
                         full={firstFreeBike(c) === null}
+                        closed={!isBookable(c.startsAt, now)}
                         href={href}
                         labels={labels}
                       />
@@ -244,6 +250,20 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
       labels={labels}
     />
   </template>
+  <template data-row="closed">
+    <ScheduleRow
+      id=""
+      time=""
+      instructor=""
+      name=""
+      seatsText=""
+      scarce={false}
+      full={false}
+      closed={true}
+      href={href}
+      labels={labels}
+    />
+  </template>
   <script
     is:inline
     type="application/json"
@@ -261,7 +281,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
 <script>
   import { fillRow } from '~/lib/class-row';
   import { profileHref, slugOf } from '~/lib/instructor-link';
-  import { STUDIO_ZONE, addDays, groupByDay, mondayOf, studioDay } from '~/lib/schedule-days';
+  import { STUDIO_ZONE, addDays, groupByDay, isBookable, mondayOf, studioDay } from '~/lib/schedule-days';
   import type { SeatLabels } from '~/lib/seats';
   import { SCHEDULE_FEED_URL, firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
   import type { NextClass } from '~/lib/schedule-feed';
@@ -292,6 +312,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
     const photos = JSON.parse(root.dataset.photos ?? '{}') as Record<string, { src: string; focus: [number, number] }>;
     const open = root.querySelector<HTMLTemplateElement>('template[data-row="open"]')!;
     const full = root.querySelector<HTMLTemplateElement>('template[data-row="full"]')!;
+    const closed = root.querySelector<HTMLTemplateElement>('template[data-row="closed"]')!;
     let selected = root.querySelector<HTMLElement>('[data-day][aria-pressed="true"]')?.dataset.day ?? '';
 
     const onDesktop = () => window.matchMedia('(min-width: 768px)').matches;
@@ -358,6 +379,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
       if (book) {
         const li = book.closest<HTMLElement>('li[data-class-id]')!;
         e.preventDefault();
+        if (li.hasAttribute('data-closed')) return;
         document.dispatchEvent(
           new CustomEvent('schedule:book', {
             detail: { classId: li.dataset.classId, full: li.hasAttribute('data-full') },
@@ -372,7 +394,8 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
     });
 
     const buildRow = (c: NextClass) => {
-      const li = (firstFreeBike(c) === null ? full : open).content.firstElementChild!.cloneNode(true) as HTMLElement;
+      const tpl = !isBookable(c.startsAt) ? closed : firstFreeBike(c) === null ? full : open;
+      const li = tpl.content.firstElementChild!.cloneNode(true) as HTMLElement;
       li.setAttribute('data-class-id', c.id);
       fillRow(li, c, {
         time: timeFormat.format(new Date(c.startsAt)),
@@ -392,7 +415,7 @@ const weekDays = (monday: string) => Array.from({ length: 7 }, (_, i) => addDays
         ...rows.map((c) => {
           const i = document.createElement('i');
           i.className = 'h-[5px] w-[5px] rounded-full bg-current data-full:opacity-30';
-          if (firstFreeBike(c) === null) i.setAttribute('data-full', '');
+          if (firstFreeBike(c) === null || !isBookable(c.startsAt)) i.setAttribute('data-full', '');
           return i;
         })
       );

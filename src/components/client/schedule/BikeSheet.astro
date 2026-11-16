@@ -63,7 +63,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
     <div class="min-h-0 flex-1 overflow-hidden overscroll-contain px-4 py-2 sm:py-4">
       <div
         data-bike-grid
-        class="mx-auto grid max-w-[22.5rem] grid-cols-[1fr_1fr_5.25rem] grid-rows-[repeat(5,var(--bike-h))_0.875rem_repeat(5,var(--bike-h))] gap-x-2 gap-y-1 [--bike-h:2.25rem] max-sm:[--bike-h:clamp(2.25rem,calc((100dvh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)_-_243px)/10),2.75rem)]"
+        class="mx-auto grid max-w-[22.5rem] grid-cols-[1fr_1fr_5.25rem] grid-rows-[repeat(5,var(--bike-h))_0.875rem_repeat(5,var(--bike-h))] gap-x-2 gap-y-1 [--bike-h:2.25rem] max-sm:[--bike-h:clamp(2.25rem,calc((100dvh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)_-_271px)/10),2.75rem)]"
       >
         <ul class="col-start-3 row-span-3 row-start-1 flex flex-col gap-2 self-start pl-1.5 text-xs text-muted">
           <li class="inline-flex items-center gap-1.5">
@@ -116,6 +116,7 @@ const swatch = 'inline-block h-3.5 w-3.5 rounded border';
         class="absolute inset-x-4 bottom-full mx-auto mb-2 w-fit max-w-full rounded-full bg-gray-100 px-3 py-1 text-center text-sm text-default shadow-lg empty:hidden dark:bg-slate-700"
       >
       </p>
+      <p class="mb-2 text-center text-xs text-muted">{t.preview}</p>
       <button
         type="button"
         data-continue

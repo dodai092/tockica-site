@@ -28,8 +28,10 @@ interface Props {
   scarce: boolean;
   /** No places: the waiting list is offered instead of Book. */
   full: boolean;
+  /** Too far ahead to book: the button is inactive and says so. Wins over `full`. */
+  closed?: boolean;
   href: string;
-  labels: { book: string; waitlist: string };
+  labels: { book: string; waitlist: string; notOpen?: string };
   /** The homepage card: a box of its own, always stacked. Needs `freeBikes`. */
   card?: boolean;
   freeBikes?: number;
@@ -49,6 +51,7 @@ const {
   seatsText,
   scarce,
   full,
+  closed = false,
   href,
   labels,
   card = false,
@@ -59,7 +62,8 @@ const {
 const Who = plainInstructor ? 'span' : 'a';
 const flags = {
   ...(card ? { 'data-next-class': id, 'data-free-bikes': String(freeBikes) } : { 'data-class-id': id }),
-  ...(full ? { 'data-full': '' } : {}),
+  ...(full && !closed ? { 'data-full': '' } : {}),
+  ...(closed ? { 'data-closed': '' } : {}),
   ...(scarce ? { 'data-scarce': '' } : {}),
 };
 ---
@@ -125,16 +129,19 @@ const flags = {
   </p>
   <p data-f="name" class="[grid-area:kind] self-start text-sm text-default">{name}</p>
   <a
-    href={href}
+    href={closed ? undefined : href}
+    aria-disabled={closed ? 'true' : undefined}
     class:list={[
       'sched-action [grid-area:action] inline-flex h-10 items-center justify-center whitespace-nowrap rounded-lg px-4 text-sm font-semibold',
       card ? 'w-full' : 'min-w-28 md:w-full',
-      full
-        ? 'border-2 border-primary bg-white text-primary dark:border-red-300 dark:bg-transparent dark:text-red-300'
-        : 'border border-(--aw-color-btn) bg-(--aw-color-btn) text-(--aw-color-btn-text) transition-colors duration-200 hover:border-(--aw-color-btn-hover) hover:bg-(--aw-color-btn-hover)',
+      closed
+        ? 'cursor-not-allowed border border-(--aw-color-btn) bg-(--aw-color-btn) text-(--aw-color-btn-text) opacity-40'
+        : full
+          ? 'border-2 border-primary bg-white text-primary dark:border-red-300 dark:bg-transparent dark:text-red-300'
+          : 'border border-(--aw-color-btn) bg-(--aw-color-btn) text-(--aw-color-btn-text) transition-colors duration-200 hover:border-(--aw-color-btn-hover) hover:bg-(--aw-color-btn-hover)',
     ]}
   >
-    {full ? labels.waitlist : labels.book}
+    {closed ? labels.notOpen : full ? labels.waitlist : labels.book}
   </a>
 </li>
 
@@ -175,7 +182,7 @@ const flags = {
   .sched-action {
     transition: transform 0.35s var(--ease-spring);
   }
-  .sched-action:active {
+  .sched-action:not([aria-disabled='true']):active {
     transform: scale(0.96);
     transition-duration: 0.08s;
   }

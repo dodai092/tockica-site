@@ -14,6 +14,7 @@ export type Copy = {
   cta: {
     book: string;
     seeSchedule: string;
+    signIn: string;
   };
   langSwitch: {
     aria: string;
@@ -80,6 +81,8 @@ export type Copy = {
     monthsMany: string;
     visitsLabel: string;
     slots: string;
+    /** Pitch under the title (doc item 6): headline, who it is for, what is fixed, what you do with it. */
+    pitch: { lead: string; text: string; fixed: string; plan: string };
     formHeading: string;
     submit: string;
   };
@@ -99,6 +102,12 @@ export type Copy = {
     price: string;
     room: string;
     deadline: string;
+    /** Purchase window and when the 30 days start, under the deadline pill. */
+    terms: string;
+    /** Footnotes under the terms: availability, not transferable, no pause and no refund. */
+    notes: [string, string, string];
+    firstName: string;
+    lastName: string;
     formHeading: string;
     submit: string;
     /** Form errors in the page language, shown in place of the browser's own. */
@@ -109,13 +118,11 @@ export type Copy = {
     birthHints: { day: string; month: string; year: string };
     /** Names the missing fact on the placeholder flag under the birth date: what we ask for it for. */
     birthDateWhyMissing: string;
-    /** The offer terms Dunia has stated, shown under the form. */
-    terms: string;
     /** Names what is still missing from the terms, on the placeholder flag under them. */
     termsMissing: string;
     stepsHeading: string;
     steps: [{ title: string; text: string }, { title: string; text: string }, { title: string; text: string }];
-    /** Three dates under the steps: last day to buy, opening, end of the offer. */
+    /** Three dates under the steps: last day to join, opening, last day to buy. */
     timeline: [{ date: string; label: string }, { date: string; label: string }, { date: string; label: string }];
   };
   waitlistThanks: { title: string; text: string; instagram: string; pendingMissing: string; back: string };
@@ -130,6 +137,8 @@ export type Copy = {
     days: string;
     noClasses: string;
     today: string;
+    /** Button label on a class in the third week, which can be seen but not booked yet. */
+    notOpen: string;
     /** Free places on a class card. */
     seats: {
       full: string;
@@ -158,6 +167,8 @@ export type Copy = {
     sendCode: string;
     soonTitle: string;
     soonText: string;
+    /** Small note on the bike map while the schedule is mock data. */
+    preview: string;
     changeBike: string;
     backToSchedule: string;
     waitlist: string;

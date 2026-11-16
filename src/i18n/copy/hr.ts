@@ -13,6 +13,7 @@ export const hr: Copy = {
   cta: {
     book: 'Rezerviraj trening',
     seeSchedule: 'Pogledaj raspored',
+    signIn: 'Prijavi se',
   },
   langSwitch: {
     aria: 'English',
@@ -42,7 +43,7 @@ export const hr: Copy = {
       heading: 'Korak po korak',
       steps: [
         { title: 'Odaberi trening', text: 'Raspored i instruktori su otvoreni svima.' },
-        { title: 'Odaberi bicikl', text: 'Svoj bicikl biraš na karti.' },
+        { title: 'Odaberi bicikl', text: 'Odaberi gdje želiš sjediti na karti.' },
         {
           title: 'Prijavi se i plati',
           text: 'Tek kod potvrde, e-mailom bez lozinke. Intro: 1 trening 10 EUR, 3 treninga 30 EUR.',
@@ -113,6 +114,12 @@ export const hr: Copy = {
     monthsMany: 'mjeseci',
     visitsLabel: 'Dolazaka mjesečno',
     slots: 'Termine biraš mjesec dana unaprijed.',
+    pitch: {
+      lead: 'Tvoj prostor. Tvoji klijenti. Tvoj raspored.',
+      text: 'Prostor namijenjen trenerima za vođenje manjih grupnih treninga do 6 klijenata, unutar aktivnog i potpuno opremljenog boutique fitness studija.',
+      fixed: 'Fiksna mjesečna cijena. Fiksni tjedni termini.',
+      plan: 'Planiraj svoj raspored, organiziraj svoje klijente i usredotoči se na izgradnju vlastite zajednice.',
+    },
     formHeading: 'Javi se',
     submit: 'Pošalji upit',
   },
@@ -140,13 +147,21 @@ export const hr: Copy = {
   waitlist: {
     title: 'Lista čekanja',
     description:
-      'Otvaramo 4. siječnja. Prijavi se na listu čekanja i otključaj neograničene treninge 30 dana za 100 €.',
-    heading: 'Otvaramo 4. siječnja',
-    offer: 'Prijavi se na listu čekanja i otključaj ponudu.',
-    priceLine: 'Neograničeni spin treninzi 30 dana za',
-    price: '100 €',
+      'Prijavi se na listu čekanja do 31. prosinca i otključaj 30 dana neograničenih vožnji za 100 €. Otvaramo 4. siječnja.',
+    heading: 'OTKLJUČAJ NAŠU LAUNCH PONUDU.',
+    offer: 'Za sve koji su s nama na početku ovog novog poglavlja. Ovo je za vas.',
+    priceLine: '30 DANA NEOGRANIČENIH VOŽNJI',
+    price: '100 €',
     room: 'Spin treninzi u Riders Roomu. 50 minuta, 20 bicikala.',
-    deadline: 'Ponudu možeš kupiti do 31. prosinca.',
+    deadline: 'Prijavi se na listu čekanja do 31. prosinca i otključaj ponudu.',
+    terms: 'Ponudu ćeš moći kupiti od 4. do 31. siječnja. Tvojih 30 dana počinje od dana kupnje.',
+    notes: [
+      '*Rezervacije ovise o dostupnosti mjesta na treningu.',
+      '*Ponuda je neprenosiva i može je koristiti samo osoba čiji je korisnički račun povezan s ponudom.',
+      '*Jednokratna ponuda, bez pauze i bez povrata.',
+    ],
+    firstName: 'Ime',
+    lastName: 'Prezime',
     formHeading: 'Prijavi se na listu',
     submit: 'Prijavi me',
     errors: {
@@ -160,27 +175,22 @@ export const hr: Copy = {
     birthParts: { day: 'Dan', month: 'Mjesec', year: 'Godina' },
     birthHints: { day: 'DD', month: 'MM', year: 'GGGG' },
     birthDateWhyMissing: 'zašto tražimo datum rođenja (Dunia)',
-    terms:
-      'Vrijedi od otvaranja, 4. siječnja do 4. veljače. Prijaviti se može svatko. Jednokratna ponuda, bez pauze i bez povrata.',
-    termsMissing: 'ograničenje broja korisnika (možda 100) i prenosivost ponude (Dunia odlučuje)',
+    termsMissing: 'ograničenje broja korisnika (možda 100, Dunia odlučuje)',
     stepsHeading: 'Korak po korak',
     steps: [
-      { title: 'Prijavi se', text: 'Upiši ime, e-mail i datum rođenja.' },
-      {
-        title: 'Otključaj ponudu',
-        text: 'Napravi račun i do 31. prosinca kupi 30 dana neograničenih treninga za 100 €.',
-      },
-      { title: 'Dođi 4. siječnja', text: 'Neograničeni spin treninzi 30 dana.' },
+      { title: 'Prijavi se', text: 'Do 31. prosinca upiši ime, prezime, e-mail i datum rođenja.' },
+      { title: 'Otključaj ponudu', text: 'Od 4. do 31. siječnja kupi 30 dana neograničenih vožnji za 100 €.' },
+      { title: 'Vozi 30 dana', text: 'Tvojih 30 dana počinje od dana kupnje.' },
     ],
     timeline: [
-      { date: '31.12.', label: 'zadnji dan za kupnju' },
-      { date: '4.1.', label: 'otvaramo' },
-      { date: '4.2.', label: 'ponuda završava' },
+      { date: '31.12.', label: 'zadnji dan za prijavu' },
+      { date: '4.1.', label: 'otvaramo, kupnja počinje' },
+      { date: '31.1.', label: 'zadnji dan za kupnju' },
     ],
   },
   waitlistThanks: {
     title: 'Na listi si',
-    text: 'Hvala na prijavi. Otvaramo 4. siječnja, a ponudu od 100 € možeš kupiti do 31. prosinca.',
+    text: 'Hvala na prijavi. Otvaramo 4. siječnja, a ponudu od 100 € možeš kupiti od 4. do 31. siječnja.',
     instagram: 'Prati nas na Instagramu',
     pendingMissing: 'kako i kada javljamo da je ponuda otvorena',
     back: 'Natrag na naslovnicu',
@@ -188,7 +198,7 @@ export const hr: Copy = {
   schedulePage: {
     title: 'Raspored',
     description: 'Raspored treninga u Točkici na i.',
-    soon: 'Online rezervacija uskoro stiže.',
+    soon: 'Raspored je probni. Rezervacije počinju 4. siječnja.',
     demo: { text: 'Isprobaj demo rezervacija (nije prava rezervacija).', link: 'Otvori demo' },
     weeks: 'Tjedan',
     prevWeek: 'Prethodni tjedan',
@@ -196,6 +206,7 @@ export const hr: Copy = {
     days: 'Dan u tjednu',
     noClasses: 'Taj dan nema treninga.',
     today: 'Danas',
+    notOpen: 'Još nije otvoreno',
     seats: {
       full: 'Popunjeno',
       plenty: '{n} slobodnih',
@@ -219,6 +230,7 @@ export const hr: Copy = {
     sendCode: 'Pošalji kod',
     soonTitle: 'Rezervacije uskoro',
     soonText: 'Online rezervacija uskoro stiže. Ovo još nije prava rezervacija.',
+    preview: 'Raspored je probni. Rezervacije počinju 4. siječnja.',
     changeBike: 'Promijeni bicikl',
     backToSchedule: 'Natrag na raspored',
     waitlist: 'Lista čekanja',

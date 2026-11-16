@@ -54,13 +54,15 @@ sent to them as marketing mail.
 
 ### Waitlist offer
 
-€100 for unlimited training for 30 days from opening day (4 January, so until 4 February), bought by 31.12 and
-available to anyone who joins the **Waitlist**. "Unlimited" covers all spin classes. No pause, no refund. Stated openly on the waitlist page, because it is the reason to join.
+€100 for 30 days of unlimited rides. Joining the **Waitlist** by 31 December unlocks it. It can be bought from
+4 January (opening day) to 31 January, and the 30 days start on the day of purchase. "Unlimited" covers all spin
+classes. Subject to class availability, not transferable (only the account it is linked to), no pause, no refund.
+Stated openly on the waitlist page, because it is the reason to join.
 
 _Avoid_: early bird, launch promo
 
 **Why:** the January offers "Buy 1, we double it" and "Bring a +1" are separate and start only after opening,
-so they are not part of this term.
+so they are not part of this term. Dunia's 2026-11-12 text replaced the earlier reading "buy by 31.12, valid until 4.2".
 
 ## Related docs
 

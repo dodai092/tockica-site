@@ -5,6 +5,8 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test, { after, before } from 'node:test';
 import { chromium } from 'playwright';
+import { headerRoutes } from '../src/lib/nav.ts';
+import { sculpt } from '../src/data/sculpt.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
@@ -64,7 +66,8 @@ test('390px: the open menu is narrow and has no booking button', async () => {
   await page.close();
   assert.equal(state.bookVisible, false, 'booking button is still visible in the open menu');
   assert.ok(state.width <= 260, `menu is ${state.width}px wide, expected 260px or less`);
-  assert.equal(state.labels.length, 6, JSON.stringify(state.labels));
+  // The header links plus Prijava at the end of the menu.
+  assert.equal(state.labels.length, headerRoutes(sculpt.visible).length + 1, JSON.stringify(state.labels));
 });
 
 test('1280px: the booking button in the bar is still there', async () => {

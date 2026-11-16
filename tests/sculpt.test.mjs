@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { footerRoutes, headerRoutes } from '../src/lib/nav.ts';
 import { sculpt } from '../src/data/sculpt.ts';
-import { pathFor } from '../src/i18n/index.ts';
+import { getCopy, pathFor } from '../src/i18n/index.ts';
 
 const read = (file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8');
 const pages = [
@@ -13,11 +13,11 @@ const pages = [
 // The built HTML is minified and orders attributes alphabetically (content before name).
 const noindex = /<meta[^>]*(?:name="robots"[^>]*content="[^"]*noindex|content="[^"]*noindex[^"]*"[^>]*name="robots")/;
 
-test('sculpt data: 6 month minimum, price and visits still open', () => {
+test('sculpt data: 6 month minimum, price and visits still open, hidden until opening', () => {
   assert.equal(sculpt.minMonths, 6);
   assert.equal(sculpt.monthlyPriceEur, null);
   assert.equal(sculpt.visitsPerMonth, null);
-  assert.equal(sculpt.visible, true);
+  assert.equal(sculpt.visible, false);
 });
 
 test('nav helpers drop Sculpt Room when it is not visible', () => {
@@ -41,7 +41,7 @@ for (const { lang, file, thanks } of pages) {
     const html = await read(file);
     assert.ok(/data-todo="[^"]*monthly price[^"]*"/.test(html));
     assert.ok(/data-todo="[^"]*visits[^"]*"/.test(html));
-    assert.ok(/data-todo="[^"]*pitch[^"]*"/.test(html), 'one-sentence pitch is open (doc item 6)');
+    assert.ok(html.includes(getCopy(lang).sculptPage.pitch.lead), 'the pitch from doc item 6 is shown');
     assert.ok(/data-min-months="6"/.test(html));
     assert.ok(!/\b(100|150) ?(EUR|€)/.test(html));
   });
@@ -63,13 +63,13 @@ for (const { lang, file, thanks } of pages) {
       assert.match(form, new RegExp(`name="${field}"[^>]*required|required[^>]*name="${field}"`));
   });
 
-  test(`${lang}: page is indexable and Sculpt Room is in the header and footer`, async () => {
+  test(`${lang}: page is noindex and Sculpt Room is not in the header or footer`, async () => {
     const html = await read(file);
-    assert.ok(!noindex.test(html));
+    assert.match(html, noindex);
     const header = html.match(/<header[\s\S]*?<\/header>/)[0];
     const footer = html.match(/<footer[\s\S]*?<\/footer>/)[0];
-    assert.ok(header.includes(`href="${pathFor('sculpt', lang)}"`));
-    assert.ok(footer.includes(`href="${pathFor('sculpt', lang)}"`));
+    assert.ok(!header.includes(`href="${pathFor('sculpt', lang)}"`));
+    assert.ok(!footer.includes(`href="${pathFor('sculpt', lang)}"`));
   });
 
   test(`${lang}: thanks page is plain, noindex, and links home`, async () => {

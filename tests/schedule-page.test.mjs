@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { isBookable } from '../src/lib/schedule-days.ts';
 
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), 'utf8');
 const pages = [
@@ -79,14 +80,21 @@ for (const { lang, file, book, wait, full, weekday } of pages) {
     );
     const rows = [...html.matchAll(/<li\b[^>]*data-class-id="([^"]+)"[^>]*>/g)];
     assert.equal(rows.length, classes.length, 'one row per embedded class');
-    const full = new Set(classes.filter((c) => c.takenBikes.length >= c.capacity).map((c) => c.id));
-    assert.ok(full.size > 0, 'the mock should contain a full class');
+    // A class in the third week is not open yet: its row is data-closed and never data-full.
+    const closed = new Set(classes.filter((c) => !isBookable(c.startsAt)).map((c) => c.id));
+    assert.ok(closed.size > 0, 'the mock should contain a class that is not open yet');
+    const full = new Set(
+      classes.filter((c) => c.takenBikes.length >= c.capacity && !closed.has(c.id)).map((c) => c.id)
+    );
+    assert.ok(full.size > 0, 'the mock should contain a full class that is open');
     for (const [tag, id] of rows) {
       assert.equal(/\sdata-full/.test(tag), full.has(id), `data-full on row ${id}`);
+      assert.equal(/\sdata-closed/.test(tag), closed.has(id), `data-closed on row ${id}`);
     }
     const tpl = (kind) => html.match(new RegExp(`<template[^>]*data-row="${kind}"[^>]*>\\s*(<li\\b[^>]*>)`))?.[1] ?? '';
     assert.ok(/\sdata-full/.test(tpl('full')), 'full template needs data-full');
     assert.ok(!/\sdata-full/.test(tpl('open')), 'open template must not have data-full');
+    assert.ok(/\sdata-closed/.test(tpl('closed')), 'closed template needs data-closed');
   });
 
   test(`${lang}: has the login step, the notice step and the hidden "your pick" bar, the first two marked as placeholders`, async () => {

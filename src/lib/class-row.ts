@@ -40,8 +40,10 @@ export function fillRow(
   if (href) markLink?.setAttribute('href', href);
   else markLink?.removeAttribute('href');
   set('name', c.themeName ?? c.name);
-  set('seats', seatNote(left, c.capacity, opts.seatLabels, opts.locale));
-  li.toggleAttribute('data-scarce', state.scarce);
+  // A class that is not open yet shows no places, and is never "few left".
+  const closed = li.hasAttribute('data-closed');
+  set('seats', closed ? '' : seatNote(left, c.capacity, opts.seatLabels, opts.locale));
+  li.toggleAttribute('data-scarce', !closed && state.scarce);
   const mark = li.querySelector<HTMLElement>('[data-f="initial"]');
   const img = li.querySelector<HTMLImageElement>('img[data-f="photo"]');
   const photo = opts.photo?.(c.instructor);

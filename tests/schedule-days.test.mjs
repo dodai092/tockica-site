@@ -1,7 +1,7 @@
 // Studio-day helpers behind the schedule page (src/lib/schedule-days.ts).
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { addDays, dayOfWeek, groupByDay, mondayOf, studioDay } from '../src/lib/schedule-days.ts';
+import { addDays, dayOfWeek, groupByDay, isBookable, mondayOf, studioDay } from '../src/lib/schedule-days.ts';
 
 test('studioDay uses Zagreb time, not UTC', () => {
   assert.equal(studioDay('2026-12-01T23:30:00+01:00'), '2026-12-01');
@@ -38,4 +38,17 @@ test('groupByDay groups by studio day in start order and leaves empty days out',
     groups.get('2026-12-02').map((x) => x.id),
     ['a', 'b']
   );
+});
+
+test('isBookable opens this studio week and the next, later weeks are not open yet', () => {
+  const monday = new Date('2026-11-16T09:00:00+01:00');
+  const sunday = new Date('2026-11-22T22:00:00+01:00');
+  // Week of 16 Nov and the week of 23 Nov are open, the week of 30 Nov is not.
+  assert.equal(isBookable('2026-11-29T20:00:00+01:00', monday), true);
+  assert.equal(isBookable('2026-11-30T07:30:00+01:00', monday), false);
+  // The window is by studio week, so on the Sunday it is the same two weeks.
+  assert.equal(isBookable('2026-11-29T20:00:00+01:00', sunday), true);
+  assert.equal(isBookable('2026-11-30T07:30:00+01:00', sunday), false);
+  // The day after the Sunday starts a new week, and the window moves on.
+  assert.equal(isBookable('2026-11-30T07:30:00+01:00', new Date('2026-11-23T08:00:00+01:00')), true);
 });
