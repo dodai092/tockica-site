@@ -7,7 +7,8 @@ import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
 import { sculpt } from '~/data/sculpt';
 import { withBase } from '~/lib/base';
-import { headerRoutes } from '~/lib/nav';
+import { headerRoutes, navPath } from '~/lib/nav';
+import { waitlistOnHome } from '~/data/waitlist';
 import { getCopy, otherLang, pathFor } from '~/i18n';
 import type { Lang, RouteKey } from '~/i18n';
 
@@ -26,7 +27,10 @@ const copy = getCopy(lang);
 const other = otherLang(lang);
 const currentPath = Astro.url.pathname.replace(/(.)\/$/, '$1');
 
-const links = headerRoutes(sculpt.visible).map((key) => ({ text: copy.nav[key], href: pathFor(key, lang) }));
+const links = headerRoutes(sculpt.visible, waitlistOnHome).map((key) => ({
+  text: copy.nav[key],
+  href: navPath(key, lang),
+}));
 const linkClass = 'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap';
 ---
 

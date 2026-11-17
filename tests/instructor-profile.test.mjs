@@ -6,6 +6,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import test, { after, before } from 'node:test';
 import { chromium } from 'playwright';
+import { waitlistOnHome } from '../src/data/waitlist.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
@@ -75,7 +76,7 @@ for (const [lang, file, base] of [
 
 test('a name on a home card opens the profile, Book still opens the bike map', async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  await page.goto(`${origin}/`);
+  await page.goto(`${origin}${waitlistOnHome ? '/pocetna' : '/'}`);
   await page.waitForSelector('[data-section="next-classes"][data-feed-live]');
   const card = page.locator('[data-section="next-classes"] ul > li[data-next-class]').first();
   const name = (await card.locator('a[data-f="instructor"]').innerText()).trim();

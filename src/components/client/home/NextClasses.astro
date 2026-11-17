@@ -8,6 +8,7 @@ import { profileHref, slugOf } from '~/lib/instructor-link';
 import { thumbUrls } from '~/lib/instructor-photo';
 import { seatNote, seatState } from '~/lib/seats';
 import { firstFreeBike } from '~/lib/schedule-feed';
+import { isBookable } from '~/lib/schedule-days';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -20,7 +21,7 @@ interface Props {
 const { lang, overlapHero = true } = Astro.props;
 const copy = getCopy(lang).home.nextClasses;
 const seatCopy = getCopy(lang).schedulePage.seats;
-const labels = { book: copy.book, waitlist: copy.waitlist };
+const labels = { book: copy.book, waitlist: copy.waitlist, notOpen: getCopy(lang).schedulePage.notOpen };
 // Cards sit in a sideways scroll row on phones and a grid from sm.
 const size = 'w-[10.5rem] flex-none snap-start sm:w-auto';
 const schedule = pathFor('schedule', lang);
@@ -55,6 +56,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
       nextClasses.map((c) => {
         const free = c.capacity - c.takenBikes.length;
         const st = seatState(free, c.capacity);
+        const bookable = isBookable(c.startsAt);
         return (
           <ScheduleRow
             card
@@ -66,9 +68,10 @@ const timeOf = new Intl.DateTimeFormat(lang, {
             photo={thumbs[slugOf(c.instructor)]}
             instructorHref={profileHref(profileBase, profileSlugs, c.instructor)}
             name={c.themeName ?? c.name}
-            seatsText={seatNote(free, c.capacity, seatCopy, lang)}
-            scarce={st.scarce}
+            seatsText={bookable ? seatNote(free, c.capacity, seatCopy, lang) : ''}
+            scarce={st.scarce && bookable}
             full={firstFreeBike(c) === null}
+            closed={!bookable}
             href={schedule}
             labels={labels}
             class={size}
@@ -105,6 +108,23 @@ const timeOf = new Intl.DateTimeFormat(lang, {
       seatsText=""
       scarce={false}
       full={true}
+      href={schedule}
+      labels={labels}
+      class={size}
+    />
+  </template>
+  <template data-card="closed">
+    <ScheduleRow
+      card
+      id=""
+      freeBikes={0}
+      time=""
+      instructor=""
+      name=""
+      seatsText=""
+      scarce={false}
+      full={false}
+      closed={true}
       href={schedule}
       labels={labels}
       class={size}
@@ -170,6 +190,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
 <script>
   import { fillRow } from '~/lib/class-row';
   import { profileHref, slugOf } from '~/lib/instructor-link';
+  import { isBookable } from '~/lib/schedule-days';
   import { SCHEDULE_FEED_URL, parseSchedule } from '~/lib/schedule-feed';
   import type { NextClass } from '~/lib/schedule-feed';
   import type { SeatLabels } from '~/lib/seats';
@@ -199,6 +220,7 @@ const timeOf = new Intl.DateTimeFormat(lang, {
       const li = (e.target as Element).closest<HTMLElement>('li[data-next-class]');
       if (!li || !(e.target as Element).closest('a.sched-action')) return;
       e.preventDefault();
+      if (li.hasAttribute('data-closed')) return;
       document.dispatchEvent(
         new CustomEvent('schedule:book', {
           detail: { classId: li.dataset.nextClass, full: li.hasAttribute('data-full') },
@@ -212,7 +234,8 @@ const timeOf = new Intl.DateTimeFormat(lang, {
     const list = root?.querySelector('ul');
     const open = root?.querySelector<HTMLTemplateElement>('template[data-card="open"]');
     const full = root?.querySelector<HTMLTemplateElement>('template[data-card="full"]');
-    if (!root || !list || !open || !full) return;
+    const closed = root?.querySelector<HTMLTemplateElement>('template[data-card="closed"]');
+    if (!root || !list || !open || !full || !closed) return;
     try {
       const res = await fetch(SCHEDULE_FEED_URL, { headers: { accept: 'application/json' }, cache: 'no-store' });
       if (!res.ok) return;
@@ -235,7 +258,9 @@ const timeOf = new Intl.DateTimeFormat(lang, {
         { src: string; focus: [number, number] }
       >;
       const items = feed.classes.map((c) => {
-        const li = (c.freeBikes > 0 ? open : full).content.firstElementChild!.cloneNode(true) as HTMLElement;
+        const li = (
+          !isBookable(c.startsAt) ? closed : c.freeBikes > 0 ? open : full
+        ).content.firstElementChild!.cloneNode(true) as HTMLElement;
         li.setAttribute('data-next-class', c.id);
         li.setAttribute('data-free-bikes', String(c.freeBikes));
         fillRow(li, c, {

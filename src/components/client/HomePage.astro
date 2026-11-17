@@ -1,7 +1,6 @@
 ---
 import Page from '~/components/client/Page.astro';
 import HomeHero from '~/components/client/home/HomeHero.astro';
-import WaitlistHero from '~/components/client/home/WaitlistHero.astro';
 import NextClasses from '~/components/client/home/NextClasses.astro';
 import OfferTile from '~/components/client/home/OfferTile.astro';
 import AboutStudio from '~/components/client/home/AboutStudio.astro';
@@ -11,7 +10,6 @@ import HowItWorks from '~/components/client/home/HowItWorks.astro';
 import SculptBand from '~/components/client/home/SculptBand.astro';
 import Faq from '~/components/client/home/Faq.astro';
 import ContactBlock from '~/components/client/home/ContactBlock.astro';
-import { waitlistOnHome } from '~/data/waitlist';
 import { getCopy } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -27,7 +25,7 @@ const copy = getCopy(lang).home;
 ---
 
 <Page lang={lang} route="home" title={copy.title} description={copy.description} noindex={noindex} twin={twin}>
-  {waitlistOnHome ? <WaitlistHero lang={lang} /> : <HomeHero lang={lang} />}
+  <HomeHero lang={lang} />
   <NextClasses lang={lang} />
   <OfferTile lang={lang} />
   <AboutStudio lang={lang} />

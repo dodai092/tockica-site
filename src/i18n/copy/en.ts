@@ -161,6 +161,7 @@ export const en: Copy = {
       '*Offer cannot be used by multiple people using 1 account.',
       '*One-time offer, no pause, no refund.',
     ],
+    hoursHeading: 'Opening hours from 4 January',
     firstName: 'First name',
     lastName: 'Last name',
     formHeading: 'Join the waitlist',
@@ -175,7 +176,8 @@ export const en: Copy = {
     birthDate: 'Date of birth',
     birthParts: { day: 'Day', month: 'Month', year: 'Year' },
     birthHints: { day: 'DD', month: 'MM', year: 'YYYY' },
-    birthDateWhyMissing: 'why we ask for the date of birth (Dunia)',
+    // Antun's translation of Dunia's Croatian, Dunia approves.
+    birthDateWhy: 'So we can celebrate your birthday with you.',
     termsMissing: 'a cap on the number of people (maybe 100, Dunia to decide)',
     stepsHeading: 'How it works',
     steps: [

@@ -5,6 +5,10 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test, { after, before } from 'node:test';
 import { chromium } from 'playwright';
+import { waitlistOnHome } from '../src/data/waitlist.ts';
+
+// While the waitlist page is the homepage the full homepage is served at /pocetna and /en/home.
+const HOME = { hr: waitlistOnHome ? '/pocetna' : '/', en: waitlistOnHome ? '/en/home' : '/en' };
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
@@ -59,8 +63,8 @@ const card = (page, full) =>
 const closed = (page) => page.waitForFunction(() => !document.querySelector('dialog[data-bike-sheet]')?.open);
 
 for (const [path, width] of [
-  ['/', 390],
-  ['/en', 1280],
+  [HOME.hr, 390],
+  [HOME.en, 1280],
 ]) {
   test(`${path} at ${width}px: Book on a card opens the bike map for that class`, async () => {
     const { page, errors } = await open(path, width);
@@ -100,7 +104,7 @@ for (const [path, width] of [
 }
 
 test('a ctrl-click on a card does not open the dialog', async () => {
-  const { page } = await open('/en', 1280);
+  const { page } = await open(HOME.en, 1280);
   await card(page, false)
     .locator('a.sched-action')
     .click({ modifiers: ['Control'], noWaitAfter: true });

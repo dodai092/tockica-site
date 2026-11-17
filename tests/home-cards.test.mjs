@@ -5,6 +5,10 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import test, { after, before } from 'node:test';
 import { chromium } from 'playwright';
+import { waitlistOnHome } from '../src/data/waitlist.ts';
+
+// While the waitlist page is the homepage the full homepage is served at /pocetna and /en/home.
+const HOME = { hr: waitlistOnHome ? '/pocetna' : '/', en: waitlistOnHome ? '/en/home' : '/en' };
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const PORT = 4326;
@@ -57,7 +61,7 @@ async function open(path, width) {
 
 const cards = (page) => page.locator('[data-section="next-classes"] ul > li[data-next-class]');
 
-for (const path of ['/', '/en']) {
+for (const path of [HOME.hr, HOME.en]) {
   test(`${path}: cards rebuilt from the feed keep time, instructor, training name, avatar and seats`, async () => {
     const { page, feed } = await open(path, 1280);
     // What the page does with the feed: upcoming classes only, the first four.
@@ -91,7 +95,7 @@ for (const path of ['/', '/en']) {
 }
 
 test('phone: a card is a stacked box, time, instructor, training, action, in a sideways row', async () => {
-  const { page } = await open('/', 390);
+  const { page } = await open(HOME.hr, 390);
   const li = cards(page).first();
   const box = (sel) => li.locator(sel).boundingBox();
   const [time, who, kind, action] = await Promise.all(
@@ -111,7 +115,7 @@ test('phone: a card is a stacked box, time, instructor, training, action, in a s
 });
 
 test('phone: a card has the same layout with or without a status note, and its time never wraps', async () => {
-  const { page } = await open('/', 390);
+  const { page } = await open(HOME.hr, 390);
   // One card with a note (few places or full), one without. The mock feed has both kinds.
   const info = await cards(page).evaluateAll((els) =>
     els.map((li) => {
@@ -141,7 +145,7 @@ test('phone: a card has the same layout with or without a status note, and its t
 });
 
 test('desktop: four cards in one row, same width', async () => {
-  const { page } = await open('/', 1280);
+  const { page } = await open(HOME.hr, 1280);
   const boxes = await cards(page).evaluateAll((els) =>
     els.map((e) => e.getBoundingClientRect()).map((r) => ({ y: Math.round(r.y), w: Math.round(r.width) }))
   );

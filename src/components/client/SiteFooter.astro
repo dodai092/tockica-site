@@ -1,7 +1,8 @@
 ---
 import Logo from '~/components/client/Logo.astro';
 import { sculpt } from '~/data/sculpt';
-import { footerRoutes } from '~/lib/nav';
+import { footerRoutes, navPath } from '~/lib/nav';
+import { waitlistOnHome } from '~/data/waitlist';
 import { getCopy, pathFor } from '~/i18n';
 import type { Lang } from '~/i18n';
 
@@ -15,7 +16,10 @@ interface Props {
 const { lang, bookBarSpace = false, minimal = false } = Astro.props;
 const copy = getCopy(lang);
 
-const nav = footerRoutes(sculpt.visible).map((key) => ({ text: copy.nav[key], href: pathFor(key, lang) }));
+const nav = footerRoutes(sculpt.visible, waitlistOnHome).map((key) => ({
+  text: copy.nav[key],
+  href: navPath(key, lang),
+}));
 const legal = [
   { text: copy.footer.rules, href: pathFor('rules', lang) },
   { text: copy.footer.terms, href: pathFor('terms', lang) },

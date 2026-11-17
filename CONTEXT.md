@@ -64,6 +64,23 @@ _Avoid_: early bird, launch promo
 **Why:** the January offers "Buy 1, we double it" and "Bring a +1" are separate and start only after opening,
 so they are not part of this term. Dunia's 2026-11-12 text replaced the earlier reading "buy by 31.12, valid until 4.2".
 
+### Waitlist page
+
+The page that stands in as the site's homepage until opening on 4 January: the **Waitlist offer**, the sign-up form,
+the steps and the studio's opening hours. One page in both languages.
+
+_Avoid_: landing page, home hero
+
+**Why:** Dunia wants visitors to land on the waitlist first. A form inside the full homepage's hero was tried and
+rejected, because it changed a homepage she wanted left as it is.
+
+### Full homepage
+
+The complete homepage (next classes, packs, about, rooms, instructors, FAQ, contact). Built and kept out of sight
+until opening, when it replaces the **Waitlist page** as the homepage.
+
+_Avoid_: old homepage, real homepage
+
 ## Related docs
 
 - [SETUP.md](./SETUP.md), the build reference kept from the template

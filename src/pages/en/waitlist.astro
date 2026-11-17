@@ -1,5 +1,6 @@
 ---
-import C from '~/components/client/WaitlistPage.astro';
----
+// The waitlist page is the homepage now, so the old address sends visitors there.
+import { pathFor } from '~/i18n';
 
-<C lang="en" />
+return Astro.redirect(pathFor('home', 'en'));
+---

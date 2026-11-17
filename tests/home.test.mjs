@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { getCopy, pathFor } from '../src/i18n/index.ts';
+import { pathFor } from '../src/i18n/index.ts';
 import { waitlistOnHome } from '../src/data/waitlist.ts';
 
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), 'utf8');
+// While the waitlist page is the homepage the full homepage is built at the hidden /pocetna and /en/home.
 const pages = [
-  { lang: 'hr', file: 'index.html' },
-  { lang: 'en', file: 'en/index.html' },
+  { lang: 'hr', file: waitlistOnHome ? 'pocetna/index.html' : 'index.html' },
+  { lang: 'en', file: waitlistOnHome ? 'en/home/index.html' : 'en/index.html' },
 ];
 
 // Layout A, booking first: hero and next classes come before the story.
@@ -35,26 +36,13 @@ for (const { lang, file } of pages) {
     );
   });
 
-  // The hero is the waitlist while `waitlistOnHome` is on (src/data/waitlist.ts), the normal hero after opening.
-  if (waitlistOnHome) {
-    test(`${lang}: hero is the waitlist, with the offer and a form that asks for first and last name`, async () => {
-      const hero = section(await read(file), 'hero');
-      const t = getCopy(lang).waitlist;
-      assert.ok(hero.includes(t.heading), 'waitlist heading');
-      assert.ok(hero.includes(t.price), 'price');
-      assert.match(hero, /<form\b[^>]*data-waitlist-form/);
-      for (const field of ['firstName', 'lastName', 'email'])
-        assert.match(hero, new RegExp(`<input\\b[^>]*name="${field}"`), field);
-    });
-  } else {
-    test(`${lang}: hero has exactly two buttons, log in and the schedule`, async () => {
-      const hero = section(await read(file), 'hero');
-      const links = [...hero.matchAll(/<a\b[^>]*>/g)].map((m) => m[0]);
-      assert.equal(links.length, 2);
-      assert.ok(/\sdata-login/.test(links[0]) && /btn-primary/.test(links[0]), links[0]);
-      assert.ok(links[1].includes(`href="${pathFor('schedule', lang)}"`), links[1]);
-    });
-  }
+  test(`${lang}: hero has exactly two buttons, log in and the schedule`, async () => {
+    const hero = section(await read(file), 'hero');
+    const links = [...hero.matchAll(/<a\b[^>]*>/g)].map((m) => m[0]);
+    assert.equal(links.length, 2);
+    assert.ok(/\sdata-login/.test(links[0]) && /btn-primary/.test(links[0]), links[0]);
+    assert.ok(links[1].includes(`href="${pathFor('schedule', lang)}"`), links[1]);
+  });
 
   test(`${lang}: hero is the supplied words artwork, with no placeholder flag left`, async () => {
     const hero = section(await read(file), 'hero');
@@ -62,12 +50,10 @@ for (const { lang, file } of pages) {
     assert.ok(!/data-todo="[^"]*hero photo[^"]*"/.test(hero));
   });
 
-  if (!waitlistOnHome) {
-    test(`${lang}: hero slogan is an open placeholder, not a guess`, async () => {
-      const hero = section(await read(file), 'hero');
-      assert.ok(/data-todo="[^"]*slogan[^"]*"/.test(hero));
-    });
-  }
+  test(`${lang}: hero slogan is an open placeholder, not a guess`, async () => {
+    const hero = section(await read(file), 'hero');
+    assert.ok(/data-todo="[^"]*slogan[^"]*"/.test(hero));
+  });
 
   test(`${lang}: next classes lists four items with a free-bike count`, async () => {
     const block = section(await read(file), 'next-classes').replace(/<template[\s\S]*?<\/template>/g, '');
@@ -164,10 +150,10 @@ for (const { lang, file } of pages) {
     assert.ok(!/\b(100|150) ?(EUR|€)/.test(block));
   });
 
-  test(`${lang}: FAQ is a four-item details accordion`, async () => {
+  test(`${lang}: FAQ is a five-item details accordion`, async () => {
     const block = section(await read(file), 'faq');
-    assert.equal([...block.matchAll(/<details\b/g)].length, 4);
-    assert.equal([...block.matchAll(/<summary\b/g)].length, 4);
+    assert.equal([...block.matchAll(/<details\b/g)].length, 5);
+    assert.equal([...block.matchAll(/<summary\b/g)].length, 5);
   });
 
   test(`${lang}: contact block has Dunia's address, e-mail and hours, phone stays a placeholder`, async () => {
@@ -197,6 +183,8 @@ test('en: FAQ ships the client English verbatim, apostrophes and typos included'
     'If you are new, arrive 15 minutes early so you have enough time to set up your bike, get familiar with the workout concept, and settle into the studio before class starts.',
     'What if I need to cancel?',
     'Cancellation window is 6 hours prior to the lesson.',
+    'What if I still have unused classes after 10 December?',
+    'If you have any unused classes remaining after 10 December, they will be transferred to your account so you can use them for spin classes once the studio reopens in 2027.',
   ]) {
     assert.ok(text.includes(line), `missing verbatim: ${line.slice(0, 40)}`);
   }
@@ -214,6 +202,8 @@ test('hr: FAQ is written in Croatian, no English text and no open placeholders',
     'Koliko ranije trebam doći?',
     'Što ako moram otkazati?',
     'najkasnije 6 sati prije početka treninga',
+    'Što ako mi nakon 10.12. ostanu neiskorišteni treninzi?',
+    'preostali kredite će se prenijeti na tvoj profil',
   ]) {
     assert.ok(block.includes(line), `missing: ${line}`);
   }

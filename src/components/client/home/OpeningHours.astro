@@ -1,0 +1,30 @@
+---
+// Address and opening hours, for the waitlist page while there is no full homepage. Kontakt has the rest.
+import { contact } from '~/data/contact';
+import { getCopy } from '~/i18n';
+import type { Lang } from '~/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getCopy(lang).waitlist;
+---
+
+<section data-section="hours" class="mx-auto max-w-3xl px-4 sm:px-6 py-12 md:py-16">
+  <div class="rounded-(--aw-radius-card) border border-white/10 bg-accent p-5 sm:p-6 lg:p-8">
+    <h2 class="text-2xl font-extrabold text-heading md:text-3xl">{t.hoursHeading}</h2>
+    <p class="mt-3 text-default" data-contact="address">{contact.address}</p>
+    <ul class="mt-4 space-y-1.5" data-contact="hours">
+      {
+        contact.hours.map((h) => (
+          <li class="tabular-nums text-default">
+            <span class="inline-block w-12 font-semibold text-heading">{h.days[lang]}</span>
+            {h.time}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

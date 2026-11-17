@@ -20,11 +20,23 @@ const copy = getCopy(lang).home.faq;
         const q = item.q[lang];
         const a = item.a[lang];
         return (
-          <details data-faq-item class="group py-4">
-            <summary class="cursor-pointer list-none text-lg font-semibold text-heading">
-              {q ?? <Placeholder lang={lang} label={`FAQ question ${i + 1} (Croatian)`} />}
+          <details data-faq-item class="group">
+            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 rounded-md py-4 text-lg font-semibold text-heading focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&::-webkit-details-marker]:hidden">
+              <span>{q ?? <Placeholder lang={lang} label={`FAQ question ${i + 1} (Croatian)`} />}</span>
+              <svg
+                class="size-5 shrink-0 text-muted transition-transform duration-[240ms] ease-out group-open:rotate-180 motion-reduce:transition-none"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 8l5 5 5-5" />
+              </svg>
             </summary>
-            <div class="mt-3 space-y-3 text-default">
+            <div class="space-y-3 pb-4 text-default">
               {a ? (
                 a.split('\n').map((p) => <p>{p}</p>)
               ) : (

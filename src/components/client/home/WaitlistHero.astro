@@ -123,7 +123,7 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
             />
             <p class={errorText} id="waitlist-email-error" data-error></p>
           </div>
-          <fieldset class="mb-4 min-w-0" data-birth aria-describedby="waitlist-birth-error">
+          <fieldset class="mb-4 min-w-0" data-birth aria-describedby="waitlist-birth-why waitlist-birth-error">
             <legend class="block text-sm font-medium text-default">{t.birthDate}</legend>
             <div class="mt-1 flex gap-3">
               {
@@ -155,6 +155,7 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
                 ))
               }
             </div>
+            <p class="mt-1.5 text-xs text-muted" id="waitlist-birth-why">{t.birthDateWhy}</p>
             <input type="hidden" name="birthdate" data-birth-value />
             <p class={errorText} id="waitlist-birth-error" data-error></p>
           </fieldset>
@@ -183,7 +184,6 @@ const errorText = 'mt-1 flex gap-1.5 text-sm text-(--aw-color-error) empty:mt-0'
       {/* Developer flags for facts still missing. One block outside the card, so the form reads clean. */}
       <div class="mt-4 grid justify-items-start gap-2 text-sm">
         <Placeholder lang={lang} label={t.termsMissing} />
-        <Placeholder lang={lang} label={t.birthDateWhyMissing} />
         <Placeholder lang={lang} label="waitlist form is not connected to the booking database" />
       </div>
     </div>

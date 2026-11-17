@@ -106,6 +106,8 @@ export type Copy = {
     terms: string;
     /** Footnotes under the terms: availability, not transferable, no pause and no refund. */
     notes: [string, string, string];
+    /** Title of the opening-hours block under the FAQ. */
+    hoursHeading: string;
     firstName: string;
     lastName: string;
     formHeading: string;
@@ -116,8 +118,8 @@ export type Copy = {
     /** Labels of the three date-of-birth fields. */
     birthParts: { day: string; month: string; year: string };
     birthHints: { day: string; month: string; year: string };
-    /** Names the missing fact on the placeholder flag under the birth date: what we ask for it for. */
-    birthDateWhyMissing: string;
+    /** The line under the birth date fields: why we ask for it. */
+    birthDateWhy: string;
     /** Names what is still missing from the terms, on the placeholder flag under them. */
     termsMissing: string;
     stepsHeading: string;

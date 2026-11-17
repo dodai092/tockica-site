@@ -1,0 +1,10 @@
+---
+// The full homepage while the waitlist page stands in for it: out of search and out of the nav.
+import HomePage from '~/components/client/HomePage.astro';
+import { waitlistOnHome } from '~/data/waitlist';
+import { pathFor } from '~/i18n';
+
+if (!waitlistOnHome) return Astro.redirect(pathFor('home', 'en'));
+---
+
+<HomePage lang="en" noindex twin={{ hr: '/pocetna', en: '/en/home' }} />

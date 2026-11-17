@@ -1,9 +1,14 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { waitlistOnHome } from '../src/data/waitlist.ts';
 
 const read = (file) => readFile(new URL(`../${file}`, import.meta.url), 'utf8');
-const pages = ['dist/index.html', 'dist/en/index.html', 'dist/raspored/index.html', 'dist/en/schedule/index.html'];
+// While the waitlist page is the homepage the full homepage is built at /pocetna and /en/home.
+const home = waitlistOnHome
+  ? ['dist/pocetna/index.html', 'dist/en/home/index.html']
+  : ['dist/index.html', 'dist/en/index.html'];
+const pages = [...home, 'dist/raspored/index.html', 'dist/en/schedule/index.html'];
 
 for (const file of pages) {
   test(`${file}: mock next classes are marked data-todo so a launch build fails`, async () => {

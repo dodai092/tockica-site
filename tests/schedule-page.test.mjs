@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { isBookable } from '../src/lib/schedule-days.ts';
+import { waitlistOnHome } from '../src/data/waitlist.ts';
 
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), 'utf8');
 const pages = [
@@ -151,7 +152,10 @@ for (const { lang, file, book, wait, full, weekday } of pages) {
 }
 
 test('the homepage still has its four next-class cards', async () => {
-  const html = (await read('index.html')).replace(/<template[\s\S]*?<\/template>/g, '');
+  const html = (await read(waitlistOnHome ? 'pocetna/index.html' : 'index.html')).replace(
+    /<template[\s\S]*?<\/template>/g,
+    ''
+  );
   assert.equal([...html.matchAll(/data-next-class=/g)].length, 4);
 });
 

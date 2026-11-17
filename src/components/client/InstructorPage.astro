@@ -12,6 +12,7 @@ import ScheduleRow from '~/components/client/schedule/ScheduleRow.astro';
 import { instructors } from '~/data/instructors';
 import { thumbUrls } from '~/lib/instructor-photo';
 import { buildMockSchedule } from '~/lib/mock-schedule';
+import { isBookable } from '~/lib/schedule-days';
 import { firstFreeBike, parseSchedule } from '~/lib/schedule-feed';
 import { seatNote, seatState } from '~/lib/seats';
 import { getCopy, instructorPath, pathFor } from '~/i18n';
@@ -37,7 +38,11 @@ const mine = (parseSchedule({ classes: buildMockSchedule(now) }, now, 1000)?.cla
 const upcoming = mine.slice(0, 4);
 const teaches = [...new Set(mine.map((c) => c.name))];
 const seatCopy = copy.schedulePage.seats;
-const labels = { book: copy.home.nextClasses.book, waitlist: copy.home.nextClasses.waitlist };
+const labels = {
+  book: copy.home.nextClasses.book,
+  waitlist: copy.home.nextClasses.waitlist,
+  notOpen: copy.schedulePage.notOpen,
+};
 const dayOf = new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'Europe/Zagreb' });
 const timeOf = new Intl.DateTimeFormat(lang, {
   hour: '2-digit',
@@ -87,6 +92,7 @@ const twin = { hr: instructorPath(slug, 'hr'), en: instructorPath(slug, 'en') };
         upcoming.map((c) => {
           const free = c.capacity - c.takenBikes.length;
           const st = seatState(free, c.capacity);
+          const bookable = isBookable(c.startsAt);
           return (
             <ScheduleRow
               card
@@ -98,9 +104,10 @@ const twin = { hr: instructorPath(slug, 'hr'), en: instructorPath(slug, 'en') };
               photo={thumbs[slug]}
               plainInstructor
               name={c.themeName ?? c.name}
-              seatsText={seatNote(free, c.capacity, seatCopy, lang)}
-              scarce={st.scarce}
+              seatsText={bookable ? seatNote(free, c.capacity, seatCopy, lang) : ''}
+              scarce={st.scarce && bookable}
               full={firstFreeBike(c) === null}
+              closed={!bookable}
               href={pathFor('schedule', lang)}
               labels={labels}
             />
@@ -148,6 +155,7 @@ const twin = { hr: instructorPath(slug, 'hr'), en: instructorPath(slug, 'en') };
       const li = (e.target as Element).closest<HTMLElement>('li[data-next-class]');
       if (!li || !(e.target as Element).closest('a.sched-action')) return;
       e.preventDefault();
+      if (li.hasAttribute('data-closed')) return;
       document.dispatchEvent(
         new CustomEvent('schedule:book', {
           detail: { classId: li.dataset.nextClass, full: li.hasAttribute('data-full') },

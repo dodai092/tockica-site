@@ -160,6 +160,7 @@ export const hr: Copy = {
       '*Ponuda je neprenosiva i može je koristiti samo osoba čiji je korisnički račun povezan s ponudom.',
       '*Jednokratna ponuda, bez pauze i bez povrata.',
     ],
+    hoursHeading: 'Radno vrijeme od 4. siječnja',
     firstName: 'Ime',
     lastName: 'Prezime',
     formHeading: 'Prijavi se na listu',
@@ -174,7 +175,8 @@ export const hr: Copy = {
     birthDate: 'Datum rođenja',
     birthParts: { day: 'Dan', month: 'Mjesec', year: 'Godina' },
     birthHints: { day: 'DD', month: 'MM', year: 'GGGG' },
-    birthDateWhyMissing: 'zašto tražimo datum rođenja (Dunia)',
+    // Dunia's own wording (2026-11-17).
+    birthDateWhy: 'Da možemo zajedno s tobom proslaviti tvoj rođendan.',
     termsMissing: 'ograničenje broja korisnika (možda 100, Dunia odlučuje)',
     stepsHeading: 'Korak po korak',
     steps: [

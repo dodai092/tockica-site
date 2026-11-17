@@ -1,5 +1,7 @@
 ---
 import HomePage from '~/components/client/HomePage.astro';
+import WaitlistPage from '~/components/client/WaitlistPage.astro';
+import { waitlistOnHome } from '~/data/waitlist';
 ---
 
-<HomePage lang="en" />
+{waitlistOnHome ? <WaitlistPage lang="en" /> : <HomePage lang="en" />}

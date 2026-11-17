@@ -1,5 +1,6 @@
 // Studio-day helpers for the schedule page. The studio is in Zagreb, so a "day" is a Zagreb calendar day, whatever
 // time zone the visitor's browser is in. Dates are "YYYY-MM-DD" strings, weeks start on Monday.
+import { bookingOpensOn } from '../data/waitlist.ts';
 import type { NextClass } from './schedule-feed.ts';
 
 export const STUDIO_ZONE = 'Europe/Zagreb';
@@ -21,9 +22,15 @@ export const addDays = (ymd: string, n: number): string => {
 
 export const mondayOf = (ymd: string): string => addDays(ymd, 1 - dayOfWeek(ymd));
 
-/** A class can be booked in the current studio week and the next. Later weeks can be seen but are not open yet. */
-export const isBookable = (startsAt: string | Date, now: Date = new Date()): boolean =>
-  studioDay(startsAt) < addDays(mondayOf(studioDay(now)), 14);
+/**
+ * A class can be booked from the opening day (`opensOn`), in the current studio week and the next. Before the opening
+ * and for later weeks the class can be seen but is not open yet.
+ */
+export const isBookable = (
+  startsAt: string | Date,
+  now: Date = new Date(),
+  opensOn: string = bookingOpensOn
+): boolean => studioDay(now) >= opensOn && studioDay(startsAt) < addDays(mondayOf(studioDay(now)), 14);
 
 /** Classes by studio day, in start order. A day with no class has no entry. */
 export function groupByDay<T extends Pick<NextClass, 'startsAt'>>(classes: T[]): Map<string, T[]> {

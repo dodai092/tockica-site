@@ -1,10 +1,13 @@
 ---
-// The waitlist page (/waitlist): the hero with the offer and form (home/WaitlistHero.astro), the steps and a closing band.
+// The waitlist page, the homepage until opening (src/data/waitlist.ts): the hero with the offer and form
+// (home/WaitlistHero.astro), the steps, the FAQ, the opening hours and a closing band.
 import { Picture } from 'astro:assets';
 import Button from '~/components/ui/Button.astro';
 import Page from '~/components/client/Page.astro';
 import WaitlistHero from '~/components/client/home/WaitlistHero.astro';
 import HowItWorks from '~/components/client/home/HowItWorks.astro';
+import Faq from '~/components/client/home/Faq.astro';
+import OpeningHours from '~/components/client/home/OpeningHours.astro';
 import SpinBike from '~/components/client/SpinBike.astro';
 import wordsArt from '~/assets/images/hero-words.png';
 import { getCopy } from '~/i18n';
@@ -19,10 +22,12 @@ const copy = getCopy(lang);
 const t = copy.waitlist;
 ---
 
-<Page lang={lang} route="waitlist" title={t.title} description={t.description} overlayBar>
+<Page lang={lang} route="home" title={t.title} description={t.description} overlayBar>
   <WaitlistHero lang={lang} />
 
   <HowItWorks lang={lang} heading={t.stepsHeading} steps={t.steps} goalLast timeline={t.timeline} />
+  <Faq lang={lang} />
+  <OpeningHours lang={lang} />
 
   <section class="relative isolate overflow-hidden bg-black text-white">
     <Picture

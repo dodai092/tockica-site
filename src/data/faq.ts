@@ -36,4 +36,15 @@ export const faq: FaqItem[] = [
       en: 'Cancellation window is 6 hours prior to the lesson.',
     },
   },
+  // Dunia's own text in both languages (2026-11-17), reproduced exactly, "kredite" included.
+  {
+    q: {
+      hr: 'Što ako mi nakon 10.12. ostanu neiskorišteni treninzi?',
+      en: 'What if I still have unused classes after 10 December?',
+    },
+    a: {
+      hr: 'Ako ti nakon 10.12. ostane koji neiskorišteni trening, preostali kredite će se prenijeti na tvoj profil i moći ćeš ih iskoristiti na spin treninzima nakon ponovnog otvaranja Točkice.',
+      en: 'If you have any unused classes remaining after 10 December, they will be transferred to your account so you can use them for spin classes once the studio reopens in 2027.',
+    },
+  },
 ];

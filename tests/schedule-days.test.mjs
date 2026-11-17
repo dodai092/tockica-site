@@ -44,11 +44,17 @@ test('isBookable opens this studio week and the next, later weeks are not open y
   const monday = new Date('2026-11-16T09:00:00+01:00');
   const sunday = new Date('2026-11-22T22:00:00+01:00');
   // Week of 16 Nov and the week of 23 Nov are open, the week of 30 Nov is not.
-  assert.equal(isBookable('2026-11-29T20:00:00+01:00', monday), true);
-  assert.equal(isBookable('2026-11-30T07:30:00+01:00', monday), false);
+  assert.equal(isBookable('2026-11-29T20:00:00+01:00', monday, '2000-01-01'), true);
+  assert.equal(isBookable('2026-11-30T07:30:00+01:00', monday, '2000-01-01'), false);
   // The window is by studio week, so on the Sunday it is the same two weeks.
-  assert.equal(isBookable('2026-11-29T20:00:00+01:00', sunday), true);
-  assert.equal(isBookable('2026-11-30T07:30:00+01:00', sunday), false);
+  assert.equal(isBookable('2026-11-29T20:00:00+01:00', sunday, '2000-01-01'), true);
+  assert.equal(isBookable('2026-11-30T07:30:00+01:00', sunday, '2000-01-01'), false);
   // The day after the Sunday starts a new week, and the window moves on.
-  assert.equal(isBookable('2026-11-30T07:30:00+01:00', new Date('2026-11-23T08:00:00+01:00')), true);
+  assert.equal(isBookable('2026-11-30T07:30:00+01:00', new Date('2026-11-23T08:00:00+01:00'), '2000-01-01'), true);
+});
+
+test('isBookable is false before the opening day, whatever the week', () => {
+  const now = new Date('2027-01-03T20:00:00+01:00');
+  assert.equal(isBookable('2027-01-04T07:30:00+01:00', now, '2027-01-04'), false);
+  assert.equal(isBookable('2027-01-04T07:30:00+01:00', new Date('2027-01-04T08:00:00+01:00'), '2027-01-04'), true);
 });
